@@ -39,32 +39,23 @@ public class User extends RealmObject {
     @Expose
     private String image;
 
-    @SerializedName("firstlogin")
+    @SerializedName("position")
     @Expose
-    private String firstlogin;
-
-    @SerializedName("code")
-    @Expose
-    private String codex;
+    private String position;
 
 
 
 
-    public String getFirstlogin() {
-        return firstlogin;
+
+
+    public String getPosition() {
+        return position;
     }
 
-    public void setFirstlogin(String firstlogin) {
-        this.firstlogin = firstlogin;
+    public void setPosition(String position) {
+        this.position = position;
     }
 
-    public String getCodex() {
-        return codex;
-    }
-
-    public void setCodex(String codex) {
-        this.codex = codex;
-    }
 
 
     private String fullName;
