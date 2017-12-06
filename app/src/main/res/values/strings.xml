@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">PortableSalesCounterApp</string>
+
+
+    <!-- error -->
+    <string name="cantConnect">Connection Failed!</string>
+
+
+    <!-- login -->
+    <string name="email">Email</string>
+    <string name="pass">Password</string>
+    <string name="signin">Sign in</string>
+    <string name="need_a_new_account">NEED A NEW ACCOUNT?</string>
+    <string name="enter_display_name">Enter Display Name</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="password">Password</string>
+    <string name="email1">Email</string>
+
+
+    <!--changepass -->
+    <string name="change_password_dialog">Enter your email address below and we\'ll send your password!</string>
+    <string name="password_recovery">Password Recovery</string>
+
 </resources>

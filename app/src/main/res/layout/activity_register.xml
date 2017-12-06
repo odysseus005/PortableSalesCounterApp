@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="view"
+            type="com.portablesalescounterapp.ui.register.RegisterView" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:background="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:titleTextColor="@color/colorText" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="start"
+                    android:text="@string/account"
+                    android:textColor="@color/colorText"
+                    android:textSize="20sp" />
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/PersonalInformation"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <EditText
+                        android:id="@+id/et_email"
+                        android:layout_width="395dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/password"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_email"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textEmail"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText">
+
+                    <EditText
+                        android:id="@+id/et_password"
+                        android:layout_width="398dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/enter_password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textPassword"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText">
+
+                    <EditText
+                        android:id="@+id/et_confirmPass"
+                        android:layout_width="398dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Confirm Password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="6dp"
+                    android:text="*Password must be atleast 8 characters\n*Must have at least 1 numeric and special character\n*Atleast 1 capital letter"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="start"
+                    android:textColor="@color/colorText"
+                    android:text="@string/personal"
+                    android:textSize="20sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/text"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_fName"
+                        android:layout_width="395dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/password"
+                        android:layout_weight="1"
+                        android:hint="First Name"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignLeft="@+id/textFirstName"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignStart="@+id/textFirstName"
+                    android:layout_below="@+id/textFirstName"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_lName"
+                        android:layout_width="395dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/password"
+                        android:layout_weight="1"
+                        android:hint="Last Name"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/textContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textLastName"
+                    android:textColor="@color/colorText"
+                    android:textColorHint="@color/colorText"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/et_contact"
+                        android:layout_width="395dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/password"
+                        android:layout_weight="1"
+                        android:hint="Contact Number"
+                        android:inputType="number"
+                        android:maxLines="1"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText" />
+                </android.support.design.widget.TextInputLayout>
+
+                <LinearLayout android:layout_height="wrap_content" android:layout_width="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:id="@+id/linearLayout"
+                    android:layout_below="@+id/textContact"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true">
+
+                        <EditText
+                            android:id="@+id/et_bday"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/password"
+                            android:hint="Birthday"
+                            android:visibility="gone"
+                            android:onClick="@{()->view.onBirthdayClicked()}"
+                            android:textColor="@color/colorText"
+                            android:textColorHint="@color/colorText"
+                            android:maxLines="1" />
+
+                    <EditText
+                        android:id="@+id/et_age"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/password"
+                        android:hint="Age"
+                        android:inputType="number"
+                        android:textColor="@color/colorText"
+                        android:textColorHint="@color/colorText"
+                        android:maxLines="1" />
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="2"
+                        android:orientation="vertical" >
+
+                        <RadioGroup
+                            android:id="@+id/radioGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" >
+
+                            <RadioButton
+                                android:id="@+id/radioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="Male"
+                                android:layout_weight="1"
+                                android:textColor="@color/colorText"
+                                android:textColorHint="@color/colorText" />
+
+                            <RadioButton
+                                android:layout_weight="1"
+                                android:id="@+id/radioButton2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColorHint="@color/colorText"
+                                android:textColor="@color/colorText"
+                                android:text="Female" />
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    style="?android:textAppearanceSmall"
+                    android:layout_width="213dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/textConfirmPassword"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:background="@color/colorText"
+                    android:onClick="@{()->view.onSubmit()}"
+                    android:padding="10dp"
+                    android:paddingTop="@dimen/activity_vertical_margin"
+                    android:text="Create Account"
+                    android:textColor="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</layout>

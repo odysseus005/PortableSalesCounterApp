@@ -11,6 +11,13 @@ public class Constants {
     public static final String PUSH_NOTIFICATION = "pushNotification";
 
     public static final String TAG = "tag";
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
 
+    //Login and Register
+    public static final String SUCCESS = "success";
+    public static final String NOT_EXIST = "doesNotExist";
+    public static final String WRONG_PASSWORD = "wrong";
+    public static final String EMAIL_EXIST = "existing";
 
 }

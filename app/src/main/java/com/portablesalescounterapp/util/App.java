@@ -1,16 +1,18 @@
-package com.portablesalescounterapp.app;
+package com.portablesalescounterapp.util;
 
 import android.app.Application;
 
+import com.firebase.client.Firebase;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.portablesalescounterapp.model.data.User;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import jazevangelio.newvawepp.model.data.Emergency;
+import jazevangelio.newvawepp.model.data.User;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -27,7 +29,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Firebase.setAndroidContext(this);
         sInstance = this;
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder()
@@ -89,6 +91,16 @@ public class App extends Application {
 
         return user;
     }
+
+    public static List<Emergency> getEmergency(){
+        Realm realm = Realm.getDefaultInstance();
+        List<Emergency> user = (List<Emergency>) realm.where(Emergency.class).findAllAsync();
+
+        return user;
+    }
+
+    //upload image
+
 
     private OkHttpClient.Builder getOkHttpClientImage() {
         if (httpClient == null) {
