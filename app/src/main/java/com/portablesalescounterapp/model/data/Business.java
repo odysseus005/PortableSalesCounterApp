@@ -13,12 +13,7 @@ public class Business extends RealmObject {
     @SerializedName("business_id")
     @Expose
     private int businessId;
-    @SerializedName("businessUsername")
-    @Expose
-    private String businessUsername;
-    @SerializedName("businessPassword")
-    @Expose
-    private String businessPassword;
+
     @SerializedName("businessName")
     @Expose
     private String businessName;
@@ -36,22 +31,6 @@ public class Business extends RealmObject {
 
     public void setBusinessId(int businessId) {
         this.businessId = businessId;
-    }
-
-    public String getBusinessUsername() {
-        return businessUsername;
-    }
-
-    public void setBusinessUsername(String businessUsername) {
-        this.businessUsername = businessUsername;
-    }
-
-    public String getBusinessPassword() {
-        return businessPassword;
-    }
-
-    public void setBusinessPassword(String businessPassword) {
-        this.businessPassword = businessPassword;
     }
 
     public String getBusinessName() {

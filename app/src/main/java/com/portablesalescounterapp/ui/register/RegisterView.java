@@ -7,6 +7,8 @@ public interface RegisterView extends MvpView {
 
     void onSubmit();
 
+    void onNext();
+
     void showAlert(String message);
 
     void setEditTextValue(String email, String password, String confirmPassword, String firstName, String lastName, String birthday, String contact, String address);

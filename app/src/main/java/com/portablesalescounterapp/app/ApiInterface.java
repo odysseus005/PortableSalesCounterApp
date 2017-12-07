@@ -3,14 +3,14 @@ package com.portablesalescounterapp.app;
 
 
 
+import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.model.response.LoginResponse;
+import com.portablesalescounterapp.model.response.ResultResponse;
+
 import java.util.List;
 import java.util.Map;
 
-import jazevangelio.newvawepp.model.data.Company;
-import jazevangelio.newvawepp.model.data.Emergency;
-import jazevangelio.newvawepp.model.data.User;
-import jazevangelio.newvawepp.model.response.LoginResponse;
-import jazevangelio.newvawepp.model.response.ResultResponse;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -44,16 +44,8 @@ public interface ApiInterface {
     );
 
 
-    @FormUrlEncoded
-    @POST(Endpoints.CLIENT)
-    Call<ResultResponse> firstLogin(@Field(Constants.TAG) String tag,
-                                    @Field(Constants.USER_ID) String user_id
-    );
 
-    @FormUrlEncoded
-    @POST(Endpoints.VERIFY)
-    Call<ResultResponse> verify(@Field(Constants.EMAIL) String email,
-                                @Field(Constants.VER_CODE) String code);
+
 
 
     @Multipart
@@ -85,10 +77,7 @@ public interface ApiInterface {
                                         @Field(Constants.PASSWORD) String password);
 
 
-
-    @FormUrlEncoded
-    @POST(Endpoints.CLIENT)
-    Call<ResultResponse> checkEmail(@Field(Constants.TAG) String tag, @Field(Constants.EMAIL) String email);
+/*
 
     @FormUrlEncoded
     @POST(Endpoints.COMPANY)
@@ -116,18 +105,7 @@ public interface ApiInterface {
     @POST(Endpoints.EMERGENCY)
     Call<List<Emergency>> addEmergency(@Field(Constants.TAG) String tag, @Field(Constants.USER_ID) String user_id, @Field(Constants.CONTACT_NAME) String name, @Field(Constants.CONTACT_NUMBER) String contact);
 
-
-
-    @FormUrlEncoded
-    @POST("checkAnswer")
-    Call<ResultResponse> checkAnswer(@Field(Constants.EMAIL) String email,
-                                     @Field(Constants.QUESTION) String question,
-                                     @Field(Constants.ANSWER) String answer);
-
-    @FormUrlEncoded
-    @POST(Endpoints.VERIFY_RESEND_EMAIL)
-    Call<ResultResponse> verifyResendEmail(@Field(Constants.USER_ID) String user_id);
-
+*/
 
     @Multipart
     @POST("upload.php?")

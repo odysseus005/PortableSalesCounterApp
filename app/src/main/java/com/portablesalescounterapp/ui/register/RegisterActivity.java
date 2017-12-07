@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -30,7 +31,6 @@ import java.util.Locale;
 public class RegisterActivity extends MvpViewStateActivity<RegisterView, RegisterPresenter> implements RegisterView, TextWatcher {
     private ActivityRegisterBinding binding;
     private ProgressDialog progressDialog;
-    private RadioButton radioSexButton;
     private String etAddress;
 
 
@@ -42,12 +42,12 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
         binding = DataBindingUtil.setContentView(this, R.layout.activity_register);
         binding.setView(getMvpView());
 
-        setSupportActionBar(binding.toolbar);
+      /*  setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(true);
             getSupportActionBar().setTitle("Registration");
-
+     */
     }
 
     @Override
@@ -89,28 +89,33 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
      * End of MvpViewStateActivity
      ***/
 
+    @Override
+    public void onNext()
+    {
+        binding.regBusinessgroup.setVisibility(View.VISIBLE);
+        binding.regUsergroup.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onSubmit() {
 
-        int selectedId=binding.radioGroup.getCheckedRadioButtonId();
-        radioSexButton=(RadioButton)findViewById(selectedId);
 
-        if(Integer.parseInt(binding.etAge.getText().toString())<13)
-        {
-            showAlert("Age must be more than 13 years old");
-        }
-        else {
+        binding.etBusinessaddress.getText().toString();
+        binding.etBusinesscontact.getText().toString();
+        binding.etBusinessname.getText().toString();
+
+
             presenter.register(
                     binding.etEmail.getText().toString(),
                     binding.etPassword.getText().toString(),
-                    binding.etConfirmPass.getText().toString(),
-                    binding.etFName.getText().toString(),
-                    binding.etLName.getText().toString(),
-                    binding.etAge.getText().toString(),
-                    binding.etContact.getText().toString(),
-                    radioSexButton.getText().toString());
-        }
+                    binding.etRepeatPassword.getText().toString(),
+                    binding.etFirstName.getText().toString(),
+                    binding.etLastName.getText().toString(),
+                    binding.etBirthday.getText().toString(),
+                    binding.etMobileNumber.getText().toString(),
+                    binding.etAddress.getText().toString());
+
 
     }
 
@@ -123,11 +128,12 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     public void setEditTextValue(String email, String password, String confirmPassword, String firstName, String lastName, String birthday, String contact, String address) {
         binding.etEmail.setText(email);
         binding.etPassword.setText(password);
-        binding.etConfirmPass.setText(confirmPassword);
-        binding.etFName.setText(firstName);
-        binding.etLName.setText(lastName);
-        binding.etBday.setText(birthday);
-        binding.etContact.setText(contact);
+        binding.etRepeatPassword.setText(confirmPassword);
+        binding.etFirstName.setText(firstName);
+        binding.etLastName.setText(lastName);
+        binding.etBirthday.setText(birthday);
+        binding.etMobileNumber.setText(contact);
+        binding.etAddress.setText(address);
 
     }
 
@@ -177,7 +183,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                binding.etBday.setText(dateFormatter.format(newDate.getTime()));
+                binding.etBirthday.setText(dateFormatter.format(newDate.getTime()));
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));

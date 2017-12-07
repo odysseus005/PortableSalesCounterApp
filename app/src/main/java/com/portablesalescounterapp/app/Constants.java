@@ -20,4 +20,13 @@ public class Constants {
     public static final String WRONG_PASSWORD = "wrong";
     public static final String EMAIL_EXIST = "existing";
 
+
+    //Profile
+    public static final String USER_ID = "user_id";
+    public static final String FIRST_NAME = "firstname";
+    public static final String LAST_NAME = "lastname";
+    public static final String BIRTHDAY = "birthday";
+    public static final String CONTACT = "contact";
+    public static final String ADDRESS = "address";
+
 }
