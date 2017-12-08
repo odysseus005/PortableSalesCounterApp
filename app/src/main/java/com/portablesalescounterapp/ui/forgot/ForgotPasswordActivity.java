@@ -10,9 +10,8 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
-
-import jazevangelio.newvawepp.R;
-import jazevangelio.newvawepp.databinding.ActivityForgotPassBinding;
+import com.portablesalescounterapp.R;
+import com.portablesalescounterapp.databinding.ActivityForgotPassBinding;
 
 
 public class ForgotPasswordActivity extends MvpActivity<ForgotView, ForgotPresenter> implements ForgotView {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_edit_profile"
+            android:title="Runners" />
+
+        <item
+            android:id="@+id/nav_myraces"
+            android:icon="@drawable/ic_edit_profile"
+            android:title="My Races" />
+
+        <item
+            android:id="@+id/nav_upcoming"
+            android:icon="@drawable/ic_edit_profile"
+            android:title="Upcoming Races" />
+
+            <item
+                android:id="@+id/nav_result"
+                android:icon="@drawable/ic_edit_profile"
+                android:title="Races Result" />
+
+          <item
+            android:id="@+id/nav_company"
+              android:icon="@drawable/ic_edit_profile"
+            android:title="About Us" />
+
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_edit_profile"
+                android:title="Logout" />
+
+
+
+    </group>
+
+
+
+
+</menu>

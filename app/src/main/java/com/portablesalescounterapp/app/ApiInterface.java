@@ -45,6 +45,10 @@ public interface ApiInterface {
 
 
 
+    @FormUrlEncoded
+    @POST(Endpoints.CLIENT)
+    Call<ResultResponse> checkEmail(@Field(Constants.TAG) String tag, @Field(Constants.EMAIL) String email);
+
 
 
 

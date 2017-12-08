@@ -46,12 +46,13 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                                 public void execute(Realm realm) {
                                                     User user = response.body().getUser();
                                                     realm.copyToRealmOrUpdate(user);
-                                                    getView().onLoad(user);
+
                                                 }
                                             }, new Realm.Transaction.OnSuccess() {
                                                 @Override
                                                 public void onSuccess() {
                                                     realm.close();
+                                                    getView().onLoginSuccess();
                                                 }
                                             }, new Realm.Transaction.OnError() {
                                                 @Override

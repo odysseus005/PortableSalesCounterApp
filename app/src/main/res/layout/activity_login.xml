@@ -108,17 +108,6 @@
             android:text="Log In"
             android:textStyle="bold" />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:visibility="invisible"
-            android:onClick="@{() -> view.onFBClicked()}"
-            android:layout_gravity="center"
-            android:layout_below="@+id/email_sign_in_button"
-            android:layout_centerHorizontal="true" />
-
 
         <Button
             android:id="@+id/button_sign_up"
