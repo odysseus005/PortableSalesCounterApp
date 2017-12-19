@@ -22,22 +22,7 @@ public class Endpoints {
     public static final String FORGOTPASS = "forgotPass";
     public static final String FIRSTLOGIN = "firstLogin";
 
-    //Company
-    public static final String COMPANY = "company.php?";
-    public static final String ALL_COMPANY = "allCompany";
 
-
-    //EmergencyContact
-    public static final String EMERGENCY = "emergency.php?";
-    public static final String ALL_EMERGENCY = "allEmergencyContact";
-    public static final String EDIT_EMERGENCY = "editEmergency";
-    public static final String ADD_EMERGENCY = "addEmergency";
-    public static final String DELETE_EMERGENCY = "deleteEmergency";
-
-
-    public static final String VERIFY = "verify";
-    public static final String VERIFY_RESEND_EMAIL ="resendEmail";
-
-    public static final String SAVE_USER_TOKEN = "saveUserToken";
-    public static final String DELETE_USER_TOKEN = "deleteUserToken";
+    //Business
+    public static final String BUSINESS_REGISTER = "registerBusiness";
 }

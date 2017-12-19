@@ -8,10 +8,7 @@ import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import tip.edu.ph.runrio.app.App;
-import tip.edu.ph.runrio.app.Constants;
-import tip.edu.ph.runrio.model.data.Reservation;
-import tip.edu.ph.runrio.model.data.UpcomingRaces;
+
 
 
 @SuppressWarnings("ConstantConditions")
@@ -21,7 +18,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
 
     public void loadUpcomingRaces(String apiToken) {
 
-        App.getInstance().getApiInterface().getUpcomingRaces(Constants.BEARER+apiToken, Constants.APPJSON)
+      /*  App.getInstance().getApiInterface().getUpcomingRaces(Constants.BEARER+apiToken, Constants.APPJSON)
                 .enqueue(new Callback<List<UpcomingRaces>>() {
                     @Override
                     public void onResponse(Call<List<UpcomingRaces>> call, final Response<List<UpcomingRaces>> response) {
@@ -67,7 +64,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             getView().showError(t.getLocalizedMessage());
                         }
                     }
-                });
+                });*/
     }
 
 
@@ -81,7 +78,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
 
     public void loadUserRaces(String apiToken) {
 
-        App.getInstance().getApiInterface().getUserReservations(Constants.BEARER+apiToken, Constants.APPJSON)
+      /*  App.getInstance().getApiInterface().getUserReservations(Constants.BEARER+apiToken, Constants.APPJSON)
                 .enqueue(new Callback<List<Reservation>>() {
                     @Override
                     public void onResponse(Call<List<Reservation>> call, final Response<List<Reservation>> response) {
@@ -127,7 +124,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             getView().showError(t.getLocalizedMessage());
                         }
                     }
-                });
+                });*/
 
 
     }

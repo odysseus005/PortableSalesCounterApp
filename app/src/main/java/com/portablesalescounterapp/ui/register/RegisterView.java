@@ -19,5 +19,7 @@ public interface RegisterView extends MvpView {
 
     void onRegistrationSuccess();
 
+    void onBusinessRegistrationSuccess(String bussinessID);
+
     void onBirthdayClicked();
 }

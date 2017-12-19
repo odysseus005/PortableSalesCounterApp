@@ -101,20 +101,13 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     public void onSubmit() {
 
 
-        binding.etBusinessaddress.getText().toString();
-        binding.etBusinesscontact.getText().toString();
-        binding.etBusinessname.getText().toString();
+        presenter.registerBusiness(
+        binding.etBusinessaddress.getText().toString(),
+        binding.etBusinesscontact.getText().toString(),
+        binding.etBusinessname.getText().toString(),
+        binding.etBusinessdescription.getText().toString());
 
 
-            presenter.register(
-                    binding.etEmail.getText().toString(),
-                    binding.etPassword.getText().toString(),
-                    binding.etRepeatPassword.getText().toString(),
-                    binding.etFirstName.getText().toString(),
-                    binding.etLastName.getText().toString(),
-                    binding.etBirthday.getText().toString(),
-                    binding.etMobileNumber.getText().toString(),
-                    binding.etAddress.getText().toString());
 
 
     }
@@ -169,6 +162,25 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onBusinessRegistrationSuccess(String business_id) {
+
+        binding.regBusinessgroup.setVisibility(View.GONE);
+        binding.regUsergroup.setVisibility(View.VISIBLE);
+        presenter.registerUser(
+                binding.etEmail.getText().toString(),
+                binding.etPassword.getText().toString(),
+                binding.etRepeatPassword.getText().toString(),
+                binding.etFirstName.getText().toString(),
+                binding.etLastName.getText().toString(),
+                binding.etBirthday.getText().toString(),
+                binding.etMobileNumber.getText().toString(),
+                binding.etAddress.getText().toString(),
+                "Owner",
+                business_id);
+
     }
 
 

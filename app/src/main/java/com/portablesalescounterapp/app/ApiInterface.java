@@ -40,7 +40,18 @@ public interface ApiInterface {
                                   @Field(Constants.LAST_NAME) String lastName,
                                   @Field(Constants.CONTACT) String contact,
                                   @Field(Constants.BIRTHDAY) String birthday,
-                                  @Field(Constants.ADDRESS) String address
+                                  @Field(Constants.ADDRESS) String address,
+                                  @Field(Constants.POSITION) String position,
+                                  @Field(Constants.BUSINESS_ID) String businessID
+    );
+
+    @FormUrlEncoded
+    @POST(Endpoints.CLIENT)
+    Call<ResultResponse> registerBusiness(@Field(Constants.TAG) String tag,
+                                          @Field(Constants.BUSINESS_NAME) String bName,
+                                          @Field(Constants.BUSINESS_ADDRESS) String bAddress,
+                                          @Field(Constants.BUSINESS_CONTACT) String bContact,
+                                          @Field(Constants.BUSINESS_DESCRIPTION) String bDescription
     );
 
 

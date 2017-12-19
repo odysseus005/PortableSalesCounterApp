@@ -23,8 +23,18 @@ public class Business extends RealmObject {
     @SerializedName("businessAddress")
     @Expose
     private String businessAddress;
+    @SerializedName("businessDescription")
+    @Expose
+    private String businessDescription;
 
 
+    public String getBusinessDescription() {
+        return businessDescription;
+    }
+
+    public void setBusinessDescription(String businessDescription) {
+        this.businessDescription = businessDescription;
+    }
     public int getBusinessId() {
         return businessId;
     }

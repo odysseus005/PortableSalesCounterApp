@@ -35,10 +35,7 @@ import com.portablesalescounterapp.util.CircleTransform;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmModel;
-import io.realm.RealmResults;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 
 
@@ -105,6 +102,24 @@ public class MainActivity
 
 
 
+    }
+
+
+
+    private void hideItem()
+    {
+
+        Menu nav_Menu =  binding.navView.getMenu();
+        nav_Menu.findItem(R.id.nav_company).setVisible(false);
+
+       if(true)// if(user.getPosition().equalsIgnoreCase("a"))
+        {
+            nav_Menu.findItem(R.id.nav_company).setVisible(false);
+
+        }else if(user.getPosition().equalsIgnoreCase("b"))
+        {
+
+        }
     }
 
 

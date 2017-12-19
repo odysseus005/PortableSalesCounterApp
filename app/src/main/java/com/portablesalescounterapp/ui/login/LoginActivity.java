@@ -138,10 +138,15 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     @Override
     public void onLoginButtonClicked() {
-        presenter.login(
+
+
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+
+       /* presenter.login(
                 binding.etEmail.getText().toString(),
                 binding.etPassword.getText().toString()
-        );
+        );*/
     }
 
     @Override

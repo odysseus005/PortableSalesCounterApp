@@ -43,9 +43,17 @@ public class User extends RealmObject {
     @Expose
     private String position;
 
+    @SerializedName("business_id")
+    @Expose
+    private String business_id;
 
+    public String getBusiness_id() {
+        return business_id;
+    }
 
-
+    public void setBusiness_id(String business_id) {
+        this.business_id = business_id;
+    }
 
 
     public String getPosition() {
