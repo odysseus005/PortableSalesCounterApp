@@ -206,7 +206,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
                     android:layout_marginRight="48dp"
-                    android:text="Next"
+                    android:text="Register"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />
@@ -247,7 +247,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_selector"
-                android:hint="Business Address"
+                android:hint="Address"
                 android:maxLength="150"
                 android:padding="12dp"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
@@ -258,9 +258,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_selector"
-                android:hint="Business Contact"
+                android:hint="Contact"
                 android:maxLength="150"
                 android:padding="12dp"
+                android:inputType="phone"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
                 android:textColorHint="@android:color/darker_gray" />
 
@@ -269,7 +270,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_selector"
-                android:hint="Business Description"
+                android:hint="Description"
                 android:maxLength="350"
                 android:lines="2"
                 android:padding="12dp"
@@ -293,7 +294,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="48dp"
                     android:layout_marginRight="48dp"
-                    android:text="Register"
+                    android:text="Next"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textColor="@android:color/white"
                     android:textStyle="bold" />

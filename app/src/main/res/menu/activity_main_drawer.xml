@@ -5,33 +5,44 @@
 
 
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_edit_profile"
-            android:title="Runners" />
+            android:id="@+id/nav_sales.png"
+            android:icon="@drawable/ic_sales"
+            android:title="Transaction" />
 
         <item
-            android:id="@+id/nav_myraces"
-            android:icon="@drawable/ic_edit_profile"
-            android:title="My Races" />
+            android:id="@+id/nav_receipts"
+            android:icon="@drawable/ic_receipt"
+            android:title="History of Sales" />
 
         <item
-            android:id="@+id/nav_upcoming"
-            android:icon="@drawable/ic_edit_profile"
-            android:title="Upcoming Races" />
+            android:id="@+id/nav_items"
+            android:icon="@drawable/ic_item"
+            android:title="Items" />
 
             <item
-                android:id="@+id/nav_result"
-                android:icon="@drawable/ic_edit_profile"
-                android:title="Races Result" />
+                android:id="@+id/nav_inventory"
+                android:icon="@drawable/ic_inventory"
+                android:title="Inventory" />
 
-          <item
-            android:id="@+id/nav_company"
-              android:icon="@drawable/ic_edit_profile"
-            android:title="About Us" />
+        <item
+            android:id="@+id/nav_report"
+            android:icon="@drawable/ic_report"
+            android:title="Reports &amp; Analytics" />
+
+
+        <item
+            android:id="@+id/nav_qrcode"
+            android:icon="@drawable/ic_qrcode"
+            android:title="Manage Qr Codes" />
+
+        <item
+            android:id="@+id/nav_manageusers"
+            android:icon="@drawable/ic_manageusers"
+            android:title="Manage Users" />
 
             <item
                 android:id="@+id/nav_logout"
-                android:icon="@drawable/ic_edit_profile"
+                android:icon="@drawable/ic_logout"
                 android:title="Logout" />
 
 

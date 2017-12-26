@@ -63,7 +63,7 @@ public class MainActivity
 
         if (user == null) {
             Log.e(TAG, "No User found");
-            finish();
+            //finish();
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -110,13 +110,13 @@ public class MainActivity
     {
 
         Menu nav_Menu =  binding.navView.getMenu();
-        nav_Menu.findItem(R.id.nav_company).setVisible(false);
+        //nav_Menu.findItem(R.id.nav_company).setVisible(false);
 
-       if(true)// if(user.getPosition().equalsIgnoreCase("a"))
+        if(user.getPosition().equalsIgnoreCase("cashier"))
         {
-            nav_Menu.findItem(R.id.nav_company).setVisible(false);
+            nav_Menu.findItem(R.id.nav_items).setVisible(false);
 
-        }else if(user.getPosition().equalsIgnoreCase("b"))
+        }else if(user.getPosition().equalsIgnoreCase("inventory custodian"))
         {
 
         }
@@ -185,20 +185,26 @@ public class MainActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_company) {
+        if (id == R.id.nav_sales_png) {
 
-        }  else if (id == R.id.nav_profile) {
-            startActivity(new Intent(this, ProfileActivity.class));
-
-        }
-        else if (id == R.id.nav_myraces) {
+        }  else if (id == R.id.nav_manageusers) {
+           // startActivity(new Intent(this, ProfileActivity.class));
 
         }
-        else if (id == R.id.nav_upcoming) {
+        else if (id == R.id.nav_receipts) {
+
+        }
+        else if (id == R.id.nav_items) {
 
 
         }
-        else if (id == R.id.nav_result) {
+        else if (id == R.id.nav_inventory) {
+
+        }
+        else if (id == R.id.nav_report) {
+
+        }
+        else if (id == R.id.nav_qrcode) {
 
         }
         else if (id == R.id.nav_logout) {

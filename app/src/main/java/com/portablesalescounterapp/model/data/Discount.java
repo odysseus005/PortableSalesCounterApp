@@ -9,53 +9,44 @@ import io.realm.annotations.PrimaryKey;
 
 public class Discount extends RealmObject {
 
+
     @PrimaryKey
-    @SerializedName("category_id")
+    @SerializedName("discount_id")
     @Expose
-    private int categoryId;
-    @SerializedName("categoryName")
+    private int discountId;
+    @SerializedName("discountName")
     @Expose
-    private String categoryName;
-    @SerializedName("categoryDescription")
+    private String discountName;
+    @SerializedName("discountValue")
     @Expose
-    private String categoryDescription;
+    private String discountValue;
 
 
-    @SerializedName("business_id")
-    @Expose
-    private int businessId;
-
-    public int getBusinessId() {
-        return businessId;
+    public int getDiscountId() {
+        return discountId;
     }
 
-    public void setBusinessId(int businessId) {
-        this.businessId = businessId;
+    public void setDiscountId(int discountId) {
+        this.discountId = discountId;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public String getDiscountName() {
+        return discountName;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setDiscountName(String discountName) {
+        this.discountName = discountName;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getDiscountValue() {
+        return discountValue;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setDiscountValue(String discountValue) {
+        this.discountValue = discountValue;
     }
 
-    public String getCategoryDescription() {
-        return categoryDescription;
-    }
 
-    public void setCategoryDescription(String categoryDescription) {
-        this.categoryDescription = categoryDescription;
-    }
 
 
 

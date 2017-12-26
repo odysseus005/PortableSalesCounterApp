@@ -32,6 +32,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     private ActivityRegisterBinding binding;
     private ProgressDialog progressDialog;
     private String etAddress;
+    private String business_id;
 
 
     @Override
@@ -94,6 +95,17 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     {
         binding.regBusinessgroup.setVisibility(View.VISIBLE);
         binding.regUsergroup.setVisibility(View.GONE);
+        presenter.registerUser(
+                binding.etEmail.getText().toString(),
+                binding.etPassword.getText().toString(),
+                binding.etRepeatPassword.getText().toString(),
+                binding.etFirstName.getText().toString(),
+                binding.etLastName.getText().toString(),
+                binding.etBirthday.getText().toString(),
+                binding.etMobileNumber.getText().toString(),
+                binding.etAddress.getText().toString(),
+                "Owner",
+                business_id);
     }
 
 
@@ -101,10 +113,9 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     public void onSubmit() {
 
 
-        presenter.registerBusiness(
+        presenter.registerBusiness(binding.etBusinessname.getText().toString(),
         binding.etBusinessaddress.getText().toString(),
         binding.etBusinesscontact.getText().toString(),
-        binding.etBusinessname.getText().toString(),
         binding.etBusinessdescription.getText().toString());
 
 
@@ -169,17 +180,9 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
 
         binding.regBusinessgroup.setVisibility(View.GONE);
         binding.regUsergroup.setVisibility(View.VISIBLE);
-        presenter.registerUser(
-                binding.etEmail.getText().toString(),
-                binding.etPassword.getText().toString(),
-                binding.etRepeatPassword.getText().toString(),
-                binding.etFirstName.getText().toString(),
-                binding.etLastName.getText().toString(),
-                binding.etBirthday.getText().toString(),
-                binding.etMobileNumber.getText().toString(),
-                binding.etAddress.getText().toString(),
-                "Owner",
-                business_id);
+
+        business_id = business_id;
+
 
     }
 

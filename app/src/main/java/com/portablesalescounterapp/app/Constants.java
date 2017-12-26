@@ -28,16 +28,16 @@ public class Constants {
     public static final String BIRTHDAY = "birthday";
     public static final String CONTACT = "contact";
     public static final String ADDRESS = "address";
-    public static final String POSITION = "address";
+    public static final String POSITION = "position";
 
 
 
     //Business Profile
     public static final String BUSINESS_ID = "business_id";
-    public static final String BUSINESS_NAME = "business_name";
-    public static final String BUSINESS_DESCRIPTION = "business_desc";
-    public static final String BUSINESS_CONTACT = "business_contact";
-    public static final String BUSINESS_ADDRESS = "business_address";
+    public static final String BUSINESS_NAME = "businessName";
+    public static final String BUSINESS_DESCRIPTION = "businessDescription";
+    public static final String BUSINESS_CONTACT = "businessContact";
+    public static final String BUSINESS_ADDRESS = "businessAddress";
 
 
 
