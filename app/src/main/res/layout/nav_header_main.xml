@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="@dimen/nav_header_vertical_spacing"
-                android:textSize="32sp"
+                android:textSize="22sp"
                 android:text="@{user.firstname}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
@@ -61,9 +61,9 @@
                 android:id="@+id/txt_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="2dp"
                 android:gravity="center"
-                android:textSize="28sp"
+                android:textSize="18sp"
                 android:text="@{user.email}"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead" />
 

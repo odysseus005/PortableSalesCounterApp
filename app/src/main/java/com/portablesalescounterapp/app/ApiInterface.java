@@ -3,6 +3,9 @@ package com.portablesalescounterapp.app;
 
 
 
+import com.portablesalescounterapp.model.data.Category;
+import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.Employee;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
@@ -82,7 +85,8 @@ public interface ApiInterface {
                           @Field(Constants.LAST_NAME) String last_name,
                           @Field(Constants.CONTACT) String contact,
                           @Field(Constants.BIRTHDAY) String birthday,
-                          @Field(Constants.ADDRESS) String address);
+                          @Field(Constants.ADDRESS) String address,
+                          @Field(Constants.POSITION) String position);
 
 
     @FormUrlEncoded
@@ -92,35 +96,100 @@ public interface ApiInterface {
                                         @Field(Constants.PASSWORD) String password);
 
 
-/*
-
     @FormUrlEncoded
-    @POST(Endpoints.COMPANY)
-    Call<List<Company>> getCompanies(@Field(Constants.TAG) String tag, @Field(Constants.TYPE) String type);
-
+    @POST(Endpoints.EMPLOYEE)
+    Call<List<Employee>> getEmployee(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String user_id );
 
 
     @FormUrlEncoded
-    @POST(Endpoints.EMERGENCY)
-    Call<List<Emergency>> getEmergency(@Field(Constants.TAG) String tag, @Field(Constants.USER_ID) String user_id);
+    @POST(Endpoints.EMPLOYEE)
+    Call<List<Employee>> deleteEmployee(@Field(Constants.TAG) String tag, @Field(Constants.EMPLOYEE_ID) String user_id,@Field(Constants.BUSINESS_ID) String business_id);
 
 
     @FormUrlEncoded
-    @POST(Endpoints.EMERGENCY)
-    Call<List<Emergency>> deleteEmergency(@Field(Constants.TAG) String tag, @Field(Constants.USER_ID) String user_id, @Field(Constants.CONTACT_ID) String contact_id);
+    @POST(Endpoints.EMPLOYEE)
+    Call<List<Employee>> updateEmployee(@Field(Constants.TAG) String tag,
+                                        @Field(Constants.EMPLOYEE_ID) String employee_id,
+                                        @Field(Constants.FIRST_NAME) String first_name,
+                                        @Field(Constants.LAST_NAME) String last_name,
+                                        @Field(Constants.CONTACT) String contact,
+                                        @Field(Constants.BIRTHDAY) String birthday,
+                                        @Field(Constants.ADDRESS) String address,
+                                        @Field(Constants.POSITION) String position,
+                                        @Field(Constants.BUSINESS_ID) String business_id);
+
+    @FormUrlEncoded
+    @POST(Endpoints.EMPLOYEE)
+    Call<List<Employee>> addEmployee(@Field(Constants.TAG) String tag,
+                                     @Field(Constants.EMAIL) String username,
+                                     @Field(Constants.PASSWORD) String password,
+                                     @Field(Constants.FIRST_NAME) String firstName,
+                                     @Field(Constants.LAST_NAME) String lastName,
+                                     @Field(Constants.CONTACT) String contact,
+                                     @Field(Constants.BIRTHDAY) String birthday,
+                                     @Field(Constants.ADDRESS) String address,
+                                     @Field(Constants.POSITION) String position,
+                                     @Field(Constants.BUSINESS_ID) String businessID
+    );
 
 
     @FormUrlEncoded
-    @POST(Endpoints.EMERGENCY)
-    Call<List<Emergency>> updateEmergency(@Field(Constants.TAG) String tag, @Field(Constants.CONTACT_ID) String emergency_id, @Field(Constants.CONTACT_NAME) String name, @Field(Constants.CONTACT_NUMBER) String contact);
+    @POST(Endpoints.CATEGORY)
+    Call<List<Category>> getCategory(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String user_id );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.CATEGORY)
+    Call<List<Category>> deleteCategory(@Field(Constants.TAG) String tag, @Field(Constants.CATEGORY_ID) String user_id,@Field(Constants.BUSINESS_ID) String business_id);
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.CATEGORY)
+    Call<List<Category>> updateCategory(@Field(Constants.TAG) String tag,
+                                        @Field(Constants.CATEGORY_ID) String category_id,
+                                        @Field(Constants.CATEGORY_NAME) String name,
+                                        @Field(Constants.CATEGORY_DESCRIPTION) String description,
+                                        @Field(Constants.BUSINESS_ID) String business_id);
+
+    @FormUrlEncoded
+    @POST(Endpoints.CATEGORY)
+    Call<List<Category>> addCategory(@Field(Constants.TAG) String tag,
+                                     @Field(Constants.CATEGORY_NAME) String name,
+                                     @Field(Constants.CATEGORY_DESCRIPTION) String description,
+                                     @Field(Constants.BUSINESS_ID) String businessID
+    );
 
 
 
     @FormUrlEncoded
-    @POST(Endpoints.EMERGENCY)
-    Call<List<Emergency>> addEmergency(@Field(Constants.TAG) String tag, @Field(Constants.USER_ID) String user_id, @Field(Constants.CONTACT_NAME) String name, @Field(Constants.CONTACT_NUMBER) String contact);
+    @POST(Endpoints.DISCOUNT)
+    Call<List<Discount>> getDiscount(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id );
 
-*/
+
+    @FormUrlEncoded
+    @POST(Endpoints.DISCOUNT)
+    Call<List<Discount>> deleteDiscount(@Field(Constants.TAG) String tag, @Field(Constants.DISCOUNT_ID) String disc_id,@Field(Constants.BUSINESS_ID) String business_id);
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.DISCOUNT)
+    Call<List<Discount>> updateDiscount(@Field(Constants.TAG) String tag,
+                                        @Field(Constants.DISCOUNT_ID) String category_id,
+                                        @Field(Constants.DISCOUNT__NAME) String name,
+                                        @Field(Constants.DISCOUNT_CODE) String code,
+                                        @Field(Constants.DISCOUNT_VALUE) String value,
+                                        @Field(Constants.BUSINESS_ID) String business_id);
+
+    @FormUrlEncoded
+    @POST(Endpoints.DISCOUNT)
+    Call<List<Discount>> addDiscount(@Field(Constants.TAG) String tag,
+                                     @Field(Constants.DISCOUNT__NAME) String name,
+                                     @Field(Constants.DISCOUNT_CODE) String code,
+                                     @Field(Constants.DISCOUNT_VALUE) String value,
+                                     @Field(Constants.BUSINESS_ID) String business_id);
+
+
+
 
     @Multipart
     @POST("upload.php?")

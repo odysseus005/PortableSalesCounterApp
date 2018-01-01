@@ -113,7 +113,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
                 binding.lastName.getText().toString(),
                 binding.contact.getText().toString(),
                 binding.birthday.getText().toString(),
-                binding.address.getText().toString());
+                binding.address.getText().toString(),"");
     }
 
     @Override
@@ -146,7 +146,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
                 binding.lastName.getText().toString(),
                 binding.contact.getText().toString(),
                 binding.birthday.getText().toString(),
-                binding.address.getText().toString());
+                binding.address.getText().toString(),"");
     }
 
 

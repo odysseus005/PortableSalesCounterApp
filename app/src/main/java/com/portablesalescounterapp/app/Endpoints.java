@@ -24,4 +24,28 @@ public class Endpoints {
 
     //Business
     public static final String BUSINESS_REGISTER = "registerBusiness";
+
+
+    //Employee
+    public static final String EMPLOYEE = "employee.php?";
+    public static final String ALL_EMPLOYEE = "allEmployee";
+    public static final String ADD_EMPLOYEE = "addEmployee";
+    public static final String UPDATE_EMPLOYEE = "updateEmployee";
+    public static final String DELETE_EMPLOYEE = "deleteEmployee";
+
+
+    //Category
+    public static final String CATEGORY = "category.php?";
+    public static final String ALL_CATEGORY = "allCategory";
+    public static final String ADD_CATEGORY = "addCategory";
+    public static final String UPDATE_CATEGORY = "updateCategory";
+    public static final String DELETE_CATEGORY = "deleteCategory";
+
+
+    //Discount
+    public static final String DISCOUNT = "discount.php?";
+    public static final String ALL_DISCOUNT = "allDiscount";
+    public static final String ADD_DISCOUNT = "addDiscount";
+    public static final String UPDATE_DISCOUNT = "updateDiscount";
+    public static final String DELETE_DISCOUNT = "deleteDiscount";
 }

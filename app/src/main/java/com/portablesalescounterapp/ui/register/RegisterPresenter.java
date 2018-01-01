@@ -1,6 +1,7 @@
 package com.portablesalescounterapp.ui.register;
 
 import android.util.Log;
+import android.util.Patterns;
 
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
 import com.portablesalescounterapp.R;
@@ -35,9 +36,12 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
         if (email.equals("") || password.equals("") || confirmPassword.equals("") || firstName.equals("") || lastName.equals("") || birthday.equals("") ||
                 contact.equals("") || address.equals("")) {
             getView().showAlert("Fill-up all fields");
-        } /*else if (password.equals(password.toLowerCase())) {
-            getView().showAlert("Password must have Uppercase!");
-        } */else if (password.length() < 8) {
+        }else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) { //check if email is valid
+            getView().showAlert("Invalid email address.");
+        } else if (!Patterns.PHONE.matcher(contact).matches()) { // check if mobile number is valid
+            getView().showAlert("Invalid mobile number.");
+        }
+         else if (password.length() < 8) {
             getView().showAlert("Password must be atleast 8 characters");
         } /*else if (password.matches("[A-Za-z0-9 ]*")) {
             getView().showAlert("Password must have at least 1 numeric and special character");

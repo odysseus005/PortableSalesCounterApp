@@ -259,7 +259,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_selector"
                 android:hint="Contact"
-                android:maxLength="150"
+                android:maxLength="11"
                 android:padding="12dp"
                 android:inputType="phone"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"

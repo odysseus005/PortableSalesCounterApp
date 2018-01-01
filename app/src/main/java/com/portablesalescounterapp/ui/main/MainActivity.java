@@ -28,7 +28,9 @@ import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ActivityMainBinding;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.item.ItemActivity;
 import com.portablesalescounterapp.ui.login.LoginActivity;
+import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
 import com.portablesalescounterapp.util.CircleTransform;
 
@@ -63,14 +65,14 @@ public class MainActivity
 
         if (user == null) {
             Log.e(TAG, "No User found");
-            //finish();
+            finish();
         }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.appBarMain.setView(getMvpView());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "RUNRIO App" : "RUNRIO App");
+        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "PSC Ap" : "PSC App");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout,
                 binding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -100,7 +102,7 @@ public class MainActivity
         binding.appBarMain.swipeRefreshLayout.setOnRefreshListener(this);
 
 
-
+        hideItem();
 
     }
 
@@ -108,16 +110,25 @@ public class MainActivity
 
     private void hideItem()
     {
-
+        realm = Realm.getDefaultInstance();
+        user = realm.where(User.class).findFirst();
         Menu nav_Menu =  binding.navView.getMenu();
-        //nav_Menu.findItem(R.id.nav_company).setVisible(false);
 
-        if(user.getPosition().equalsIgnoreCase("cashier"))
+        if((user.getPosition()).equalsIgnoreCase("cashier"))
         {
             nav_Menu.findItem(R.id.nav_items).setVisible(false);
+            nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
+            nav_Menu.findItem(R.id.nav_inventory).setVisible(false);
+            nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
 
-        }else if(user.getPosition().equalsIgnoreCase("inventory custodian"))
+        }else if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
         {
+
+            nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
+            nav_Menu.findItem(R.id.nav_sales_png).setVisible(false);
+
 
         }
     }
@@ -159,7 +170,7 @@ public class MainActivity
         String imageURL = "";
 
         if (user.getImage() != null && !user.getImage().isEmpty()) {
-            imageURL = user.getImage();//Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, user.getImage());
+            imageURL = Endpoints.URL_IMAGE+user.getImage();//Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, user.getImage());
         }
 
         Log.d("MainActivity", "imageUrl: " + imageURL);
@@ -167,6 +178,7 @@ public class MainActivity
                 .load(imageURL)
                 .transform(new CircleTransform(this))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .error(R.drawable.default_user)
                 .into(imgProfile);
     }
 
@@ -186,9 +198,10 @@ public class MainActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_sales_png) {
+            startActivity(new Intent(this, MainActivity.class));
 
         }  else if (id == R.id.nav_manageusers) {
-           // startActivity(new Intent(this, ProfileActivity.class));
+            startActivity(new Intent(this, EmployeeListActivity.class));
 
         }
         else if (id == R.id.nav_receipts) {
@@ -196,7 +209,7 @@ public class MainActivity
         }
         else if (id == R.id.nav_items) {
 
-
+            startActivity(new Intent(this, ItemActivity.class));
         }
         else if (id == R.id.nav_inventory) {
 
@@ -206,6 +219,9 @@ public class MainActivity
         }
         else if (id == R.id.nav_qrcode) {
 
+        }
+        else if (id == R.id.nav_profile) {
+            startActivity(new Intent(this, ProfileActivity.class));
         }
         else if (id == R.id.nav_logout) {
             logOut(user);

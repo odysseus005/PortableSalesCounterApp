@@ -32,12 +32,12 @@ public class EditProfilePresenter extends MvpNullObjectBasePresenter<EditProfile
     }
 
 
-    public void updateUser(String userId, String firstName, String lastName, String contact, String birthday, String address) {
+    public void updateUser(String userId, String firstName, String lastName, String contact, String birthday, String address,String position) {
         if (firstName.equals("") || lastName.equals("") || birthday.equals("") || contact.equals("") || address.equals("")) {
             getView().showAlert("Fill-up all fields");
         } else {
             getView().startLoading();
-            App.getInstance().getApiInterface().updateUser(Endpoints.UPDATEUSER,userId, firstName, lastName, contact, birthday, address)
+            App.getInstance().getApiInterface().updateUser(Endpoints.UPDATEUSER,userId, firstName, lastName, contact, birthday, address, position)
                     .enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, final Response<User> response) {

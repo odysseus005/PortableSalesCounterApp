@@ -93,8 +93,9 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     @Override
     public void onNext()
     {
-        binding.regBusinessgroup.setVisibility(View.VISIBLE);
-        binding.regUsergroup.setVisibility(View.GONE);
+       // binding.regBusinessgroup.setVisibility(View.VISIBLE);
+        //binding.regUsergroup.setVisibility(View.GONE);
+
         presenter.registerUser(
                 binding.etEmail.getText().toString(),
                 binding.etPassword.getText().toString(),
@@ -167,7 +168,7 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         RegisterActivity.this.finish();
-                       // Toast.makeText(RegisterActivity.this, "An email has been sent to your email for verification!", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(UserRegisterActivity.this, "An email has been sent to your email for verification!", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                         finish();
                     }
@@ -176,12 +177,21 @@ public class RegisterActivity extends MvpViewStateActivity<RegisterView, Registe
     }
 
     @Override
-    public void onBusinessRegistrationSuccess(String business_id) {
+    public void onBusinessRegistrationSuccess(String bid) {
 
         binding.regBusinessgroup.setVisibility(View.GONE);
         binding.regUsergroup.setVisibility(View.VISIBLE);
 
-        business_id = business_id;
+        if(!(bid==null)) {
+            binding.regBusinessgroup.setVisibility(View.GONE);
+            binding.regUsergroup.setVisibility(View.VISIBLE);
+
+            business_id = bid;
+        }
+        else
+        {
+            showAlert("Error on Registering Business");
+        }
 
 
     }

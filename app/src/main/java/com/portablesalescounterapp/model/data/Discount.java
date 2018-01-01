@@ -20,8 +20,17 @@ public class Discount extends RealmObject {
     @SerializedName("discountValue")
     @Expose
     private String discountValue;
+    @SerializedName("discountCode")
+    @Expose
+    private String discountCode;
 
+    public String getDiscountCode() {
+        return discountCode;
+    }
 
+    public void setDiscountCode(String discountCode) {
+        this.discountCode = discountCode;
+    }
     public int getDiscountId() {
         return discountId;
     }

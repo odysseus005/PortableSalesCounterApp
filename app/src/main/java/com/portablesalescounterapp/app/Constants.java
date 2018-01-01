@@ -29,6 +29,7 @@ public class Constants {
     public static final String CONTACT = "contact";
     public static final String ADDRESS = "address";
     public static final String POSITION = "position";
+    public static final String EMPLOYEE_ID = "employee_id";
 
 
 
@@ -38,6 +39,18 @@ public class Constants {
     public static final String BUSINESS_DESCRIPTION = "businessDescription";
     public static final String BUSINESS_CONTACT = "businessContact";
     public static final String BUSINESS_ADDRESS = "businessAddress";
+
+    //Category
+    public static final String CATEGORY_ID = "category_id";
+    public static final String CATEGORY_NAME = "categoryName";
+    public static final String CATEGORY_DESCRIPTION = "categoryDescription";
+
+
+    //Discount
+    public static final String DISCOUNT_ID = "discount_id";
+    public static final String DISCOUNT__NAME = "discountName";
+    public static final String DISCOUNT_VALUE = "discountValue";
+    public static final String DISCOUNT_CODE = "discountCode";
 
 
 

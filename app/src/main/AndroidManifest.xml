@@ -42,7 +42,23 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".ui.profile.edit.EditProfileActivity"
+        android:name=".ui.profile.edit.EditProfileActivity"
+        android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.item.category.CategoryListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.item.discount.DiscountListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.item.ItemActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.manageuser.EmployeeListActivity"
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".ui.forgot.ForgotPasswordActivity" />

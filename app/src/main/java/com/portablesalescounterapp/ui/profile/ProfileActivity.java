@@ -55,19 +55,7 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
         //binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
         binding.swipeRefreshLayout.setOnRefreshListener(this);
 
-        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/adam_reg.otf");
-        Typeface face = Typeface.createFromAsset(getAssets(), "fonts/acid_reg.otf");
 
-        binding.sex.setTypeface(face);
-        binding.sex1.setTypeface(face);
-        binding.mobile.setTypeface(face);
-        binding.mobile1.setTypeface(face);
-        binding.age.setTypeface(face);
-        binding.age1.setTypeface(face);
-        binding.changePass.setTypeface(typeface);
-
-        binding.layoutHeader.tvNumber1.setTypeface(face);
-        binding.layoutHeader.txtEmail.setTypeface(face);
 
         user = realm.where(User.class).findFirstAsync();
         user.addChangeListener(new RealmChangeListener<RealmModel>() {
