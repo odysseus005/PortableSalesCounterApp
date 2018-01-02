@@ -22,7 +22,7 @@ public class Products extends RealmObject {
     @SerializedName("productPrice")
     @Expose
     private String productPrice;
-    @SerializedName("productImage")
+    @SerializedName("image")
     @Expose
     private String productImage;
     @SerializedName("productBar")

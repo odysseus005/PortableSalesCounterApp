@@ -50,6 +50,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.item.product.ProductListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.item.discount.DiscountListActivity"
             android:windowSoftInputMode="adjustResize" />
 

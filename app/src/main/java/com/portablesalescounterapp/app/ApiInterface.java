@@ -6,6 +6,7 @@ package com.portablesalescounterapp.app;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Employee;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
@@ -187,6 +188,45 @@ public interface ApiInterface {
                                      @Field(Constants.DISCOUNT_CODE) String code,
                                      @Field(Constants.DISCOUNT_VALUE) String value,
                                      @Field(Constants.BUSINESS_ID) String business_id);
+
+
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> getProduct(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> deleteProduct(@Field(Constants.TAG) String tag, @Field(Constants.PRODUCT_ID) String prod_id,@Field(Constants.BUSINESS_ID) String business_id);
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> updateProduct(@Field(Constants.TAG) String tag,
+                                        @Field(Constants.PRODUCT_ID) String product_id,
+                                        @Field(Constants.PRODUCT_NAME) String name,
+                                        @Field(Constants.PRODUCT_DESCRIPTION) String desc,
+                                        @Field(Constants.PRODUCT_PRICE) String price,
+                                        @Field(Constants.PRODUCT_CODE) String code,
+                                       @Field(Constants.PRODUCT_BAR) String bar,
+                                       @Field(Constants.CATEGORY_ID) String category_id,
+                                       @Field(Constants.BUSINESS_ID) String business_id
+                                       );
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> addProduct(@Field(Constants.TAG) String tag,
+                                    @Field(Constants.PRODUCT_NAME) String name,
+                                    @Field(Constants.PRODUCT_DESCRIPTION) String desc,
+                                    @Field(Constants.PRODUCT_PRICE) String price,
+                                    @Field(Constants.PRODUCT_CODE) String code,
+                                    @Field(Constants.PRODUCT_BAR) String bar,
+                                    @Field(Constants.CATEGORY_ID) String category_id,
+                                    @Field(Constants.BUSINESS_ID) String business_id
+    );
+
 
 
 

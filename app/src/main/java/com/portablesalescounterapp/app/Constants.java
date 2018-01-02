@@ -53,5 +53,16 @@ public class Constants {
     public static final String DISCOUNT_CODE = "discountCode";
 
 
+    //Product
+    public static final String PRODUCT_ID = "product_id";
+    public static final String PRODUCT_NAME = "discountName";
+    public static final String PRODUCT_DESCRIPTION = "discountName";
+    public static final String PRODUCT_PRICE = "discountName";
+    public static final String PRODUCT_BAR = "discountName";
+    public static final String PRODUCT_QR = "discountName";
+    public static final String PRODUCT_SKU = "discountName";
+    public static final String PRODUCT_CODE = "discountName";
+
+
 
 }

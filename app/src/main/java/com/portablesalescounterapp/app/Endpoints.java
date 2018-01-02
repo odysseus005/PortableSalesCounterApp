@@ -48,4 +48,12 @@ public class Endpoints {
     public static final String ADD_DISCOUNT = "addDiscount";
     public static final String UPDATE_DISCOUNT = "updateDiscount";
     public static final String DELETE_DISCOUNT = "deleteDiscount";
+
+
+    //Product
+    public static final String PRODUCT = "product.php?";
+    public static final String ALL_PRODUCT = "allProduct";
+    public static final String ADD_PRODUCT = "addProduct";
+    public static final String UPDATE_PRODUCT = "updateProduct";
+    public static final String DELETE_PRODUCT = "deleteProduct";
 }
