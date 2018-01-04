@@ -7,12 +7,11 @@ public class Constants {
 
 
     // broadcast receiver intent filters
-    public static final String REGISTRATION_COMPLETE = "registrationComplete";
-    public static final String PUSH_NOTIFICATION = "pushNotification";
 
     public static final String TAG = "tag";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
+    public static final String DATE_TIME = "datetime";
 
     //Login and Register
     public static final String SUCCESS = "success";
@@ -55,13 +54,15 @@ public class Constants {
 
     //Product
     public static final String PRODUCT_ID = "product_id";
-    public static final String PRODUCT_NAME = "discountName";
-    public static final String PRODUCT_DESCRIPTION = "discountName";
-    public static final String PRODUCT_PRICE = "discountName";
-    public static final String PRODUCT_BAR = "discountName";
-    public static final String PRODUCT_QR = "discountName";
-    public static final String PRODUCT_SKU = "discountName";
-    public static final String PRODUCT_CODE = "discountName";
+    public static final String PRODUCT_NAME = "productName";
+    public static final String PRODUCT_DESCRIPTION = "productDescription";
+    public static final String PRODUCT_PRICE = "productPrice";
+    public static final String PRODUCT_BAR = "productBar";
+    public static final String PRODUCT_QR = "productQr";
+    public static final String PRODUCT_SKU = "productSKU";
+    public static final String PRODUCT_CODE = "productCode";
+    public static final String PRODUCT_TOTAL = "productTotal";
+    public static final String PRODUCT_RESTOCK = "productRestock";
 
 
 

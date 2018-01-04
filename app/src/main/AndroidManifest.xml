@@ -54,6 +54,18 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.inventory.InventoryActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.inventory.restock.RestockListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.inventory.monitor.MonitorListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.item.discount.DiscountListActivity"
             android:windowSoftInputMode="adjustResize" />
 

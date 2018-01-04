@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minWidth="300dp"
+        android:minWidth="400dp"
+        android:background="@color/dialog"
         android:padding="16dp"
         android:orientation="vertical">
 
@@ -18,7 +20,7 @@
             android:paddingRight="10dp"
             android:padding="@dimen/activity_horizontal_margin"
             android:text="Add Product"
-            android:textColor="@color/colorText"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -90,7 +92,7 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight=".4"
+                            android:layout_weight=".3"
                             android:layout_marginTop="8dp"
                             android:layout_height="40dp"
                             android:text="Sold by"
@@ -122,13 +124,13 @@
                         <TextView
                             android:id="@+id/weight"
                             android:layout_width="0dp"
-                            android:layout_weight=".3"
+                            android:layout_weight=".4"
                             android:layout_marginTop="8dp"
                             android:layout_height="40dp"
                             android:background="@color/colorPrimary"
                             android:clickable="true"
                             android:padding="8dp"
-                            android:text="Weight"
+                            android:text="Weight(kg)"
                             android:textAllCaps="true"
                             android:gravity="center"
                             android:paddingRight="25dp"

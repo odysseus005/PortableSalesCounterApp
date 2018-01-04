@@ -17,5 +17,6 @@
     <color name="black">#000000</color>
     <color name="hyperlink">#01579b</color>
     <color name="transBlack">#70000000</color>
+    <color name="dialog">#a0edecec</color>
 
 </resources>

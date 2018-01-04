@@ -53,7 +53,12 @@ public class Endpoints {
     //Product
     public static final String PRODUCT = "product.php?";
     public static final String ALL_PRODUCT = "allProduct";
+    public static final String ALL_PRODUCT_CATEGORY = "allProductCategory";
     public static final String ADD_PRODUCT = "addProduct";
     public static final String UPDATE_PRODUCT = "updateProduct";
     public static final String DELETE_PRODUCT = "deleteProduct";
+    public static final String RESTOCK_PRODUCT = "restockProduct";
+    public static final String ALL_RESTOCK_PRODUCT = "allRestock";
+
+
 }

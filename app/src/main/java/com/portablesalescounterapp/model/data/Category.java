@@ -19,11 +19,22 @@ public class Category extends RealmObject {
     @SerializedName("categoryDescription")
     @Expose
     private String categoryDescription;
+    @SerializedName("categoryTotal")
+    @Expose
+    private String categoryTotal;
 
 
     @SerializedName("business_id")
     @Expose
     private int businessId;
+
+    public String getCategoryTotal() {
+        return categoryTotal;
+    }
+
+    public void setCategoryTotal(String categoryTotal) {
+        this.categoryTotal = categoryTotal;
+    }
 
     public int getBusinessId() {
         return businessId;

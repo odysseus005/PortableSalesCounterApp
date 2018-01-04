@@ -15,16 +15,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -32,16 +36,20 @@ import android.widget.ImageView;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
-import com.portablesalescounterapp.databinding.ActivityManageUserBinding;
-import com.portablesalescounterapp.databinding.DialogAddEmployeeBinding;
-import com.portablesalescounterapp.databinding.DialogEditEmployeeBinding;
-import com.portablesalescounterapp.model.data.Employee;
+
+import com.portablesalescounterapp.databinding.ActivityProductListBinding;
+import com.portablesalescounterapp.databinding.DialogAddProductBinding;
+import com.portablesalescounterapp.databinding.DialogEditProductBinding;
+import com.portablesalescounterapp.model.data.Category;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.item.discount.DiscountListActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -60,15 +68,17 @@ public class ProductListActivity
     private static final int PERMISSION_READ_EXTERNAL_STORAGE = 124;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 125;
     private static final int PERMISSION_CAMERA = 126;
-    private static final int PICK_CONTACT = 127;
-    private ActivityManageUserBinding binding;
+    private ActivityProductListBinding binding;
     private Realm realm;
     private User user;
     private ProductListAdapter adapterPromo;
-    private RealmResults<Employee> employeeRealmResults;
+    private RealmResults<Products> employeeRealmResults;
+    private RealmResults<Category> categoryRealmResults;
+    private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
     private ProgressDialog progressDialog;
     private int emerID=0;
+    private  String productCode = "E", categoryId;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -81,10 +91,10 @@ public class ProductListActivity
                 .saveInRootPicturesDirectory();
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_manage_user);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Contact Person");
+        getSupportActionBar().setTitle("Product");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
@@ -102,12 +112,12 @@ public class ProductListActivity
         });
         adapterPromo = new ProductListAdapter(this, getMvpView(),user.getEmail());
         binding.recyclerView.setAdapter(adapterPromo);
-        employeeRealmResults = realm.where(Employee.class).findAllAsync();
-        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Employee>>() {
+        employeeRealmResults = realm.where(Products.class).findAllAsync();
+        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Products>>() {
             @Override
-            public void onChange(RealmResults<Employee> element) {
-               List<Employee> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setEmployeeList(promoList);
+            public void onChange(RealmResults<Products> element) {
+               List<Products> promoList = realm.copyFromRealm(employeeRealmResults);
+                adapterPromo.setProductList(promoList);
                 adapterPromo.notifyDataSetChanged();
 
             }
@@ -207,22 +217,21 @@ public class ProductListActivity
     }
 
     @Override
-    public void OnButtonDelete(Employee emergency) {
-        presenter.deleteContact(Integer.toString(emergency.getUserId()),user.getBusiness_id());
+    public void OnButtonDelete(Products products) {
+        presenter.deleteContact(Integer.toString(products.getProductId()),user.getBusiness_id());
     }
 
     @Override
-    public void OnButtonEdit(final Employee emergency) {
+    public void OnButtonEdit(final Products products) {
 
-        emerID = emergency.getUserId();
+        emerID = products.getProductId();
 
         dialog = new Dialog(ProductListActivity.this);
-        final DialogEditEmployeeBinding dialogBinding = DataBindingUtil.inflate(
+        final DialogEditProductBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.dialog_edit_employee,
+                R.layout.dialog_edit_product,
                 null,
                 false);
-
         dialogBinding.btnChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,26 +255,88 @@ public class ProductListActivity
             }
         });
 
-        dialogBinding.layoutBirthday.setOnClickListener(new View.OnClickListener() {
+
+
+        if(products.getProductCode().equalsIgnoreCase("W"))
+        {
+            dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+            dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+
+        }
+
+
+        dialogBinding.each.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar newCalendar = Calendar.getInstance();
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ProductListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                productCode = "E";
+                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar newDate = Calendar.getInstance();
-                        newDate.set(year, monthOfYear, dayOfMonth);
-                        dialogBinding.etBirthday.setText(dateFormatter.format(newDate.getTime()));
+            }
+        });
+
+        dialogBinding.weight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productCode = "W";
+                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+
+            }
+        });
+
+        categoryIdList = new ArrayList<>();
+        final List<String> promoList = new ArrayList<>();
+
+        presenter.getCategory(user.getBusiness_id());
+        categoryRealmResults = realm.where(Category.class).findAll();
+
+
+        categoryRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                categoryIdList.add(0);
+                categoryId = 0+"";
+                int currCateg=1;
+                int ctr=1;
+                promoList.add("Select Category");
+                for (Category category : categoryRealmResults) {
+                    if(category.getCategoryId()==(products.getCategoryId())) {
+                        currCateg = ctr;
+                        categoryId = ""+ctr;
                     }
+                    promoList.add(category.getCategoryName());
+                    categoryIdList.add(category.getCategoryId());
+                    ctr++;
+                }
 
-                }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProductListActivity.this, R.layout.spinner_custom_item, promoList);
+                dialogBinding.spCategory.setAdapter(arrayAdapter);
+                dialogBinding.spCategory.setSelection(currCateg);
             }
         });
 
 
-        dialogBinding.setEmployee(emergency);
+        /**
+         * Triggers on click of the spinner
+         */
+        dialogBinding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categoryId = ""+(categoryIdList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+
+        dialogBinding.setProduct(products);
 
         dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,13 +350,13 @@ public class ProductListActivity
             public void onClick(View v) {
 
 
-                presenter.updateContact(Integer.toString(emergency.getUserId()),
-                        dialogBinding.etFirstName.getText().toString(),
-                        dialogBinding.etLastName.getText().toString(),
-                        dialogBinding.etBirthday.getText().toString(),
-                        dialogBinding.etMobileNumber.getText().toString(),
-                        dialogBinding.etAddress.getText().toString(),
-                        dialogBinding.etPosition.getText().toString(),
+                presenter.updateContact(Integer.toString(products.getProductId()),
+                        dialogBinding.etName.getText().toString(),
+                        dialogBinding.etDescription.getText().toString(),
+                        dialogBinding.etPrice.getText().toString(),
+                        productCode,
+                        dialogBinding.etBarcode.getText().toString(),
+                        categoryId,
                         user.getBusiness_id());
                 //dialog.dismiss();
             }
@@ -313,36 +384,75 @@ public class ProductListActivity
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
         dialog = new Dialog(ProductListActivity.this);
-        final DialogAddEmployeeBinding dialogBinding = DataBindingUtil.inflate(
+
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        final DialogAddProductBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.dialog_add_employee,
+                R.layout.dialog_add_product,
                 null,
                 false);
 
 
-        String positions[] = new String[] {"Cashier","Inventory Custodian"};
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProductListActivity.this, R.layout.spinner_custom_item, positions);
-        dialogBinding.spPosition.setAdapter(arrayAdapter);
 
 
-        dialogBinding.layoutBirthday.setOnClickListener(new View.OnClickListener() {
+        dialogBinding.each.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar newCalendar = Calendar.getInstance();
-                DatePickerDialog datePickerDialog = new DatePickerDialog(ProductListActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                productCode = "E";
+                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        Calendar newDate = Calendar.getInstance();
-                        newDate.set(year, monthOfYear, dayOfMonth);
-                        dialogBinding.etBirthday.setText(dateFormatter.format(newDate.getTime()));
-                    }
-
-                }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
             }
         });
 
+        dialogBinding.weight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                productCode = "W";
+                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+
+            }
+        });
+
+        categoryIdList = new ArrayList<>();
+        final List<String> promoList = new ArrayList<>();
+
+        presenter.getCategory(user.getBusiness_id());
+        categoryRealmResults = realm.where(Category.class).findAll();
+
+        categoryRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                categoryIdList.add(0);
+                categoryId = 0+"";
+                promoList.add("Select Category");
+                for (Category category : categoryRealmResults) {
+                    promoList.add(category.getCategoryName());
+                    categoryIdList.add(category.getCategoryId());
+                }
+
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProductListActivity.this, R.layout.spinner_custom_item, promoList);
+                dialogBinding.spCategory.setAdapter(arrayAdapter);
+            }
+        });
+
+        /**
+         * Triggers on click of the spinner
+         */
+        dialogBinding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                categoryId = ""+(categoryIdList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
 
 
@@ -355,17 +465,13 @@ public class ProductListActivity
         dialogBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.addContact(dialogBinding.etEmail.getText().toString(),
-                        dialogBinding.etPassword.getText().toString(),
-                        dialogBinding.etRepeatPassword.getText().toString(),
-                        dialogBinding.etFirstName.getText().toString(),
-                        dialogBinding.etLastName.getText().toString(),
-                        dialogBinding.etBirthday.getText().toString(),
-                        dialogBinding.etMobileNumber.getText().toString(),
-                        dialogBinding.etAddress.getText().toString(),
-                        dialogBinding.spPosition.getSelectedItem().toString(),
-                        user.getBusiness_id()
-                        );
+                presenter.addContact(dialogBinding.etName.getText().toString(),
+                        dialogBinding.etDescription.getText().toString(),
+                        dialogBinding.etPrice.getText().toString(),
+                        productCode,
+                        dialogBinding.etBarcode.getText().toString(),
+                        categoryId,
+                        user.getBusiness_id());
                 //dialog.dismiss();
             }
         });
@@ -494,6 +600,15 @@ public class ProductListActivity
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
+
+
+
+
+
+
+
 
 
 

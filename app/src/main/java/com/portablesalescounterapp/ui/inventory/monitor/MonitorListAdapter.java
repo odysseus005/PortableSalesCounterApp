@@ -1,4 +1,4 @@
-package com.portablesalescounterapp.ui.item.product;
+package com.portablesalescounterapp.ui.inventory.monitor;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,21 +10,20 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
-import com.portablesalescounterapp.databinding.ItemProductsBinding;
+import com.portablesalescounterapp.databinding.ItemMonitorBinding;
 import com.portablesalescounterapp.model.data.Products;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
+public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.ViewHolder> {
     private final Context context;
-    private final ProductListView view;
+    private final MonitorListView view;
     private List<Products> employeeList;
     private String userEmail;
 
-    public ProductListAdapter(Context context, ProductListView view, String userEmail) {
+    public MonitorListAdapter(Context context, MonitorListView view, String userEmail) {
         this.context = context;
         this.view = view;
         this.userEmail = userEmail;
@@ -37,9 +36,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemProductsBinding itemEmployeeBinding = DataBindingUtil.inflate(
+        ItemMonitorBinding itemEmployeeBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.item_products,
+                R.layout.item_monitor,
                 parent,
                 false);
         return new ViewHolder(itemEmployeeBinding);
@@ -50,14 +49,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
-             String imageURL = Endpoints.URL_IMAGE + userEmail;
-            Glide.with(context)
-                    .load(imageURL)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .error(R.drawable.default_user)
-                    .into(holder.itemEmergencyBinding.imageProfile);
-            Log.d("TAG", imageURL);
+            if(employeeList.get(position).getProductCode().equalsIgnoreCase("E"))
+                holder.itemEmergencyBinding.prodCode.setText(" pcs.");
+            else
+                holder.itemEmergencyBinding.prodCode.setText(" kg");
+            //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, employeeList.get(position).getImage());
+
 
     }
 
@@ -67,9 +64,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final ItemProductsBinding  itemEmergencyBinding;
+        private final ItemMonitorBinding  itemEmergencyBinding;
 
-        public ViewHolder(ItemProductsBinding  itemEmergencyBinding) {
+        public ViewHolder(ItemMonitorBinding  itemEmergencyBinding) {
             super(itemEmergencyBinding.getRoot());
             this.itemEmergencyBinding = itemEmergencyBinding;
         }

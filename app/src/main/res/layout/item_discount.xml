@@ -29,7 +29,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
                 android:orientation="vertical">
 
 
@@ -39,7 +42,7 @@
                     android:text='@{discount.discountName}'
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -47,21 +50,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                 <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:text='@{discount.discountValue}'
+                android:text='@{"Value : "+discount.discountValue}'
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:textColor="@color/darkGray"
                 android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/disCode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text='@{discount.discountCode}'
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/darkGray"
@@ -72,7 +76,12 @@
 
 
 
-
+                <include
+                    layout="@layout/design_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -86,7 +95,7 @@
                         android:layout_marginStart="20dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
-                        android:layout_margin="10dp"
+
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
@@ -102,7 +111,6 @@
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
-                        android:layout_margin="10dp"
                         android:paddingEnd="20dp"
                         android:onClick="@{()->view.OnButtonDelete(discount)}"
                         android:paddingStart="20dp"

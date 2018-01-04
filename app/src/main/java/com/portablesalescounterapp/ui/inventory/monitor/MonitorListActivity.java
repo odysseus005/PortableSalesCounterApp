@@ -1,8 +1,7 @@
-package com.portablesalescounterapp.ui.item.category;
+package com.portablesalescounterapp.ui.inventory.monitor;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,37 +14,38 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
-import com.portablesalescounterapp.databinding.ActivityCategoryListBinding;
-import com.portablesalescounterapp.databinding.DialogAddCategoryBinding;
-import com.portablesalescounterapp.databinding.DialogEditCategoryBinding;
+
+import com.portablesalescounterapp.databinding.ActivityMonitorListBinding;
+import com.portablesalescounterapp.databinding.DialogEditMonitorBinding;
 import com.portablesalescounterapp.model.data.Category;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.util.DateTimeUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -53,21 +53,25 @@ import io.realm.RealmResults;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
-public class CategoryListActivity
-        extends MvpViewStateActivity<CategoryListView, CategoryListPresenter>
-        implements SwipeRefreshLayout.OnRefreshListener, CategoryListView {
+public class MonitorListActivity
+        extends MvpViewStateActivity<MonitorListView, MonitorListPresenter>
+        implements SwipeRefreshLayout.OnRefreshListener, MonitorListView {
 
 
-
-    private ActivityCategoryListBinding binding;
+    private static final int PERMISSION_READ_EXTERNAL_STORAGE = 124;
+    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 125;
+    private static final int PERMISSION_CAMERA = 126;
+    private ActivityMonitorListBinding binding;
     private Realm realm;
     private User user;
-    private CategoryListAdapter adapterPromo;
-    private RealmResults<Category> employeeRealmResults;
+    private MonitorListAdapter adapterPromo;
+    private RealmResults<Products> employeeRealmResults;
+    private RealmResults<Category> categoryRealmResults;
+    private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
     private ProgressDialog progressDialog;
     private int emerID=0;
-    private String totalCategory = "0";
+    private  String productCode = "E", categoryId;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -80,10 +84,10 @@ public class CategoryListActivity
                 .saveInRootPicturesDirectory();
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_category_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_monitor_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Category");
+        getSupportActionBar().setTitle("Product");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
@@ -99,14 +103,14 @@ public class CategoryListActivity
                 binding.swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
         });
-        adapterPromo = new CategoryListAdapter(this, getMvpView(),user.getEmail());
+        adapterPromo = new MonitorListAdapter(this, getMvpView(),user.getEmail());
         binding.recyclerView.setAdapter(adapterPromo);
-        employeeRealmResults = realm.where(Category.class).findAllAsync();
-        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+        employeeRealmResults = realm.where(Products.class).findAllAsync();
+        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Products>>() {
             @Override
-            public void onChange(RealmResults<Category> element) {
-               List<Category> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setCategoryList(promoList);
+            public void onChange(RealmResults<Products> element) {
+               List<Products> promoList = realm.copyFromRealm(employeeRealmResults);
+                adapterPromo.setProductList(promoList);
                 adapterPromo.notifyDataSetChanged();
 
             }
@@ -136,9 +140,6 @@ public class CategoryListActivity
                onBackPressed();
                 return true;
 
-            case R.id.action_add:
-                   add();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -154,15 +155,15 @@ public class CategoryListActivity
 
     @NonNull
     @Override
-    public CategoryListPresenter createPresenter() {
-        return new CategoryListPresenter();
+    public MonitorListPresenter createPresenter() {
+        return new MonitorListPresenter();
     }
 
     @NonNull
     @Override
-    public ViewState<CategoryListView> createViewState() {
+    public ViewState<MonitorListView> createViewState() {
         setRetainInstance(true);
-        return new CategoryViewState();
+        return new MonitorViewState();
     }
 
     @Override
@@ -205,32 +206,33 @@ public class CategoryListActivity
        dialog.dismiss();
     }
 
-    @Override
-    public void OnButtonDelete(Category category) {
-        presenter.deleteContact(Integer.toString(category.getCategoryId()),user.getBusiness_id());
-    }
+
 
     @Override
-    public void OnButtonEdit(final Category emergency) {
+    public void OnRestockEdit(final Products products) {
 
+        emerID = products.getProductId();
 
-        presenter.productCategory(user.getBusiness_id(),emergency.getCategoryId()+"");
-
-
-        emerID = emergency.getCategoryId();
-
-        dialog = new Dialog(CategoryListActivity.this);
-        final DialogEditCategoryBinding dialogBinding = DataBindingUtil.inflate(
+        dialog = new Dialog(MonitorListActivity.this);
+        final DialogEditMonitorBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.dialog_edit_category,
+                R.layout.dialog_edit_monitor,
                 null,
                 false);
 
 
+        if(products.getProductCode().equalsIgnoreCase("E"))
+        {    dialogBinding.prodCode.setText(" pcs.");
+            dialogBinding.prodCode2.setText(" pcs.");
+        }
+        else
+        {
+            dialogBinding.prodCode.setText(" kg");
+            dialogBinding.prodCode2.setText(" kg");
+        }
 
 
-        dialogBinding.setCategory(emergency);
-        dialogBinding.totalCateg.setText("No. of Products : "+totalCategory);
+        dialogBinding.setProduct(products);
 
         dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,9 +246,13 @@ public class CategoryListActivity
             public void onClick(View v) {
 
 
-                presenter.updateContact(Integer.toString(emergency.getCategoryId()),
-                        dialogBinding.etName.getText().toString(),
-                        dialogBinding.etDesc.getText().toString(),
+                presenter.restockContact(Integer.toString(products.getProductId()),
+                        products.getProductName(),
+                        (Integer.parseInt(dialogBinding.etValue.getText().toString())+Integer.parseInt(products.getProductSKU()))+"",
+                        dialogBinding.etValue.getText().toString(),
+                        DateTimeUtils.getCurrentTimeStamp(),
+                        user.getUserId()+"",
+                        user.getFullName(),
                         user.getBusiness_id());
                 //dialog.dismiss();
             }
@@ -259,17 +265,8 @@ public class CategoryListActivity
     }
 
     @Override
-    public void onEditCategCount(String count) {
-
-        totalCategory = count;
-
-    }
-
-
-    @Override
     public void onRefresh() {
         presenter.load(""+user.getBusiness_id());
-
     }
 
     @Override
@@ -277,42 +274,12 @@ public class CategoryListActivity
         presenter.load(""+user.getBusiness_id());
     }
 
-    public void add()
-    {
-
-        realm = Realm.getDefaultInstance();
-        user = realm.where(User.class).findFirst();
-        dialog = new Dialog(CategoryListActivity.this);
-        final DialogAddCategoryBinding dialogBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.dialog_add_category,
-                null,
-                false);
 
 
 
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.addContact(
-                        user.getBusiness_id(),
-                        dialogBinding.etName.getText().toString(),
-                        dialogBinding.etDesc.getText().toString()
-                        );
-                //dialog.dismiss();
-            }
-        });
-        dialog.setContentView(dialogBinding.getRoot());
-        dialog.setCancelable(false);
-        dialog.show();
 
-    }
+
+
 
 
 }

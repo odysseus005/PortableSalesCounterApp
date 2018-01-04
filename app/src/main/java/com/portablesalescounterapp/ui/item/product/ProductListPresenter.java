@@ -5,6 +5,7 @@ import android.util.Patterns;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Endpoints;
+import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.ResultResponse;
@@ -247,6 +248,54 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         getView().stopLoading();
                         t.printStackTrace();
                         getView().showAlert(t.getLocalizedMessage());
+                    }
+                });
+    }
+
+
+    public void getCategory(String businessId) {
+        App.getInstance().getApiInterface().getCategory(Endpoints.ALL_CATEGORY,businessId)
+                .enqueue(new Callback<List<Category>>() {
+                    @Override
+                    public void onResponse(Call<List<Category>> call, final Response<List<Category>> response) {
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                        }
+                        if (response.isSuccessful()) {
+                            final Realm realm = Realm.getDefaultInstance();
+                            realm.executeTransactionAsync(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    realm.delete(Category.class);
+                                    realm.copyToRealmOrUpdate(response.body());
+                                }
+                            }, new Realm.Transaction.OnSuccess() {
+                                @Override
+                                public void onSuccess() {
+                                    realm.close();
+                                }
+                            }, new Realm.Transaction.OnError() {
+                                @Override
+                                public void onError(Throwable error) {
+                                    realm.close();
+                                    error.printStackTrace();
+                                    if (isViewAttached())
+                                        getView().showAlert(error.getLocalizedMessage());
+                                }
+                            });
+                        } else {
+                            if (isViewAttached())
+                                getView().showAlert(response.errorBody().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Category>> call, Throwable t) {
+                        t.printStackTrace();
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                            getView().showAlert(t.getLocalizedMessage());
+                        }
                     }
                 });
     }

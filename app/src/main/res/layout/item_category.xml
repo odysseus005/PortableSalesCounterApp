@@ -17,7 +17,9 @@
         android:id="@+id/eventCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:minWidth="100dp"
         android:foreground="?selectableItemBackground"
         android:orientation="vertical">
@@ -26,11 +28,14 @@
 
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            android:orientation="vertical">
 
 
                 <TextView
@@ -39,7 +44,7 @@
                     android:text='@{category.categoryName}'
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
@@ -54,16 +59,12 @@
                 android:textSize="14sp" />
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text='No of Items'
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
-                    android:textSize="14sp" />
-
+                <include
+                    layout="@layout/design_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="15dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,7 +78,7 @@
                         android:layout_marginStart="20dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
-                        android:layout_margin="10dp"
+
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
@@ -93,7 +94,6 @@
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
-                        android:layout_margin="10dp"
                         android:paddingEnd="20dp"
                         android:onClick="@{()->view.OnButtonDelete(category)}"
                         android:paddingStart="20dp"

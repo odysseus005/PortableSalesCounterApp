@@ -48,8 +48,9 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.itemEmergencyBinding.setCategory(categoryList.get(position));
         holder.itemEmergencyBinding.setView(view);
-        //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, categoryList.get(position).getImage());
-        String imageURL = Endpoints.URL_IMAGE+userEmail;
+
+
+
 
     }
 

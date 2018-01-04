@@ -48,6 +48,12 @@ public class DiscountListAdapter extends RecyclerView.Adapter<DiscountListAdapte
         holder.itemEmergencyBinding.setDiscount(categoryList.get(position));
         holder.itemEmergencyBinding.setView(view);
 
+
+        if(categoryList.get(position).getDiscountCode().equalsIgnoreCase("P"))
+            holder.itemEmergencyBinding.disCode.setText("%");
+        else
+            holder.itemEmergencyBinding.disCode.setText("php");
+
     }
 
     @Override

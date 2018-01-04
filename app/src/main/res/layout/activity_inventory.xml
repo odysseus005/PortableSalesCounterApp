@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.portablesalescounterapp.ui.item.ItemView" />
+            type="com.portablesalescounterapp.ui.inventory.InventoryView" />
     </data>
 
 
@@ -35,7 +35,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
-            android:onClick="@{() -> view.onProductClicked()}"
+            android:onClick="@{() -> view.onMonitorClicked()}"
             android:foreground="?android:selectableItemBackground"
             android:orientation="vertical">
 
@@ -48,14 +48,14 @@
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_product" />
+                app:srcCompat="@drawable/ic_monitor" />
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTint="#777777"
-                        android:text="Product"
+                        android:text="Monitor Inventory"
                         android:textColor="@color/darkGray"
                         android:layout_margin="10dp"
                         android:textSize="18sp"
@@ -75,7 +75,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
-            android:onClick="@{() -> view.onCategoryClicked()}"
+            android:onClick="@{() -> view.onRestockClicked()}"
             android:foreground="?android:selectableItemBackground"
             android:orientation="vertical">
 
@@ -88,13 +88,13 @@
                 android:layout_margin="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_category" />
+                app:srcCompat="@drawable/ic_restock" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTint="#777777"
-                android:text="Category"
+                android:text="Restock Products"
                 android:textColor="@color/darkGray"
                 android:layout_margin="10dp"
                 android:textSize="18sp"
@@ -106,45 +106,6 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_discount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:onClick="@{() -> view.onDiscountClicked()}"
-            android:foreground="?android:selectableItemBackground"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_margin="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_discount" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableTint="#777777"
-                android:layout_margin="10dp"
-                android:text="Discount"
-                android:textColor="@color/darkGray"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:targetApi="m" />
-            </LinearLayout>
-
-
-
-
-        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>

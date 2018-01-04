@@ -1,11 +1,13 @@
 package com.portablesalescounterapp.ui.item.category;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Category;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.ResultResponse;
 
@@ -76,6 +78,31 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                             getView().stopRefresh();
                             getView().showAlert(t.getLocalizedMessage());
                         }
+                    }
+                });
+    }
+
+
+
+    public void productCategory(String bussinessId,String categoryId) {
+        App.getInstance().getApiInterface().getProductCategory(Endpoints.ALL_PRODUCT_CATEGORY,bussinessId,categoryId)
+                .enqueue(new Callback<ResultResponse>() {
+                    @Override
+                    public void onResponse(Call<ResultResponse> call, Response<ResultResponse> response) {
+                        getView().stopRefresh();
+                        if (response.body().getResult().equals("success")) {
+                            getView().onEditCategCount(response.body().getCategoryTotal());
+                        } else {
+                            getView().showAlert("Erron on Connecting to Server");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResultResponse> call, Throwable t) {
+                        getView().stopRefresh();
+                        Log.e("", "onFailure: Error calling register api", t);
+                        getView().stopLoading();
+                        getView().showAlert("Error Connecting to Server");
                     }
                 });
     }

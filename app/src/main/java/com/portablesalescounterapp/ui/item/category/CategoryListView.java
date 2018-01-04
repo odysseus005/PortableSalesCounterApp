@@ -22,5 +22,7 @@ public interface CategoryListView extends MvpView {
 
     void dismiss();
 
+    void onEditCategCount(String cnt);
+
 
 }

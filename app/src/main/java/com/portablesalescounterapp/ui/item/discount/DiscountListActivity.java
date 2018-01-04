@@ -62,7 +62,7 @@ public class DiscountListActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_discount_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Discount List");
+        getSupportActionBar().setTitle("Discount");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));

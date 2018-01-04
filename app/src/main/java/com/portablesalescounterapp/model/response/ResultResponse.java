@@ -17,6 +17,20 @@ public class ResultResponse {
     }
 
 
+
+
+    @SerializedName("categoryTotal")
+    private String categoryTotal;
+
+    public String getCategoryTotal() {
+        return categoryTotal;
+    }
+
+    public void setCategoryTotal(String categoryTotal) {
+        this.categoryTotal = categoryTotal;
+    }
+
+
     @SerializedName("business_id")
     private String business_id;
 

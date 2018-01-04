@@ -1,26 +1,22 @@
-package com.portablesalescounterapp.ui.item;
+package com.portablesalescounterapp.ui.inventory;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
-import com.portablesalescounterapp.databinding.ActivityItemBinding;
-import com.portablesalescounterapp.ui.item.category.CategoryListActivity;
-import com.portablesalescounterapp.ui.item.discount.DiscountListActivity;
-import com.portablesalescounterapp.ui.item.product.ProductListActivity;
+import com.portablesalescounterapp.databinding.ActivityInventoryBinding;
+import com.portablesalescounterapp.ui.inventory.monitor.MonitorListActivity;
+import com.portablesalescounterapp.ui.inventory.restock.RestockListActivity;
 
 
-public class ItemActivity extends MvpActivity<ItemView, ItemPresenter> implements ItemView {
+public class InventoryActivity extends MvpActivity<InventoryView, InventoryPresenter> implements InventoryView {
 
-    private ActivityItemBinding binding;
+    private ActivityInventoryBinding binding;
     private ProgressDialog progressDialog;
 
     @Override
@@ -29,7 +25,7 @@ public class ItemActivity extends MvpActivity<ItemView, ItemPresenter> implement
         setContentView(R.layout.activity_item);
 
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_item);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_inventory);
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -39,28 +35,24 @@ public class ItemActivity extends MvpActivity<ItemView, ItemPresenter> implement
     }
 
     @Override
-    public void onDiscountClicked() {
-        startActivity(new Intent(this, DiscountListActivity.class));
+    public void onMonitorClicked() {
+        startActivity(new Intent(this, MonitorListActivity.class));
 
     }
 
     @Override
-    public void onProductClicked() {
-        startActivity(new Intent(this, ProductListActivity.class));
+    public void onRestockClicked() {
+       startActivity(new Intent(this, RestockListActivity.class));
 
     }
 
-    @Override
-    public void onCategoryClicked() {
-        startActivity(new Intent(this, CategoryListActivity.class));
 
-    }
 
 
     @NonNull
     @Override
-    public ItemPresenter createPresenter() {
-        return new ItemPresenter();
+    public InventoryPresenter createPresenter() {
+        return new InventoryPresenter();
     }
 
     @Override

@@ -28,6 +28,7 @@ import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ActivityMainBinding;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
 import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
@@ -212,7 +213,7 @@ public class MainActivity
             startActivity(new Intent(this, ItemActivity.class));
         }
         else if (id == R.id.nav_inventory) {
-
+            startActivity(new Intent(this, InventoryActivity.class));
         }
         else if (id == R.id.nav_report) {
 

@@ -7,6 +7,7 @@ import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Employee;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Restock;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
@@ -194,6 +195,17 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(Endpoints.PRODUCT)
+    Call<List<Restock>> getRestock(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id );
+
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<ResultResponse> getProductCategory(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id,@Field(Constants.CATEGORY_ID) String category_id );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
     Call<List<Products>> getProduct(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id );
 
 
@@ -214,6 +226,19 @@ public interface ApiInterface {
                                        @Field(Constants.CATEGORY_ID) String category_id,
                                        @Field(Constants.BUSINESS_ID) String business_id
                                        );
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> restockProduct(@Field(Constants.TAG) String tag,
+                                       @Field(Constants.PRODUCT_ID) String product_id,
+                                        @Field(Constants.PRODUCT_NAME) String product_name,
+                                        @Field(Constants.PRODUCT_TOTAL) String product_total,
+                                        @Field(Constants.PRODUCT_RESTOCK) String product_restock,
+                                        @Field(Constants.USER_ID) String user_id,
+                                        @Field(Constants.FIRST_NAME) String name,
+                                        @Field(Constants.DATE_TIME) String date,
+                                       @Field(Constants.BUSINESS_ID) String business_id
+    );
 
     @FormUrlEncoded
     @POST(Endpoints.PRODUCT)
