@@ -182,6 +182,7 @@ public interface ApiInterface {
                                         @Field(Constants.DISCOUNT_VALUE) String value,
                                         @Field(Constants.BUSINESS_ID) String business_id);
 
+
     @FormUrlEncoded
     @POST(Endpoints.DISCOUNT)
     Call<List<Discount>> addDiscount(@Field(Constants.TAG) String tag,
@@ -226,6 +227,15 @@ public interface ApiInterface {
                                        @Field(Constants.CATEGORY_ID) String category_id,
                                        @Field(Constants.BUSINESS_ID) String business_id
                                        );
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> updateQr(@Field(Constants.TAG) String tag,
+                                       @Field(Constants.PRODUCT_ID) String product_id,
+                                       @Field(Constants.QR_STATUS) String name,
+                                       @Field(Constants.PRODUCT_QR) String desc,
+                                       @Field(Constants.BUSINESS_ID) String business_id
+    );
 
     @FormUrlEncoded
     @POST(Endpoints.PRODUCT)

@@ -48,6 +48,8 @@ public class RestockListAdapter extends RecyclerView.Adapter<RestockListAdapter.
             holder.itemEmergencyBinding.setRestock(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
 
+            holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");
+
     }
 
     @Override

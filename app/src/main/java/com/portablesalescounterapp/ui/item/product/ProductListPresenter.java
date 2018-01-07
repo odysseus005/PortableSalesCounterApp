@@ -91,7 +91,7 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                               String catid,
                               String bid) {
         if ( name.equals("") || desc.equals("") || price.equals("") ||
-                code.equals("") || bar.equals("")) {
+                code.equals("")) {
             getView().showAlert("Fill-up all fields");
         }
          else {

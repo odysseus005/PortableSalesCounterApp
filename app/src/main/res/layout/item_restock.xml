@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="com.portablesalescounterapp.util.DateTimeUtils" />
+
         <variable
             name="restock"
             type="com.portablesalescounterapp.model.data.Restock" />
@@ -40,10 +42,12 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:weightSum="1"
                     android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight=".5"
                     android:layout_height="wrap_content"
                     android:text='@{("Restock ID : "+restock.restockId)}'
                     android:layout_alignParentStart="true"
@@ -52,21 +56,14 @@
                     android:textStyle="bold"
                     android:textSize="16sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text='@{restock.date}'
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="@color/colorPrimary"
-                        android:textStyle="bold"
-                        android:textSize="16sp" />
+
 
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:text='@{restock.productName}'
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
@@ -77,34 +74,51 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="horizontal">
 
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight=".35"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text='Remaining Quantity : '
+                        android:text='Remaining Stock : '
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/darkGray"
+                        android:textSize="14sp" />
+
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".2"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:id="@+id/restockRemaining"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/redFailed"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".30"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text='Added Stock : '
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/darkGray"
                         android:textSize="14sp" />
 
                     <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text='@{restock.productRestock}'
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
-                    android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight=".20"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text='@{restock.productTotal}'
+                        android:text='@{restock.productRestock}'
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/darkGray"
@@ -114,6 +128,46 @@
 
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text='Total Stock : '
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/darkGray"
+                        android:textSize="16sp" />
+
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".5"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:textStyle="bold"
+                        android:text='@{restock.productTotal}'
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/greenSuccess"
+                        android:textSize="16sp" />
+
+
+
+
+
+                </LinearLayout>
+
 
                 <include
                     layout="@layout/design_divider"
@@ -126,11 +180,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:weightSum="1"
                     android:orientation="horizontal">
 
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight=".25"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text='Restock by : '
@@ -140,7 +196,8 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight=".35"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
                         android:text='@{restock.userName}'
@@ -150,7 +207,21 @@
                         android:textSize="14sp" />
 
 
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:gravity="end"
+                        android:layout_height="wrap_content"
+                        android:text='@{DateTimeUtils.getShortDateTime(restock.date)}'
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/darkGray"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+
                 </LinearLayout>
+
 
 
 

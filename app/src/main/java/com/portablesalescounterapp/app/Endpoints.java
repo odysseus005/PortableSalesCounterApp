@@ -59,6 +59,7 @@ public class Endpoints {
     public static final String DELETE_PRODUCT = "deleteProduct";
     public static final String RESTOCK_PRODUCT = "restockProduct";
     public static final String ALL_RESTOCK_PRODUCT = "allRestock";
+    public static final String QR_PRODUCT = "qrProduct";
 
 
 }

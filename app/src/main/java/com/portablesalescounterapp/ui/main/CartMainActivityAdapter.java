@@ -1,4 +1,4 @@
-package com.portablesalescounterapp.ui.item.product;
+package com.portablesalescounterapp.ui.main;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -10,36 +10,41 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
-import com.portablesalescounterapp.databinding.ItemProductsBinding;
+import com.portablesalescounterapp.databinding.ItemCartBinding;
 import com.portablesalescounterapp.model.data.Products;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ViewHolder> {
+public class CartMainActivityAdapter extends RecyclerView.Adapter<CartMainActivityAdapter.ViewHolder> {
     private final Context context;
-    private final ProductListView view;
+    private final MainActivityView view;
     private List<Products> employeeList;
-    private String userEmail;
+    private ArrayList<String> prodIdcart;
+    private ArrayList<String> prodNamecart;
+    private ArrayList<String> prodQuantitycart;
+    private ArrayList<String> prodPricecart;
 
-    public ProductListAdapter(Context context, ProductListView view, String userEmail) {
+    public CartMainActivityAdapter(Context context, MainActivityView view) {
         this.context = context;
         this.view = view;
-        this.userEmail = userEmail;
         employeeList = new ArrayList<>();
     }
 
-    public void setProductList(List<Products> employeeList) {
+    public void setProductList(List<Products> employeeList,ArrayList<String> prodIdcart,ArrayList<String> prodNamecart,ArrayList<String> prodQuantitycart,ArrayList<String> prodPricecart) {
         this.employeeList = employeeList;
+        this.prodIdcart = prodIdcart;
+        this.prodNamecart = prodNamecart;
+        this.prodQuantitycart = prodQuantitycart;
+        this.prodPricecart = prodPricecart;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemProductsBinding itemEmployeeBinding = DataBindingUtil.inflate(
+        ItemCartBinding itemEmployeeBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.item_products,
+                R.layout.item_cart,
                 parent,
                 false);
         return new ViewHolder(itemEmployeeBinding);
@@ -50,26 +55,22 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
-           String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
-        Glide.with(context)
-                    .load(imageURL)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .error(R.drawable.placeholder)
-                    .into(holder.itemEmergencyBinding.imageProfile);
-            Log.d("TAG", imageURL);
+
+        holder.itemEmergencyBinding.cartPrice.setText(prodPricecart.get(position));
+        holder.itemEmergencyBinding.cartProdName.setText(prodNamecart.get(position));
+        holder.itemEmergencyBinding.cartQuantity.setText(prodQuantitycart.get(position));
 
     }
 
     @Override
     public int getItemCount() {
-        return employeeList.size();
+        return prodIdcart.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private final ItemProductsBinding  itemEmergencyBinding;
+        private final ItemCartBinding  itemEmergencyBinding;
 
-        public ViewHolder(ItemProductsBinding  itemEmergencyBinding) {
+        public ViewHolder(ItemCartBinding  itemEmergencyBinding) {
             super(itemEmergencyBinding.getRoot());
             this.itemEmergencyBinding = itemEmergencyBinding;
         }

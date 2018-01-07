@@ -5,7 +5,7 @@
     <data>
         <variable
             name="view"
-            type="com.portablesalescounterapp.ui.inventory.monitor.MonitorListView" />
+            type="com.portablesalescounterapp.ui.manageqr.ProductQrListView" />
 
         <variable
             name="product"
@@ -35,7 +35,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:padding="@dimen/activity_horizontal_margin"
-            android:text="Restock Product"
+            android:text="Manage Product QR Code"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -53,92 +53,58 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/reg_usergroup">
+                    android:id="@+id/qr_screenshot">
 
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text='@{product.productName}'
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:textColor="@color/darkGray"
-                        android:textStyle="bold"
-                        android:textSize="14sp" />
 
                     <LinearLayout
+                        android:id="@+id/companyImageLayout"
                         android:layout_width="match_parent"
+                        android:gravity="center"
+                        android:layout_margin="8dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text='Remaining Quantity : '
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
+                        <ImageView
+                            android:id="@+id/productQR"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/default_user" />
 
                         <TextView
                             android:layout_width="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text='@{product.productSKU}'
+                            android:text='@{product.productName}'
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
                         <TextView
-                            android:id="@+id/prodCode"
+                            android:id="@+id/productQRcodeView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
-
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
+
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
-                        <EditText
-                            android:id="@+id/et_value"
-                            android:layout_width="0dp"
-                            android:layout_weight=".6"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:gravity="center"
-                            android:background="@drawable/edittext_selector"
-                            android:hint="Restock Value"
-                            android:maxLength="100"
-                            android:inputType="number"
-                            android:padding="12dp"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-                            android:textColorHint="@android:color/darker_gray" />
-
-                        <TextView
-                            android:id="@+id/prodCode2"
-                            android:layout_width="0dp"
-                            android:layout_weight=".4"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
 
                     </LinearLayout>
+
 
 
                 </LinearLayout>
@@ -148,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:minWidth="300dp"
                     android:padding="16dp"
-                    android:gravity="right"
+                    android:gravity="center"
 
                     android:orientation="horizontal">
 
@@ -161,7 +127,7 @@
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text="Save"
+                        android:text="Save Image"
                         android:layout_marginRight="@dimen/activity_half_margin"
                         android:textAllCaps="true"
                         android:gravity="center|right"
@@ -171,15 +137,16 @@
                         android:layout_below="@+id/LinearMoTo" />
 
                     <TextView
-                        android:id="@+id/cancel"
+                        android:id="@+id/close"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
+
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text="Cancel"
+                        android:text="CLOSE"
                         android:textAllCaps="true"
                         android:gravity="center|right"
                         android:paddingRight="25dp"
@@ -189,6 +156,23 @@
                 </LinearLayout>
 
 
+
+                <TextView
+                    android:id="@+id/cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:background="@drawable/rounded_button_solid"
+                    android:clickable="true"
+                    android:padding="8dp"
+                    android:paddingEnd="20dp"
+                    android:paddingStart="20dp"
+                    android:text="DELETE CODE"
+                    android:layout_gravity="center"
+                    android:textAllCaps="true"
+                    android:gravity="center|right"
+                    android:paddingRight="25dp"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
             </LinearLayout>
         </ScrollView>

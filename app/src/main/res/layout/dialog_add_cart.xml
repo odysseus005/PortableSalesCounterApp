@@ -5,7 +5,7 @@
     <data>
         <variable
             name="view"
-            type="com.portablesalescounterapp.ui.inventory.monitor.MonitorListView" />
+            type="com.portablesalescounterapp.ui.main.MainActivityView" />
 
         <variable
             name="product"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:minWidth="300dp"
         android:background="@color/dialog"
-        android:padding="16dp"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -35,7 +35,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:padding="@dimen/activity_horizontal_margin"
-            android:text="Restock Product"
+            android:text="Add to Cart"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -47,6 +47,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -62,64 +63,67 @@
                         android:text='@{product.productName}'
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
+                        android:layout_marginTop="8dp"
                         android:textColor="@color/darkGray"
                         android:textStyle="bold"
-                        android:textSize="14sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/view_item_quantity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="15dp"
+                            android:textColor="@color/darkGray"
+                            android:text="Quantity: 45pcs"/>
 
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:id="@+id/view_item_price"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text='Remaining Quantity : '
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
+                            android:text="Php: 28,000.00"
+                            android:layout_marginTop="5dp"
                             android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text='@{product.productSKU}'
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/prodCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/darkGray"
-                            android:textSize="14sp" />
-
-
+                            android:textSize="16dp"
+                           />
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:weightSum="1">
 
-                        <EditText
-                            android:id="@+id/et_value"
+
+                        <TextView
                             android:layout_width="0dp"
-                            android:layout_weight=".6"
+                            android:layout_weight=".3"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:text="Quantity: "
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp"
+                            android:layout_below="@+id/LinearMoTo" />
+
+                        <EditText
+                            android:id="@+id/buy_item_quantity"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:gravity="center"
                             android:background="@drawable/edittext_selector"
-                            android:hint="Restock Value"
+                            android:text="1"
                             android:maxLength="100"
                             android:inputType="number"
                             android:padding="12dp"
@@ -127,9 +131,10 @@
                             android:textColorHint="@android:color/darker_gray" />
 
                         <TextView
-                            android:id="@+id/prodCode2"
+                            android:id="@+id/buy_item_prodcode"
                             android:layout_width="0dp"
-                            android:layout_weight=".4"
+                            android:layout_weight=".2"
+                            android:layout_marginLeft="3dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:layout_alignParentStart="true"
@@ -139,6 +144,48 @@
 
 
                     </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight=".4"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:text="Total Price: "
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp"
+                            android:layout_below="@+id/LinearMoTo" />
+
+                        <TextView
+                            android:id="@+id/buy_item_price"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/colorAccent"
+                            android:text="Php 1000,00"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            />
+
+
+
+                    </LinearLayout>
+
+
 
 
                 </LinearLayout>
@@ -161,7 +208,7 @@
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text="Save"
+                        android:text="BUY"
                         android:layout_marginRight="@dimen/activity_half_margin"
                         android:textAllCaps="true"
                         android:gravity="center|right"

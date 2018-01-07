@@ -62,6 +62,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.manageqr.ProductQrListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.inventory.monitor.MonitorListActivity"
             android:windowSoftInputMode="adjustResize" />
 

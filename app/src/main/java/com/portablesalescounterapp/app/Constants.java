@@ -63,6 +63,7 @@ public class Constants {
     public static final String PRODUCT_CODE = "productCode";
     public static final String PRODUCT_TOTAL = "productTotal";
     public static final String PRODUCT_RESTOCK = "productRestock";
+    public static final String QR_STATUS = "qrstat";
 
 
 

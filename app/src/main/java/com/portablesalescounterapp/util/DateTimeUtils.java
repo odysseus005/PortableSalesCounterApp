@@ -14,7 +14,7 @@ import java.util.Locale;
  */
 public class DateTimeUtils {
 
-    public static final String FULL_23_HR_DATE = "yyyy-MM-dd";
+    public static final String FULL_23_HR_DATE = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_ONLY = "MMM dd, yyyy";
     public static final String DATE_NUM_ONLY = "MM.dd.yyyy";
 
@@ -38,8 +38,8 @@ public class DateTimeUtils {
         return convertDateToString("hh:mm a", convertTransactionStringDate(dateString, FULL_23_HR_DATE));
     }
 
-    public static String geShortDateTime(String dateString) {
-        return convertDateToString("MM/dd/yy h:mm a", convertTransactionStringDate(dateString, FULL_23_HR_DATE));
+    public static String getShortDateTime(String dateString) {
+        return convertDateToString("MMM dd, yyyy \n h:mm a", convertTransactionStringDate(dateString, FULL_23_HR_DATE));
     }
 
 
