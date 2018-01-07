@@ -88,6 +88,7 @@ public class MainActivity
     private Realm realm;
     private User user;
     private Dialog dialog,dialog2;
+    DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
     private String searchText;
     private Products currProduct;
@@ -529,9 +530,39 @@ public class MainActivity
             discountName = discount.getDiscountName();
             discountValue = discount.getDiscountValue();
             v.invalidate();
-            dialog.dismiss();
-            checkout();
-            dialog2.dismiss();
+        // dialog.dismiss();
+        // checkout();
+        dialog2.dismiss();
+        dialog.invalidateOptionsMenu();
+
+
+
+        Log.d("tag",">>>");
+        if(!discountId.equalsIgnoreCase(""))
+        {
+            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+            dialogBinding.cartDiscountList.setText(discountName);
+            double discounted = 0;
+            if(discountCode.equalsIgnoreCase("P"))
+            {
+                discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
+            }
+            else
+            {
+                discounted = Double.parseDouble(discountValue);
+            }
+
+
+            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
+
+
+            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
+            if(newPrice<0)
+                newPrice = 0;
+            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
+
+        }
 
     }
 
@@ -695,7 +726,7 @@ public class MainActivity
 
 
         dialog = new Dialog(MainActivity.this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        final DialogCartBinding dialogBinding = DataBindingUtil.inflate(
+          dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_cart,
                 null,
@@ -761,32 +792,32 @@ public class MainActivity
         });
 
 
-        Log.d("tag",">>>");
-        if(!discountId.equalsIgnoreCase(""))
-        {
-            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
-            dialogBinding.cartDiscountList.setText(discountName);
-            double discounted = 0;
-            if(discountCode.equalsIgnoreCase("P"))
-            {
-              discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
-            }
-            else
-            {
-                discounted = Double.parseDouble(discountValue);
-            }
-
-
-            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
-
-
-            oldTotal = dialogBinding.cartItemPrice.getText().toString();
-            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
-            if(newPrice<0)
-                newPrice = 0;
-            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
-
-        }
+//        Log.d("tag",">>>");
+//        if(!discountId.equalsIgnoreCase(""))
+//        {
+//            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+//            dialogBinding.cartDiscountList.setText(discountName);
+//            double discounted = 0;
+//            if(discountCode.equalsIgnoreCase("P"))
+//            {
+//              discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
+//            }
+//            else
+//            {
+//                discounted = Double.parseDouble(discountValue);
+//            }
+//
+//
+//            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
+//
+//
+//            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+//            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
+//            if(newPrice<0)
+//                newPrice = 0;
+//            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
+//
+//        }
 
         dialogBinding.removeDiscountPrice.setOnClickListener(new View.OnClickListener() {
             @Override
