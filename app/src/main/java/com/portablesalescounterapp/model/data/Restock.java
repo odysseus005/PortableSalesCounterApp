@@ -34,6 +34,7 @@ public class Restock extends RealmObject {
     private int businessId;
 
 
+
     public int getBusinessId() {
         return businessId;
     }
