@@ -67,4 +67,14 @@ public class Constants {
 
 
 
+    //Transaction
+    public static final String TRANSACTION_ID = "transaction_id";
+    public static final String TRANSACTION_PRICE = "transaction_price";
+    public static final String TRANSACTION_CODE = "transaction_code";
+    public static final String TRANSACTION_DISCOUNT = "transaction_discount";
+    public static final String TRANSACTION_IDLIST = "transaction_idlist";
+    public static final String TRANSACTION_NAMELIST = "transaction_namelist";
+    public static final String TRANSACTION_QUANTITYLIST = "transaction_quantitylist";
+    public static final String TRANSACTION_PRICELIST = "transaction_pricelist";
+
 }

@@ -2,10 +2,12 @@ package com.portablesalescounterapp.ui.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.portablesalescounterapp.app.App;
+import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.ResultResponse;
 
@@ -13,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.Sort;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -81,25 +84,50 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                 });
     }
 
+    Products getProductQr(String id){
+        return realm.where(Products.class)
+                .equalTo(Constants.PRODUCT_BAR, id)
+                .or()
+                .equalTo(Constants.PRODUCT_QR, id)
+                .findFirst();
+    }
 
-    public void updateContact(String product_id,
-                              String name,
-                              String desc,
-                              String price,
-                              String code,
-                              String bar,
-                              String catid,
+
+    public void addTransaction(String transPrice,
+                              String transCode,
+                              String transDiscount,
+                              String idList,
+                              String nameList,
+                              String quanList,
+                              String priceList,
+                              String did,
+                              String dname,
+                              String user_id,
+                              String username,
+                              String date,
                               String bid) {
-        if ( name.equals("") || desc.equals("") || price.equals("") ||
-                code.equals("")) {
-            getView().showAlert("Fill-up all fields");
+        if ( transPrice.equals("") || transCode.equals("") || transDiscount.equals("") ||
+                idList.equals("")||date.equals("")) {
+            getView().showAlert("Error Transaction!");
         }
         else {
             getView().startLoading();
-            App.getInstance().getApiInterface().updateProduct(Endpoints.UPDATE_PRODUCT,product_id, name, desc, price, code, bar,catid,bid)
-                    .enqueue(new Callback<List<Products>>() {
+            App.getInstance().getApiInterface().addTransaction(Endpoints.TRANSACTION,transPrice,
+                    transCode,
+                    transDiscount,
+                    idList,
+                    nameList,
+                   quanList,
+                    priceList,
+                    did,
+                   dname,
+                   user_id,
+                    username,
+                    date,
+                    bid)
+                    .enqueue(new Callback<List<Transaction>>() {
                         @Override
-                        public void onResponse(Call<List<Products>> call, final Response<List<Products>> response) {
+                        public void onResponse(Call<List<Transaction>> call, final Response<List<Transaction>> response) {
                             getView().stopLoading();
                             if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
@@ -115,7 +143,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         }
 
                         @Override
-                        public void onFailure(Call<List<Products>> call, Throwable t) {
+                        public void onFailure(Call<List<Transaction>> call, Throwable t) {
 
                             getView().stopLoading();
                             getView().showAlert("Error Connecting to Server");

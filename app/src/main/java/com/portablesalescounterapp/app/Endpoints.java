@@ -62,4 +62,10 @@ public class Endpoints {
     public static final String QR_PRODUCT = "qrProduct";
 
 
+    //Transaction
+    public static final String TRANSACTION  = "transaction.php?";
+    public static final String ADD_TRANSACTION = "addTransaction";
+
+
+
 }

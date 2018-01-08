@@ -1,12 +1,16 @@
 package com.portablesalescounterapp.ui.main;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -30,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
@@ -51,7 +56,9 @@ import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
+import com.portablesalescounterapp.util.AnyOrientationCaptureActivity;
 import com.portablesalescounterapp.util.CircleTransform;
+import com.portablesalescounterapp.util.DateTimeUtils;
 import com.portablesalescounterapp.util.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
@@ -67,6 +74,7 @@ public class MainActivity
         extends MvpViewStateActivity<MainActivityView, MainActivityPresenter>
         implements SwipeRefreshLayout.OnRefreshListener , NavigationView.OnNavigationItemSelectedListener, MainActivityView {
 
+    private final int PERMISSION_CODE = 9235;
     private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private CartDiscountListAdapter adapterDiscount;
@@ -77,7 +85,6 @@ public class MainActivity
     private RealmResults<Category> categoryRealmResults;
     private ArrayList<Integer> categoryIdList;
     private List<Products> productList;
-    private ArrayList<String> disIdcart;
     private ArrayList<String> prodIdcart;
     private ArrayList<String> prodNamecart;
     private ArrayList<String> prodQuantitycart;
@@ -92,7 +99,7 @@ public class MainActivity
     private ProgressDialog progressDialog;
     private String searchText;
     private Products currProduct;
-    String cashCode="C",discountId="",discountName,discountValue,discountCode,oldTotal,newTotal;
+    String cashCode="C",discountId="",discountName="",discountValue="0",discountCode,oldTotal,newTotal;
     public double newPrice;
     View v = null;
 
@@ -109,7 +116,7 @@ public class MainActivity
             Log.e(TAG, "No User found");
             finish();
         }
-       disIdcart = new ArrayList<>();
+
         productList = new ArrayList<>();
         prodIdcart = new ArrayList<>();
         prodNamecart = new ArrayList<>();
@@ -218,8 +225,81 @@ public class MainActivity
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void ScanBar (View view ) {
+        requestScan();
+    }
+
+    // fucntion to scan barcode
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void requestScan(){
+        if (checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+        }else{
+            startScan();
+        }
+    }
 
 
+    public void startScan(){
+
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setOrientationLocked(false);
+      //  integrator.setBeepEnabled(false);
+        integrator.setPrompt("Scan a barcode");
+        integrator.setCameraId(0);  // Use a specific camera of the device
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
+
+    }
+
+
+    @Override
+    protected void onActivityResult ( int requestCode, int resultCode, Intent in ) {
+        // TODO Auto-generated method stub
+
+        if( requestCode == IntentIntegrator.REQUEST_CODE ){
+
+
+            if( resultCode == RESULT_OK ){
+                String contents = in.getStringExtra( "SCAN_RESULT" );
+
+
+                Log.d("TAG>>",contents);
+
+                currProduct = presenter.getProductQr(contents,detectQrorBar);
+                if(currProduct.isLoaded()&&currProduct.isValid())
+                    onItemDisplay();
+               /* appliances = presenter.getAppliance(contents);
+
+                sameBrand = presenter.getSameBrand(appliances.getType(), appliances.getBrand());
+
+                current = sameBrand.indexOf(appliances);
+
+                refresh(current);*/
+
+            }
+        }
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startScan();
+            }
+            else {
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -229,7 +309,11 @@ public class MainActivity
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+
+                startScan();
+                return false
+
+                        ;
             }
 
             @Override
@@ -689,6 +773,14 @@ public class MainActivity
 
         currProduct = product;
 
+        onItemDisplay();
+
+    }
+
+
+    public void onItemDisplay()
+    {
+
         binding.appBarMain.itemView.setVisibility(View.VISIBLE);
         binding.appBarMain.remove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -697,7 +789,7 @@ public class MainActivity
                 binding.appBarMain.itemView.setVisibility(View.GONE);
             }
         });
-        String imageURL = Endpoints.URL_IMAGE +product.getProductName();
+        String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
         Glide.with(this)
                 .load(imageURL)
                 .skipMemoryCache(true)
@@ -706,17 +798,16 @@ public class MainActivity
                 .into(binding.appBarMain.productImage);
         Log.d("TAG", imageURL);
 
-        binding.appBarMain.viewItemDesc.setText(product.getProductDescription());
-        binding.appBarMain.viewItemPrice.setText("Php: "+product.getProductPrice());
-        binding.appBarMain.viewItemName.setText(product.getProductName());
+        binding.appBarMain.viewItemDesc.setText(currProduct.getProductDescription());
+        binding.appBarMain.viewItemPrice.setText("Php: "+currProduct.getProductPrice());
+        binding.appBarMain.viewItemName.setText(currProduct.getProductName());
 
         String prodCode;
-        if(product.getProductCode().equalsIgnoreCase("E"))
+        if(currProduct.getProductCode().equalsIgnoreCase("E"))
             prodCode = "pcs.";
         else
             prodCode = "kg";
-        binding.appBarMain.viewItemQuantity.setText("Quantity: "+product.getProductSKU()+prodCode);
-
+        binding.appBarMain.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
 
     }
 
@@ -775,6 +866,21 @@ public class MainActivity
         dialogBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                presenter.addTransaction(dialogBinding.cartItemPrice.getText().toString(),
+                        cashCode,
+                        dialogBinding.cartDiscountPrice.getText().toString(),
+                        listToString(prodIdcart),
+                        listToString(prodNamecart),
+                        listToString(prodQuantitycart),
+                        listToString(prodPricecart),
+                        discountId,
+                        discountName,
+                        String.valueOf(user.getUserId()),
+                        user.getFullName(),
+                        DateTimeUtils.getCurrentTimeStamp(),
+                        user.getBusiness_id());
 
 
 
@@ -887,6 +993,40 @@ public class MainActivity
 
 
 
+
+
+
+
+    }
+
+    public String listToString(ArrayList<String> listcrt)
+    {
+        String finalOutput="";
+
+        for(int a=0;a<listcrt.size();a++)
+        {
+            finalOutput += (listcrt.get(a)+"#");
+
+        }
+
+
+        return  finalOutput;
+
+    }
+
+
+
+    public ArrayList<String> StringtoList(String strList)
+    {
+        ArrayList<String> finalOutput = null;
+        String[] items = strList.split("#");
+        for (String item : items)
+        {
+            finalOutput.add(item);
+
+        }
+
+        return finalOutput;
     }
 
 

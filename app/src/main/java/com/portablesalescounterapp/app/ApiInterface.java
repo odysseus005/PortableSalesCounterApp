@@ -8,6 +8,7 @@ import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Employee;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Restock;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
@@ -235,6 +236,25 @@ public interface ApiInterface {
                                        @Field(Constants.QR_STATUS) String name,
                                        @Field(Constants.PRODUCT_QR) String desc,
                                        @Field(Constants.BUSINESS_ID) String business_id
+    );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.TRANSACTION)
+    Call<List<Transaction>> addTransaction(@Field(Constants.TAG) String tag,
+                                           @Field(Constants.TRANSACTION_PRICE) String transPrice,
+                                           @Field(Constants.TRANSACTION_CODE) String transCode,
+                                           @Field(Constants.TRANSACTION_DISCOUNT) String transDiscount,
+                                           @Field(Constants.TRANSACTION_IDLIST) String transIdList,
+                                           @Field(Constants.TRANSACTION_NAMELIST) String transNameList,
+                                           @Field(Constants.TRANSACTION_QUANTITYLIST) String transQuanList,
+                                           @Field(Constants.TRANSACTION_PRICELIST) String transPriceList,
+                                           @Field(Constants.DISCOUNT_ID) String disId,
+                                           @Field(Constants.DISCOUNT__NAME) String disName,
+                                           @Field(Constants.USER_ID) String user_id,
+                                           @Field(Constants.FIRST_NAME) String name,
+                                           @Field(Constants.DATE_TIME) String date,
+                                           @Field(Constants.BUSINESS_ID) String business_id
     );
 
     @FormUrlEncoded
