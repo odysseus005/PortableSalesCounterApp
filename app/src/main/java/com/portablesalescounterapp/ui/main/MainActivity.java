@@ -530,39 +530,9 @@ public class MainActivity
             discountName = discount.getDiscountName();
             discountValue = discount.getDiscountValue();
             v.invalidate();
-        // dialog.dismiss();
-        // checkout();
-        dialog2.dismiss();
-        dialog.invalidateOptionsMenu();
-
-
-
-        Log.d("tag",">>>");
-        if(!discountId.equalsIgnoreCase(""))
-        {
-            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
-            dialogBinding.cartDiscountList.setText(discountName);
-            double discounted = 0;
-            if(discountCode.equalsIgnoreCase("P"))
-            {
-                discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
-            }
-            else
-            {
-                discounted = Double.parseDouble(discountValue);
-            }
-
-
-            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
-
-
-            oldTotal = dialogBinding.cartItemPrice.getText().toString();
-            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
-            if(newPrice<0)
-                newPrice = 0;
-            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
-
-        }
+            dialog.dismiss();
+            checkout();
+            dialog2.dismiss();
 
     }
 
