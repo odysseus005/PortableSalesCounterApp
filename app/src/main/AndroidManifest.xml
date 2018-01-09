@@ -73,6 +73,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.receipts.ReceiptListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.item.discount.DiscountListActivity"
             android:windowSoftInputMode="adjustResize" />
 

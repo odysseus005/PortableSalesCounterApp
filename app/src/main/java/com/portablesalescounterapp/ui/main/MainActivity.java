@@ -56,6 +56,7 @@ import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
+import com.portablesalescounterapp.ui.receipts.ReceiptListActivity;
 import com.portablesalescounterapp.util.AnyOrientationCaptureActivity;
 import com.portablesalescounterapp.util.CircleTransform;
 import com.portablesalescounterapp.util.DateTimeUtils;
@@ -272,7 +273,7 @@ public class MainActivity
 
                 Log.d("TAG>>",contents);
 
-                currProduct = presenter.getProductQr(contents,detectQrorBar);
+                currProduct = presenter.getProductQr(contents);
                 if(currProduct.isLoaded()&&currProduct.isValid())
                     OnButtonAddtoCart();
 
@@ -432,9 +433,8 @@ public class MainActivity
                 startActivity(new Intent(this, EmployeeListActivity.class));
 
             } else if (id == R.id.nav_receipts) {
-
+                startActivity(new Intent(this, ReceiptListActivity.class));
             } else if (id == R.id.nav_items) {
-
                 startActivity(new Intent(this, ItemActivity.class));
             } else if (id == R.id.nav_inventory) {
                 startActivity(new Intent(this, InventoryActivity.class));
@@ -611,7 +611,7 @@ public class MainActivity
     @Override
     public void onTransactionSuccess() {
 
-        showAlert("Payment Successful!");
+        showError("Payment Successful!");
         startActivity(new Intent(this, MainActivity.class));
 
     }
