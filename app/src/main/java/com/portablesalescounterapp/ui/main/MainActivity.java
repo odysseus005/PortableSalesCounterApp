@@ -99,7 +99,8 @@ public class MainActivity
     private ProgressDialog progressDialog;
     private String searchText;
     private Products currProduct;
-    String cashCode="C",discountId="",discountName="",discountValue="0",discountCode,oldTotal,newTotal;
+    String cashCode="Cash",discountId="",discountName="",discountValue="0",discountCode,oldTotal;
+    String vtsPrice="",vtsDiscount="";
     public double newPrice;
     View v = null;
 
@@ -273,7 +274,9 @@ public class MainActivity
 
                 currProduct = presenter.getProductQr(contents,detectQrorBar);
                 if(currProduct.isLoaded()&&currProduct.isValid())
-                    onItemDisplay();
+                    OnButtonAddtoCart();
+
+
                /* appliances = presenter.getAppliance(contents);
 
                 sameBrand = presenter.getSameBrand(appliances.getType(), appliances.getBrand());
@@ -333,7 +336,6 @@ public class MainActivity
         Button count1=(Button)v.findViewById(R.id.counter);
 
 
-
         count1.setText(String.valueOf(prodIdcart.size()));
 
         count1.setOnClickListener(new View.OnClickListener() {
@@ -343,7 +345,7 @@ public class MainActivity
                 if(prodIdcart.size()>0)
                 checkout();
                 else
-                    showError("No Item!");
+                    showError("No Item on the Cart!");
             }
         });
 
@@ -384,7 +386,7 @@ public class MainActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         final int id = item.getItemId();
-        if(prodIdcart.size()>0) {
+       /* if(prodIdcart.size()>0) {
 
             new AlertDialog.Builder(this)
                     .setTitle("Are you sure you want to cancel your current transaction?")
@@ -422,7 +424,7 @@ public class MainActivity
                     })
                     .show();
 
-        }else {
+        }else {*/
             if (id == R.id.nav_sales_png) {
                 startActivity(new Intent(this, MainActivity.class));
 
@@ -447,7 +449,7 @@ public class MainActivity
             }
 
             binding.drawerLayout.closeDrawer(GravityCompat.START);
-        }
+       // }
 
         return true;
     }
@@ -607,21 +609,21 @@ public class MainActivity
 
 
     @Override
+    public void onTransactionSuccess() {
+
+        showAlert("Payment Successful!");
+        startActivity(new Intent(this, MainActivity.class));
+
+    }
+
+
+    @Override
     public void  onAddDiscount(Discount discount) {
 
             discountId = String.valueOf(discount.getDiscountId());
             discountCode = discount.getDiscountCode();
             discountName = discount.getDiscountName();
             discountValue = discount.getDiscountValue();
-            v.invalidate();
-        // dialog.dismiss();
-        // checkout();
-        dialog2.dismiss();
-        dialog.invalidateOptionsMenu();
-
-
-
-        Log.d("tag",">>>");
         if(!discountId.equalsIgnoreCase(""))
         {
             dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
@@ -629,24 +631,27 @@ public class MainActivity
             double discounted = 0;
             if(discountCode.equalsIgnoreCase("P"))
             {
-                discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
+              discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
             }
             else
             {
                 discounted = Double.parseDouble(discountValue);
             }
 
-
-            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
+            vtsDiscount = String.valueOf(discounted);
+            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
 
 
             oldTotal = dialogBinding.cartItemPrice.getText().toString();
-            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
+            newPrice = Double.parseDouble(vtsPrice) - discounted;
             if(newPrice<0)
                 newPrice = 0;
-            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
+
+            vtsPrice = String.valueOf(newPrice);
+            dialogBinding.cartItemPrice.setText("Php: "+String.valueOf(newPrice));
 
         }
+            dialog2.dismiss();
 
     }
 
@@ -773,14 +778,6 @@ public class MainActivity
 
         currProduct = product;
 
-        onItemDisplay();
-
-    }
-
-
-    public void onItemDisplay()
-    {
-
         binding.appBarMain.itemView.setVisibility(View.VISIBLE);
         binding.appBarMain.remove.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -809,7 +806,11 @@ public class MainActivity
             prodCode = "kg";
         binding.appBarMain.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
 
+
     }
+
+
+
 
 
     public void checkout()
@@ -838,7 +839,8 @@ public class MainActivity
         {
             cartPrice += Double.parseDouble(prodPricecart.get(a));
         }
-        dialogBinding.cartItemPrice.setText(cartPrice+"");
+        vtsPrice = String.valueOf(cartPrice);
+        dialogBinding.cartItemPrice.setText("Php: "+cartPrice+"");
 
 
         dialogBinding.cash.setOnClickListener(new View.OnClickListener() {
@@ -868,13 +870,14 @@ public class MainActivity
             public void onClick(View v) {
 
 
-                presenter.addTransaction(dialogBinding.cartItemPrice.getText().toString(),
-                        cashCode,
-                        dialogBinding.cartDiscountPrice.getText().toString(),
-                        listToString(prodIdcart),
-                        listToString(prodNamecart),
-                        listToString(prodQuantitycart),
-                        listToString(prodPricecart),
+                presenter.addTransaction(
+                        vtsPrice,
+                        cashCode,vtsDiscount,
+                       // dialogBinding.cartDiscountPrice.getText().toString(),
+                        presenter.listToString(prodIdcart),
+                        presenter.listToString(prodNamecart),
+                        presenter.listToString(prodQuantitycart),
+                        presenter.listToString(prodPricecart),
                         discountId,
                         discountName,
                         String.valueOf(user.getUserId()),
@@ -931,6 +934,7 @@ public class MainActivity
 
 
                 discountId = "";
+                vtsPrice = String.valueOf(oldTotal);
                 dialogBinding.cartItemPrice.setText(oldTotal);
                 dialogBinding.viewDiscount.setVisibility(View.GONE);
 
@@ -999,35 +1003,7 @@ public class MainActivity
 
     }
 
-    public String listToString(ArrayList<String> listcrt)
-    {
-        String finalOutput="";
 
-        for(int a=0;a<listcrt.size();a++)
-        {
-            finalOutput += (listcrt.get(a)+"#");
-
-        }
-
-
-        return  finalOutput;
-
-    }
-
-
-
-    public ArrayList<String> StringtoList(String strList)
-    {
-        ArrayList<String> finalOutput = null;
-        String[] items = strList.split("#");
-        for (String item : items)
-        {
-            finalOutput.add(item);
-
-        }
-
-        return finalOutput;
-    }
 
 
 }

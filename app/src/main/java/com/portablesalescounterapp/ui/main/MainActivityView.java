@@ -27,6 +27,8 @@ public interface MainActivityView extends MvpView {
 
     void onAddDiscount(Discount discount);
 
+    void onTransactionSuccess();
+
 
 
 

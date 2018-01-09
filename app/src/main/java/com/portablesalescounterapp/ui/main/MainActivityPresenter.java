@@ -1,6 +1,7 @@
 package com.portablesalescounterapp.ui.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
@@ -12,6 +13,7 @@ import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.ResultResponse;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -112,7 +114,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
         }
         else {
             getView().startLoading();
-            App.getInstance().getApiInterface().addTransaction(Endpoints.TRANSACTION,transPrice,
+            App.getInstance().getApiInterface().addTransaction(Endpoints.ADD_TRANSACTION,transPrice,
                     transCode,
                     transDiscount,
                     idList,
@@ -125,25 +127,27 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                     username,
                     date,
                     bid)
-                    .enqueue(new Callback<List<Transaction>>() {
+                    .enqueue(new Callback<ResultResponse>() {
                         @Override
-                        public void onResponse(Call<List<Transaction>> call, final Response<List<Transaction>> response) {
+                        public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
                             getView().stopLoading();
                             if (response.isSuccessful()) {
-                                realm.executeTransaction(new Realm.Transaction() {
-                                    @Override
-                                    public void execute(Realm realm) {
-                                        realm.copyToRealmOrUpdate(response.body());
+                                switch (response.body().getResult()) {
+                                    case Constants.SUCCESS:
+                                        getView().onTransactionSuccess();
+                                        break;
 
-                                    }
-                                });
+                                    default:
+                                        getView().showAlert(String.valueOf(R.string.cantConnect));
+                                        break;
+                                }
                             } else {
                                 getView().showAlert("Oops something went wrong");
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                        public void onFailure(Call<ResultResponse> call, Throwable t) {
 
                             getView().stopLoading();
                             getView().showAlert("Error Connecting to Server");
@@ -251,6 +255,39 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
     }
 
 
+
+    public String listToString(ArrayList<String> listcrt)
+    {
+        String finalOutput="";
+
+        for(int a=0;a<listcrt.size();a++)
+        {
+            if((a+1)==listcrt.size())
+                finalOutput += (listcrt.get(a));
+            else
+                finalOutput += (listcrt.get(a)+":");
+
+        }
+
+
+        return  finalOutput;
+
+    }
+
+
+
+    public ArrayList<String> StringtoList(String strList)
+    {
+        ArrayList<String> finalOutput = null;
+        String[] items = strList.split("#");
+        for (String item : items)
+        {
+            finalOutput.add(item);
+
+        }
+
+        return finalOutput;
+    }
 
 
     public void onStop() {

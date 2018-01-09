@@ -51,6 +51,7 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/edittext_selector"
                         android:hint="Name"
+                        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                         android:inputType="textPersonName"
                         android:maxLength="150"
                         android:padding="12dp"

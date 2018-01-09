@@ -241,7 +241,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(Endpoints.TRANSACTION)
-    Call<List<Transaction>> addTransaction(@Field(Constants.TAG) String tag,
+    Call<ResultResponse> addTransaction(@Field(Constants.TAG) String tag,
                                            @Field(Constants.TRANSACTION_PRICE) String transPrice,
                                            @Field(Constants.TRANSACTION_CODE) String transCode,
                                            @Field(Constants.TRANSACTION_DISCOUNT) String transDiscount,

@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:text="Items"
                         android:gravity="center"
-                        android:textColor="@color/darkGray"
+                        android:textColor="@color/colorPrimaryDark"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         />
@@ -119,7 +119,7 @@
                             android:layout_weight=".3"
                             android:layout_marginTop="8dp"
                             android:layout_height="40dp"
-                            android:background="@color/colorAccentDark"
+                            android:background="@color/colorPrimary"
                             android:clickable="true"
                             android:padding="8dp"
                             android:text="Discount"
