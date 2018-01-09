@@ -1,4 +1,4 @@
-package com.portablesalescounterapp.ui.receipts.restock;
+package com.portablesalescounterapp.ui.receipts;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

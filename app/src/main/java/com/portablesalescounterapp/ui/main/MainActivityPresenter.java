@@ -276,18 +276,6 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
 
 
 
-    public ArrayList<String> StringtoList(String strList)
-    {
-        ArrayList<String> finalOutput = null;
-        String[] items = strList.split("#");
-        for (String item : items)
-        {
-            finalOutput.add(item);
-
-        }
-
-        return finalOutput;
-    }
 
 
     public void onStop() {

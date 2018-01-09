@@ -1,4 +1,4 @@
-package com.portablesalescounterapp.ui.receipts.restock;
+package com.portablesalescounterapp.ui.receipts;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -16,10 +16,8 @@ import android.view.MenuItem;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
-import com.portablesalescounterapp.databinding.ActivityRestockListBinding;
-import com.portablesalescounterapp.model.data.Category;
-import com.portablesalescounterapp.model.data.Products;
-import com.portablesalescounterapp.model.data.Restock;
+import com.portablesalescounterapp.databinding.ActivityReceiptListBinding;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 
 import java.util.ArrayList;
@@ -39,12 +37,11 @@ public class ReceiptListActivity
     private static final int PERMISSION_READ_EXTERNAL_STORAGE = 124;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 125;
     private static final int PERMISSION_CAMERA = 126;
-    private ActivityRestockListBinding binding;
+    private ActivityReceiptListBinding binding;
     private Realm realm;
     private User user;
     private ReceiptListAdapter adapterPromo;
-    private RealmResults<Restock> employeeRealmResults;
-    private RealmResults<Category> categoryRealmResults;
+    private RealmResults<Transaction> employeeRealmResults;
     private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
     private ProgressDialog progressDialog;
@@ -62,7 +59,7 @@ public class ReceiptListActivity
                 .saveInRootPicturesDirectory();
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_restock_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_receipt_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Product");
@@ -83,11 +80,11 @@ public class ReceiptListActivity
         });
         adapterPromo = new ReceiptListAdapter(this, getMvpView(),user.getEmail());
         binding.recyclerView.setAdapter(adapterPromo);
-        employeeRealmResults = realm.where(Restock.class).findAllAsync();
-        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Restock>>() {
+        employeeRealmResults = realm.where(Transaction.class).findAllAsync();
+        employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
-            public void onChange(RealmResults<Restock> element) {
-               List<Restock> promoList = realm.copyFromRealm(employeeRealmResults);
+            public void onChange(RealmResults<Transaction> element) {
+               List<Transaction> promoList = realm.copyFromRealm(employeeRealmResults);
                 adapterPromo.setProductList(promoList);
                 adapterPromo.notifyDataSetChanged();
 
@@ -177,6 +174,13 @@ public class ReceiptListActivity
                 .setTitle(message)
                 .setPositiveButton("Close", null)
                 .show();
+    }
+
+    @Override
+    public void onTransactionClicked(Transaction transaction) {
+
+
+
     }
 
     @Override

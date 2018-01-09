@@ -1,11 +1,13 @@
-package com.portablesalescounterapp.ui.receipts.restock;
+package com.portablesalescounterapp.ui.receipts;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Restock;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -27,10 +29,10 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
     }
 
     public void load(String bussinessId) {
-        App.getInstance().getApiInterface().getRestock(Endpoints.ALL_RESTOCK_PRODUCT,bussinessId)
-                .enqueue(new Callback<List<Restock>>() {
+        App.getInstance().getApiInterface().getTransaction(Endpoints.ALL_TRANSACTION,bussinessId)
+                .enqueue(new Callback<List<Transaction>>() {
                     @Override
-                    public void onResponse(Call<List<Restock>> call, final Response<List<Restock>> response) {
+                    public void onResponse(Call<List<Transaction>> call, final Response<List<Transaction>> response) {
                         if (isViewAttached()) {
                             getView().stopRefresh();
                         }
@@ -63,7 +65,7 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Restock>> call, Throwable t) {
+                    public void onFailure(Call<List<Transaction>> call, Throwable t) {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
@@ -79,6 +81,18 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
 
 
 
+    public ArrayList<String> StringtoList(String strList)
+    {
+        ArrayList<String> finalOutput = null;
+        String[] items = strList.split("#");
+        for (String item : items)
+        {
+            finalOutput.add(item);
+
+        }
+
+        return finalOutput;
+    }
 
 
 

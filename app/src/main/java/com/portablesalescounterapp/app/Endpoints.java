@@ -65,7 +65,7 @@ public class Endpoints {
     //Transaction
     public static final String TRANSACTION  = "transaction.php?";
     public static final String ADD_TRANSACTION = "addTransaction";
-
+    public static final String ALL_TRANSACTION = "allTransaction";
 
 
 }
