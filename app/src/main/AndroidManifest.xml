@@ -73,6 +73,14 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.reports.ReportsActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.reports.salesReport.SaleChartActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.receipts.ReceiptListActivity"
             android:windowSoftInputMode="adjustResize" />
 

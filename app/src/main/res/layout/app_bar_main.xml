@@ -224,6 +224,18 @@
 
                     >
 
+                    <Spinner
+                        android:id="@+id/sp_category"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/bg_spinner"
+                        android:fontFamily="sans-serif"
+                        android:padding="5dp"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                        android:textColorHint="@android:color/darker_gray" />
+
+
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView"

@@ -242,7 +242,7 @@ public class ProductQrListActivity
     public void OnButtonAdd(final Products products) {
 
             presenter.updateContact(Integer.toString(products.getProductId()),
-                    (products.getProductId()+1000)+"",
+                    "psc"+(products.getProductId()+1000)+"",
                     "C",
                     products.getProductName(),
                     user.getBusiness_id());
@@ -274,7 +274,7 @@ public class ProductQrListActivity
         try {
 
 
-            Bitmap bitmap =  TextToImageEncode((product.getProductId()+1000)+"",ProductQrListActivity.this);
+            Bitmap bitmap =  TextToImageEncode("psc"+(product.getProductId()+1000)+"",ProductQrListActivity.this);
 
             dialogBinding.productQR.setImageBitmap(bitmap);
             dialogBinding.productQRcodeView.setText((product.getProductId()+1000)+"");
