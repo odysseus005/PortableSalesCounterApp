@@ -21,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -70,8 +72,7 @@ public class MonitorListActivity
     private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
     private ProgressDialog progressDialog;
-    private int emerID=0;
-    private  String productCode = "E", categoryId;
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -109,9 +110,7 @@ public class MonitorListActivity
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Products>>() {
             @Override
             public void onChange(RealmResults<Products> element) {
-               List<Products> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setProductList(promoList);
-                adapterPromo.notifyDataSetChanged();
+             prepareList();
 
             }
         });
@@ -129,6 +128,26 @@ public class MonitorListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+
+
+
+
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -211,7 +230,7 @@ public class MonitorListActivity
     @Override
     public void OnRestockEdit(final Products products) {
 
-        emerID = products.getProductId();
+
 
         dialog = new Dialog(MonitorListActivity.this);
         final DialogEditMonitorBinding dialogBinding = DataBindingUtil.inflate(
@@ -237,7 +256,7 @@ public class MonitorListActivity
         dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                emerID=0;
+
                 dialog.dismiss();
             }
         });
@@ -277,8 +296,27 @@ public class MonitorListActivity
 
 
 
+    private void prepareList() {
 
-
+        if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Products> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(employeeRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(employeeRealmResults.where()
+                        .contains("productName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productRestock", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("userName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productTotal", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setProductList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+    }
 
 
 

@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import com.portablesalescounterapp.databinding.ActivityReceiptListBinding;
 import com.portablesalescounterapp.databinding.DialogCartBinding;
 import com.portablesalescounterapp.databinding.DialogReceiptBinding;
 import com.portablesalescounterapp.model.data.Business;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.util.DateTimeUtils;
@@ -29,6 +31,7 @@ import com.portablesalescounterapp.util.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -52,15 +55,14 @@ public class ReceiptListActivity
     private CartreceiptActivityAdapter adapterCart;
     DialogReceiptBinding dialogBinding;
     private ProgressDialog progressDialog;
-    private int emerID=0;
-    private  String productCode = "E", categoryId;
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
+        searchText="";
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
@@ -92,9 +94,7 @@ public class ReceiptListActivity
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Transaction>>() {
             @Override
             public void onChange(RealmResults<Transaction> element) {
-               List<Transaction> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setProductList(promoList);
-                adapterPromo.notifyDataSetChanged();
+                prepareList();
 
             }
         });
@@ -112,6 +112,23 @@ public class ReceiptListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -278,7 +295,31 @@ public class ReceiptListActivity
 
 
 
+    private void prepareList() {
 
+        if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Transaction> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(employeeRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(employeeRealmResults.where()
+                        .contains("transactionPrice", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("transactionDiscount", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("transactionCode", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("date", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("discountName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("userName", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setProductList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+    }
 
 
 

@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +23,12 @@ import com.portablesalescounterapp.databinding.ActivityDiscountListBinding;
 import com.portablesalescounterapp.databinding.DialogAddDiscountBinding;
 import com.portablesalescounterapp.databinding.DialogEditDiscountBinding;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -47,13 +50,14 @@ public class DiscountListActivity
     private ProgressDialog progressDialog;
     private int emerID=0;
     private String discountCode="P";
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
+        searchText="";
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
@@ -84,9 +88,7 @@ public class DiscountListActivity
         discountRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Discount>>() {
             @Override
             public void onChange(RealmResults<Discount> element) {
-               List<Discount> promoList = realm.copyFromRealm(discountRealmResults);
-                adapterPromo.setDiscountList(promoList);
-                adapterPromo.notifyDataSetChanged();
+                prepareList();
 
             }
         });
@@ -104,6 +106,22 @@ public class DiscountListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -325,6 +343,26 @@ public class DiscountListActivity
         dialog.setCancelable(false);
         dialog.show();
 
+    }
+
+    private void prepareList() {
+
+        if (discountRealmResults.isLoaded() && discountRealmResults.isValid()) {
+            List<Discount> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(discountRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(discountRealmResults.where()
+                        .contains("discountName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("discountValue", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("discountCode", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setDiscountList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
     }
 
 

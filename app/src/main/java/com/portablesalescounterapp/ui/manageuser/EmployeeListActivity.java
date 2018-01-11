@@ -25,6 +25,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +44,7 @@ import com.portablesalescounterapp.databinding.ActivityManageUserBinding;
 import com.portablesalescounterapp.databinding.DialogAddEmployeeBinding;
 import com.portablesalescounterapp.databinding.DialogEditEmployeeBinding;
 import com.portablesalescounterapp.model.data.Employee;
+import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.main.MainActivity;
 
@@ -54,6 +56,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -78,13 +81,14 @@ public class EmployeeListActivity
     private Dialog dialog;
     private ProgressDialog progressDialog;
     private int emerID=0;
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
+        searchText="";
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
@@ -115,9 +119,7 @@ public class EmployeeListActivity
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Employee>>() {
             @Override
             public void onChange(RealmResults<Employee> element) {
-               List<Employee> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setEmployeeList(promoList);
-                adapterPromo.notifyDataSetChanged();
+                prepareList();
 
             }
         });
@@ -135,6 +137,20 @@ public class EmployeeListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -505,6 +521,25 @@ public class EmployeeListActivity
     }
 
 
+    private void prepareList() {
+
+        if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Employee> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(employeeRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(employeeRealmResults.where()
+                        .contains("productName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productDescription", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productPrice", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setEmployeeList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+    }
 
 
 

@@ -140,7 +140,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     public void onLoginButtonClicked() {
 
 
-       /* startActivity(new Intent(this, MainActivity.class));
+       /* startActivity(new Intent(this, GuestActivity.class));
         finish();*/
 
         presenter.login(
@@ -189,10 +189,17 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     }
 
+    @Override
+    public void onLoginGuestClicked() {
+
+
+
+    }
+
 
    /* @Override
     public void onCodeSuccess() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, GuestActivity.class));
         finish();
         showAlert("Verification Success!");
 

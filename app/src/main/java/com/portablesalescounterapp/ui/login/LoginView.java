@@ -9,6 +9,8 @@ public interface LoginView extends MvpView {
 
     void onLoginButtonClicked();
 
+    void onLoginGuestClicked();
+
     void onRegisterButtonClicked();
 
     void showAlert(String message);

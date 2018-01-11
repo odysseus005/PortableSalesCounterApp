@@ -25,6 +25,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,6 +60,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -85,13 +87,14 @@ public class ProductQrListActivity
     private Products prodAdd;
     private int emerID=0;
     private  String productCode = "E", categoryId;
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
+        searchText="";
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
@@ -122,9 +125,7 @@ public class ProductQrListActivity
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Products>>() {
             @Override
             public void onChange(RealmResults<Products> element) {
-               List<Products> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setProductList(promoList);
-                adapterPromo.notifyDataSetChanged();
+                prepareList();
 
             }
         });
@@ -142,6 +143,23 @@ public class ProductQrListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -387,7 +405,29 @@ public class ProductQrListActivity
         startActivity(intent);
     }
 
+    private void prepareList() {
 
+        if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Products> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(employeeRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(employeeRealmResults.where()
+                        .contains("firstname", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("lastname", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("birthday", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("address", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("contact", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setProductList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+    }
 
 
 }

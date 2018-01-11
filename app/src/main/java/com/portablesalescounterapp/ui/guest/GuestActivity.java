@@ -1,9 +1,8 @@
-package com.portablesalescounterapp.ui.main;
+package com.portablesalescounterapp.ui.guest;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -36,14 +35,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.BuildConfig;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
+import com.portablesalescounterapp.databinding.ActivityGuestListBinding;
 import com.portablesalescounterapp.databinding.ActivityMainBinding;
 import com.portablesalescounterapp.databinding.DialogAddCartBinding;
 import com.portablesalescounterapp.databinding.DialogCartBinding;
@@ -54,7 +54,6 @@ import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
-import com.portablesalescounterapp.ui.item.product.ProductListActivity;
 import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
@@ -76,16 +75,16 @@ import io.realm.RealmModel;
 import io.realm.RealmResults;
 
 
-public class MainActivity
-        extends MvpViewStateActivity<MainActivityView, MainActivityPresenter>
-        implements SwipeRefreshLayout.OnRefreshListener , NavigationView.OnNavigationItemSelectedListener, MainActivityView {
+public class GuestActivity
+        extends MvpViewStateActivity<GuestActivityView, GuestActivityPresenter>
+        implements SwipeRefreshLayout.OnRefreshListener , GuestActivityView {
 
     private final int PERMISSION_CODE = 9235;
-    private static final String TAG = MainActivity.class.getSimpleName();
-    private ActivityMainBinding binding;
-    private CartDiscountListAdapter adapterDiscount;
-    private MainActivityAdapter adapterPromo;
-    private CartMainActivityAdapter adapterCart;
+    private static final String TAG = GuestActivity.class.getSimpleName();
+    private ActivityGuestListBinding binding;
+    private GuesttDiscountListAdapter adapterDiscount;
+    private GuestActivityAdapter adapterPromo;
+    private CartGuestActivityAdapter adapterCart;
     private RealmResults<Discount> discountRealmResults;
     private RealmResults<Products> employeeRealmResults;
     private RealmResults<Category> categoryRealmResults;
@@ -99,7 +98,7 @@ public class MainActivity
     private TextView txtEmail;
     private ImageView imgProfile;
     private Realm realm;
-    private User user;
+   // private User user;
     private Dialog dialog,dialog2;
     DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
@@ -131,22 +130,11 @@ public class MainActivity
         prodPricecart = new ArrayList<>();
 
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.appBarMain.setView(getMvpView());
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_guest_list);
 
-        setSupportActionBar(binding.appBarMain.toolbar);
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(BuildConfig.DEBUG ? "PSC Ap" : "PSC App");
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout,
-                binding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        binding.drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        binding.navView.setNavigationItemSelectedListener(this);
-
-
-        txtName = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.tvNumber1);
-        txtEmail = (TextView) binding.navView.getHeaderView(0).findViewById(R.id.txt_email);
-        imgProfile = (ImageView) binding.navView.getHeaderView(0).findViewById(R.id.imageView);
 
         user = realm.where(User.class).findFirstAsync();
         user.addChangeListener(new RealmChangeListener<RealmModel>() {
@@ -158,31 +146,29 @@ public class MainActivity
         });
 
         presenter.onStart();
-
-        binding.navView.setNavigationItemSelectedListener(this);
         //binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
-        binding.appBarMain.swipeRefreshLayout.setOnRefreshListener(this);
-        binding.appBarMain.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        binding.appBarMain.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        binding.swipeRefreshLayout.setOnRefreshListener(this);
+        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
         int spanCount = 2; // 3 columns
         int spacing = 20; // 50px
         boolean includeEdge = true;
-        binding.appBarMain.recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        binding.recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
 
 
-        hideItem();
 
-        binding.appBarMain.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int topRowVerticalPosition = (recyclerView == null || recyclerView.getChildCount() == 0)
                         ? 0 : recyclerView.getChildAt(0).getTop();
-                binding.appBarMain.swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+                binding.swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
         });
-        adapterPromo = new MainActivityAdapter(this, getMvpView());
-        binding.appBarMain.recyclerView.setAdapter(adapterPromo);
+        adapterPromo = new GuestActivityAdapter(this, getMvpView());
+        binding.recyclerView.setAdapter(adapterPromo);
         employeeRealmResults = realm.where(Products.class).findAllAsync();
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Products>>() {
             @Override
@@ -193,10 +179,10 @@ public class MainActivity
 
             }
         });
-        binding.appBarMain.swipeRefreshLayout.post(new Runnable() {
+        binding.swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                binding.appBarMain.swipeRefreshLayout.setRefreshing(true);
+                binding.swipeRefreshLayout.setRefreshing(true);
                 onRefresh();
             }
         });
@@ -223,15 +209,15 @@ public class MainActivity
                 }
 
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_custom_item, promoList);
-               binding.appBarMain.spCategory.setAdapter(arrayAdapter);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(GuestActivity.this, R.layout.spinner_custom_item, promoList);
+               binding.spCategory.setAdapter(arrayAdapter);
 
             }
 
 
         });
 
-        binding.appBarMain.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int position, long id) {
@@ -249,30 +235,7 @@ public class MainActivity
 
 
 
-    private void hideItem()
-    {
-        realm = Realm.getDefaultInstance();
-        user = realm.where(User.class).findFirst();
-        Menu nav_Menu =  binding.navView.getMenu();
 
-        if((user.getPosition()).equalsIgnoreCase("cashier"))
-        {
-            nav_Menu.findItem(R.id.nav_items).setVisible(false);
-            nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
-            nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
-            nav_Menu.findItem(R.id.nav_inventory).setVisible(false);
-            nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
-
-        }else if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
-        {
-
-            nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
-            nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
-            nav_Menu.findItem(R.id.nav_sales_png).setVisible(false);
-
-
-        }
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -324,7 +287,6 @@ public class MainActivity
             }
         }
     }
-
 
 
     @Override
@@ -422,119 +384,6 @@ public class MainActivity
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        final int id = item.getItemId();
-       /* if(prodIdcart.size()>0) {
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Are you sure you want to cancel your current transaction?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialoginterface, int i) {
-
-                            if (id == R.id.nav_sales_png) {
-                                startActivity(new Intent(GuestActivity.this, GuestActivity.class));
-
-                            } else if (id == R.id.nav_manageusers) {
-                                startActivity(new Intent(GuestActivity.this, EmployeeListActivity.class));
-
-                            } else if (id == R.id.nav_receipts) {
-
-                            } else if (id == R.id.nav_items) {
-
-                                startActivity(new Intent(GuestActivity.this, ItemActivity.class));
-                            } else if (id == R.id.nav_inventory) {
-                                startActivity(new Intent(GuestActivity.this, ReportsActivity.class));
-                            } else if (id == R.id.nav_report) {
-
-                            } else if (id == R.id.nav_qrcode) {
-                                startActivity(new Intent(GuestActivity.this, ProductQrListActivity.class));
-                            } else if (id == R.id.nav_profile) {
-                                startActivity(new Intent(GuestActivity.this, ProfileActivity.class));
-                            } else if (id == R.id.nav_logout) {
-                                logOut(user);
-                            }
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialoginterface, int i) {
-
-                        }
-                    })
-                    .show();
-
-        }else {*/
-            if (id == R.id.nav_sales_png) {
-                startActivity(new Intent(this, MainActivity.class));
-
-            } else if (id == R.id.nav_manageusers) {
-                startActivity(new Intent(this, EmployeeListActivity.class));
-
-            } else if (id == R.id.nav_receipts) {
-                startActivity(new Intent(this, ReceiptListActivity.class));
-            } else if (id == R.id.nav_items) {
-                startActivity(new Intent(this, ItemActivity.class));
-            } else if (id == R.id.nav_inventory) {
-                startActivity(new Intent(this, InventoryActivity.class));
-            } else if (id == R.id.nav_report) {
-
-                startActivity(new Intent(this, SaleChartActivity.class));
-            } else if (id == R.id.nav_qrcode) {
-                startActivity(new Intent(this, ProductQrListActivity.class));
-            } else if (id == R.id.nav_profile) {
-                startActivity(new Intent(this, ProfileActivity.class));
-            } else if (id == R.id.nav_logout) {
-                logOut(user);
-            }
-
-            binding.drawerLayout.closeDrawer(GravityCompat.START);
-       // }
-
-        return true;
-    }
-
-    private void logOut(User user) {
-
-
-        final Realm realm = Realm.getDefaultInstance();
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.deleteAll();
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                realm.close();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                error.printStackTrace();
-                realm.close();
-                Toast.makeText(MainActivity.this, "Realm Error", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-
-    //MainAcitivity Methods End
-
 
 
     private void prepareList() {
@@ -586,8 +435,8 @@ public class MainActivity
 
     @NonNull
     @Override
-    public MainActivityPresenter createPresenter() {
-        return new MainActivityPresenter();
+    public GuestActivityPresenter createPresenter() {
+        return new GuestActivityPresenter();
     }
 
     @Override
@@ -609,7 +458,7 @@ public class MainActivity
 
     @Override
     public void stopRefresh() {
-        binding.appBarMain.swipeRefreshLayout.setRefreshing(false);
+        binding.swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -639,17 +488,17 @@ public class MainActivity
 
     @NonNull
     @Override
-    public ViewState<MainActivityView> createViewState() {
+    public ViewState<GuestActivityView> createViewState() {
         setRetainInstance(true);
-        return new MainActivityViewState();
+        return new GuestViewState();
     }
 
     @Override
     public void onNewViewStateInstance() {
-        binding.appBarMain.swipeRefreshLayout.post(new Runnable() {
+        binding.swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                binding.appBarMain.swipeRefreshLayout.setRefreshing(true);
+                binding.swipeRefreshLayout.setRefreshing(true);
                 onRefresh();
             }
         });
@@ -668,7 +517,7 @@ public class MainActivity
     public void onTransactionSuccess() {
 
         showError("Payment Successful!");
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, GuestActivity.class));
 
     }
 
@@ -735,7 +584,7 @@ public class MainActivity
     public void OnButtonAddtoCart() {
 
 
-        dialog = new Dialog(MainActivity.this);
+        dialog = new Dialog(GuestActivity.this);
         final DialogAddCartBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_add_cart,
@@ -806,7 +655,7 @@ public class MainActivity
                 prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
                 prodPricecart.add(String.valueOf(newPrice));
 
-                MainActivity.this.invalidateOptionsMenu();
+                GuestActivity.this.invalidateOptionsMenu();
 
                 dialog.dismiss();
             }
@@ -834,12 +683,12 @@ public class MainActivity
 
         currProduct = product;
 
-        binding.appBarMain.itemView.setVisibility(View.VISIBLE);
-        binding.appBarMain.remove.setOnClickListener(new View.OnClickListener() {
+        binding.itemView.setVisibility(View.VISIBLE);
+        binding.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currProduct = null;
-                binding.appBarMain.itemView.setVisibility(View.GONE);
+                binding.itemView.setVisibility(View.GONE);
             }
         });
         String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
@@ -848,19 +697,19 @@ public class MainActivity
                 .skipMemoryCache(true)
                 .centerCrop()
                 .error(R.drawable.placeholder)
-                .into(binding.appBarMain.productImage);
+                .into(binding.productImage);
         Log.d("TAG", imageURL);
 
-        binding.appBarMain.viewItemDesc.setText(currProduct.getProductDescription());
-        binding.appBarMain.viewItemPrice.setText("Php: "+currProduct.getProductPrice());
-        binding.appBarMain.viewItemName.setText(currProduct.getProductName());
+        binding.viewItemDesc.setText(currProduct.getProductDescription());
+        binding.viewItemPrice.setText("Php: "+currProduct.getProductPrice());
+        binding.viewItemName.setText(currProduct.getProductName());
 
         String prodCode;
         if(currProduct.getProductCode().equalsIgnoreCase("E"))
             prodCode = "pcs.";
         else
             prodCode = "kg";
-        binding.appBarMain.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
+        binding.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
 
 
     }
@@ -873,7 +722,7 @@ public class MainActivity
     {
 
 
-        dialog = new Dialog(MainActivity.this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog = new Dialog(GuestActivity.this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
           dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_cart,
@@ -884,7 +733,7 @@ public class MainActivity
         dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapterCart = new CartMainActivityAdapter(this, getMvpView());
+        adapterCart = new CartGuestActivityAdapter(this, getMvpView());
         dialogBinding.recyclerView.setAdapter(adapterCart);
         adapterCart.setProductList(productList,prodIdcart,prodNamecart,prodQuantitycart,prodPricecart);
         adapterCart.notifyDataSetChanged();
@@ -903,8 +752,8 @@ public class MainActivity
             @Override
             public void onClick(View v) {
                 cashCode = "Cash";
-                dialogBinding.cash.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.lightGray));
-                dialogBinding.card.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                dialogBinding.cash.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.lightGray));
+                dialogBinding.card.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.colorPrimary));
 
             }
         });
@@ -913,8 +762,8 @@ public class MainActivity
             @Override
             public void onClick(View v) {
                 cashCode = "Card";
-                dialogBinding.card.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.lightGray));
-                dialogBinding.cash.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                dialogBinding.card.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.lightGray));
+                dialogBinding.cash.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.colorPrimary));
 
             }
         });
@@ -957,32 +806,6 @@ public class MainActivity
         });
 
 
-//        Log.d("tag",">>>");
-//        if(!discountId.equalsIgnoreCase(""))
-//        {
-//            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
-//            dialogBinding.cartDiscountList.setText(discountName);
-//            double discounted = 0;
-//            if(discountCode.equalsIgnoreCase("P"))
-//            {
-//              discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
-//            }
-//            else
-//            {
-//                discounted = Double.parseDouble(discountValue);
-//            }
-//
-//
-//            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
-//
-//
-//            oldTotal = dialogBinding.cartItemPrice.getText().toString();
-//            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
-//            if(newPrice<0)
-//                newPrice = 0;
-//            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
-//
-//        }
 
         dialogBinding.removeDiscountPrice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1004,17 +827,17 @@ public class MainActivity
             public void onClick(View v) {
 
 
-                dialog2 = new Dialog(MainActivity.this);
+                dialog2 = new Dialog(GuestActivity.this);
                 final DialogDiscountBinding dialogBinding = DataBindingUtil.inflate(
                         getLayoutInflater(),
                         R.layout.dialog_discount,
                         null,
                         false);
 
-                dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+                dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(GuestActivity.this));
                 dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                adapterDiscount = new CartDiscountListAdapter(MainActivity.this, getMvpView());
+                adapterDiscount = new CartGuestActivityAdapter(GuestActivity.this, getMvpView());
                 dialogBinding.recyclerView.setAdapter(adapterDiscount);
                 discountRealmResults = realm.where(Discount.class).findAllAsync();
                 discountRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Discount>>() {

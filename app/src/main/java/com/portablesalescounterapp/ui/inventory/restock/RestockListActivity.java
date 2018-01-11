@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.portablesalescounterapp.model.data.User;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -51,6 +53,7 @@ public class RestockListActivity
     private ProgressDialog progressDialog;
     private int emerID=0;
     private  String productCode = "E", categoryId;
+    private String searchText;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -58,6 +61,7 @@ public class RestockListActivity
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+        searchText="";
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
@@ -88,9 +92,7 @@ public class RestockListActivity
         employeeRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Restock>>() {
             @Override
             public void onChange(RealmResults<Restock> element) {
-               List<Restock> promoList = realm.copyFromRealm(employeeRealmResults);
-                adapterPromo.setProductList(promoList);
-                adapterPromo.notifyDataSetChanged();
+                prepareList();
 
             }
         });
@@ -108,6 +110,23 @@ public class RestockListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add, menu);
+
+        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchText = newText;
+                prepareList();
+                return true;
+            }
+        });
+
+
         return super.onCreateOptionsMenu(menu);
 
     }
@@ -206,6 +225,25 @@ public class RestockListActivity
 
 
 
+    private void prepareList() {
+
+        if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Restock> productsList;
+            if (searchText.isEmpty()) {
+                productsList = realm.copyFromRealm(employeeRealmResults);
+            } else {
+                productsList = realm.copyFromRealm(employeeRealmResults.where()
+                        .contains("productName", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productDescription", searchText, Case.INSENSITIVE)
+                        .or()
+                        .contains("productPrice", searchText, Case.INSENSITIVE)
+                        .findAll());
+            }
+            adapterPromo.setProductList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+    }
 
 
 

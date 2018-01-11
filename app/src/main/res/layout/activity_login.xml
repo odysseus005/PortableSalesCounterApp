@@ -98,14 +98,32 @@
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_above="@+id/button_sign_up"
+            android:layout_above="@+id/login_guest"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="15dp"
             android:background="@color/colorPrimary"
             android:onClick="@{() -> view.onLoginButtonClicked()}"
             android:padding="10dp"
+            android:textColor="@color/white"
             android:text="Log In"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/login_guest"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_above="@+id/button_sign_up"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="15dp"
+            android:background="@color/colorPrimary"
+            android:onClick="@{() -> view.onLoginGuestClicked()}"
+            android:padding="10dp"
+            android:text="Log In as Guest"
+            android:textColor="@color/white"
             android:textStyle="bold" />
 
 
@@ -117,7 +135,7 @@
             android:background="@null"
             android:onClick="@{()-> view.onRegisterButtonClicked()}"
             android:padding="10dp"
-            android:text="New User? Please Sign Up"
+            android:text="Sign Up New Account"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textAllCaps="false"

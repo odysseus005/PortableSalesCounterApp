@@ -1,11 +1,11 @@
-package com.portablesalescounterapp.ui.main;
+package com.portablesalescounterapp.ui.guest;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
 
 
-public interface MainActivityView extends MvpView {
+public interface GuestActivityView extends MvpView {
 
 
 
