@@ -19,6 +19,8 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.databinding.ActivityLoginBinding;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.business.BusinessListActivity;
+import com.portablesalescounterapp.ui.business.BusinessListView;
 import com.portablesalescounterapp.ui.forgot.ForgotPasswordActivity;
 import com.portablesalescounterapp.ui.main.MainActivity;
 import com.portablesalescounterapp.ui.register.RegisterActivity;
@@ -192,7 +194,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     @Override
     public void onLoginGuestClicked() {
 
-
+        startActivity(new Intent(this, BusinessListActivity.class));
 
     }
 
@@ -228,8 +230,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
     private void saveValues() {
         LoginViewState loginViewState = (LoginViewState) getViewState();
-        loginViewState.setUsername(binding.etEmail.getText().toString());
-        loginViewState.setPassword(binding.etPassword.getText().toString());
+//        loginViewState.setUsername(binding.etEmail.getText().toString());
+  //      loginViewState.setPassword(binding.etPassword.getText().toString());
     }
 
     @Override

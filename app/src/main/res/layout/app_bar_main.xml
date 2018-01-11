@@ -180,8 +180,9 @@
                                             android:onClick="@{()->view.OnButtonAddtoCart()}"
                                             android:paddingStart="20dp"
                                             android:text="BUY"
+                                            android:maxLines="1"
                                             android:textColor="@color/white"
-                                            android:textSize="14sp" />
+                                            android:textSize="12sp" />
 
                                     </LinearLayout>
 

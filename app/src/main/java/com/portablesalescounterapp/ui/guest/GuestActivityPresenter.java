@@ -8,8 +8,10 @@ import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.ResultResponse;
+import com.portablesalescounterapp.model.response.TransactionResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,14 +122,15 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                     username,
                     date,
                     bid)
-                    .enqueue(new Callback<ResultResponse>() {
+                    .enqueue(new Callback<TransactionResponse>() {
                         @Override
-                        public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                        public void onResponse(Call<TransactionResponse> call, final Response<TransactionResponse> response) {
                             getView().stopLoading();
                             if (response.isSuccessful()) {
                                 switch (response.body().getResult()) {
                                     case Constants.SUCCESS:
-                                        getView().onTransactionSuccess();
+                                        Transaction trans = response.body().getTransaction();
+                                        getView().onTransactionSuccess(trans);
                                         break;
 
                                     default:
@@ -140,7 +143,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                         }
 
                         @Override
-                        public void onFailure(Call<ResultResponse> call, Throwable t) {
+                        public void onFailure(Call<TransactionResponse> call, Throwable t) {
 
                             getView().stopLoading();
                             getView().showAlert("Error Connecting to Server");

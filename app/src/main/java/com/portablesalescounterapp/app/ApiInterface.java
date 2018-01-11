@@ -3,6 +3,7 @@ package com.portablesalescounterapp.app;
 
 
 
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Employee;
@@ -12,6 +13,7 @@ import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
+import com.portablesalescounterapp.model.response.TransactionResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -266,6 +268,12 @@ public interface ApiInterface {
     );
 
 
+    @FormUrlEncoded
+    @POST(Endpoints.EMPLOYEE)
+    Call<List<Business>> getBusiness(@Field(Constants.TAG) String tag);
+
+
+
 
     @FormUrlEncoded
     @POST(Endpoints.TRANSACTION)
@@ -274,20 +282,20 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(Endpoints.TRANSACTION)
-    Call<ResultResponse> addTransaction(@Field(Constants.TAG) String tag,
-                                        @Field(Constants.TRANSACTION_PRICE) String transPrice,
-                                        @Field(Constants.TRANSACTION_CODE) String transCode,
-                                        @Field(Constants.TRANSACTION_DISCOUNT) String transDiscount,
-                                        @Field(Constants.TRANSACTION_IDLIST) String transIdList,
-                                        @Field(Constants.TRANSACTION_NAMELIST) String transNameList,
-                                        @Field(Constants.TRANSACTION_QUANTITYLIST) String transQuanList,
-                                        @Field(Constants.TRANSACTION_PRICELIST) String transPriceList,
-                                        @Field(Constants.DISCOUNT_ID) String disId,
-                                        @Field(Constants.DISCOUNT__NAME) String disName,
-                                        @Field(Constants.USER_ID) String user_id,
-                                        @Field(Constants.FIRST_NAME) String name,
-                                        @Field(Constants.DATE_TIME) String date,
-                                        @Field(Constants.BUSINESS_ID) String business_id
+    Call<TransactionResponse> addTransaction(@Field(Constants.TAG) String tag,
+                                             @Field(Constants.TRANSACTION_PRICE) String transPrice,
+                                             @Field(Constants.TRANSACTION_CODE) String transCode,
+                                             @Field(Constants.TRANSACTION_DISCOUNT) String transDiscount,
+                                             @Field(Constants.TRANSACTION_IDLIST) String transIdList,
+                                             @Field(Constants.TRANSACTION_NAMELIST) String transNameList,
+                                             @Field(Constants.TRANSACTION_QUANTITYLIST) String transQuanList,
+                                             @Field(Constants.TRANSACTION_PRICELIST) String transPriceList,
+                                             @Field(Constants.DISCOUNT_ID) String disId,
+                                             @Field(Constants.DISCOUNT__NAME) String disName,
+                                             @Field(Constants.USER_ID) String user_id,
+                                             @Field(Constants.FIRST_NAME) String name,
+                                             @Field(Constants.DATE_TIME) String date,
+                                             @Field(Constants.BUSINESS_ID) String business_id
     );
 
 

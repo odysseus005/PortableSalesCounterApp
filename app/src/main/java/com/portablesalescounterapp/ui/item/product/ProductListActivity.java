@@ -321,7 +321,7 @@ public class ProductListActivity
                 int ctr=1;
                 promoList.add("Select Category");
                 for (Category category : categoryRealmResults) {
-                    if(category.getCategoryId()==(products.getCategoryId())) {
+                    if(category.getCategoryId()==Integer.parseInt(products.getCategoryId())) {
                         currCateg = ctr;
                         categoryId = ""+ctr;
                     }

@@ -10,8 +10,13 @@
 
     <item
         android:id="@+id/item_qrscan"
-        android:title="Scan"
-        app:showAsAction="always"
+        android:title="Scan Product Code"
+        android:orderInCategory="100"
+        app:actionLayout="@layout/button_scan"/>
+
+    <item
+        android:id="@+id/item_trscan"
+        android:title="Scan Order Code"
         android:orderInCategory="100"
         app:actionLayout="@layout/button_scan"/>
 

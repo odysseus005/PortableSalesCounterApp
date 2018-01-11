@@ -42,7 +42,7 @@ public class Products extends RealmObject {
 
     @SerializedName("category_id")
     @Expose
-    private int categoryId;
+    private String categoryId;
 
 
     @SerializedName("business_id")
@@ -66,11 +66,11 @@ public class Products extends RealmObject {
         this.businessId = businessId;
     }
 
-    public int getCategoryId() {
+    public String getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(int categoryId) {
+    public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
 

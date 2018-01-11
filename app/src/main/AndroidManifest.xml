@@ -77,6 +77,14 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.guest.GuestActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.business.BusinessListActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.inventory.monitor.MonitorListActivity"
             android:windowSoftInputMode="adjustResize" />
 

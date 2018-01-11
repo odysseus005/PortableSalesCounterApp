@@ -3,6 +3,7 @@ package com.portablesalescounterapp.ui.guest;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 
 
 public interface GuestActivityView extends MvpView {
@@ -19,7 +20,7 @@ public interface GuestActivityView extends MvpView {
 
     void stopLoading();
 
-    void OnButtonAddtoCart();
+    void OnButtonAddtoCart2();
 
     void onItemClick(Products product);
 
@@ -27,7 +28,7 @@ public interface GuestActivityView extends MvpView {
 
     void onAddDiscount(Discount discount);
 
-    void onTransactionSuccess();
+    void onTransactionSuccess(Transaction transaction);
 
 
 

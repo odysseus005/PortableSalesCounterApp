@@ -6,8 +6,8 @@ public class Constants {
     public static final int NOTIFICATION_ID_BIG_IMAGE = 101;
 
 
-    // broadcast receiver intent filters
 
+    public static final String ID = "id";
     public static final String TAG = "tag";
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";

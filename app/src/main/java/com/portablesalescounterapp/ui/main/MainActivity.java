@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -48,9 +51,12 @@ import com.portablesalescounterapp.databinding.ActivityMainBinding;
 import com.portablesalescounterapp.databinding.DialogAddCartBinding;
 import com.portablesalescounterapp.databinding.DialogCartBinding;
 import com.portablesalescounterapp.databinding.DialogDiscountBinding;
+import com.portablesalescounterapp.databinding.DialogReceiptBinding;
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
@@ -59,6 +65,7 @@ import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
+import com.portablesalescounterapp.ui.receipts.CartreceiptActivityAdapter;
 import com.portablesalescounterapp.ui.receipts.ReceiptListActivity;
 import com.portablesalescounterapp.ui.reports.salesReport.SaleChartActivity;
 import com.portablesalescounterapp.util.AnyOrientationCaptureActivity;
@@ -66,7 +73,10 @@ import com.portablesalescounterapp.util.CircleTransform;
 import com.portablesalescounterapp.util.DateTimeUtils;
 import com.portablesalescounterapp.util.GridSpacingItemDecoration;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Case;
@@ -86,6 +96,7 @@ public class MainActivity
     private CartDiscountListAdapter adapterDiscount;
     private MainActivityAdapter adapterPromo;
     private CartMainActivityAdapter adapterCart;
+    private Business business;
     private RealmResults<Discount> discountRealmResults;
     private RealmResults<Products> employeeRealmResults;
     private RealmResults<Category> categoryRealmResults;
@@ -104,10 +115,14 @@ public class MainActivity
     DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
     private Products currProduct;
-    String cashCode="Cash",discountId="",discountName="",discountValue="0",discountCode,oldTotal;
+    private Transaction transQr;
+    String cashCode="Cash",discountId="",discountName="",discountValue="0",discountCode="",oldTotal="";
     String vtsPrice="",vtsDiscount="";
     public double newPrice;
     private String searchText;
+    private String filterCategory="";
+    private ReceiptActivityAdapter adapterCart2;
+    boolean qrSwitcher=true;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -118,6 +133,7 @@ public class MainActivity
         searchText = "";
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
+        business = realm.where(Business.class).findFirst();
 
         if (user == null) {
             Log.e(TAG, "No User found");
@@ -203,18 +219,18 @@ public class MainActivity
 
 
 
-        presenter.getCategory(user.getBusiness_id());
-        categoryRealmResults = realm.where(Category.class).findAll();
 
-        categoryIdList = new ArrayList<>();
+
+
         final List<String> promoList = new ArrayList<>();
-
-        presenter.getCategory(user.getBusiness_id());
+        categoryIdList = new ArrayList<>();
         categoryRealmResults = realm.where(Category.class).findAll();
 
         categoryRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
+                categoryIdList.clear();
+                promoList.clear();
                 categoryIdList.add(0);
                 promoList.add("Select Category");
                 for (Category category : categoryRealmResults) {
@@ -236,13 +252,19 @@ public class MainActivity
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int position, long id) {
 
-
+                filterCategory = ""+(categoryIdList.get(position));
+                Log.d("TAG>>>",filterCategory);
+                prepareList();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
+
+                filterCategory="";
+                prepareList();
             }
         });
+
 
 
     }
@@ -317,10 +339,20 @@ public class MainActivity
 
             if( resultCode == RESULT_OK ){
                 String contents = in.getStringExtra( "SCAN_RESULT" );
-                currProduct = presenter.getProductQr(contents);
-                if(currProduct.isLoaded()&&currProduct.isValid())
-                    OnButtonAddtoCart();
 
+                if(qrSwitcher) {
+                    currProduct = presenter.getProductQr(contents);
+                    if (currProduct.isLoaded() && currProduct.isValid())
+                        OnButtonAddtoCart();
+
+                }else
+                {
+                    transQr = presenter.getTransactionQr(contents);
+                    if (transQr.isLoaded() && transQr.isValid())
+                        onTransactionSuccess(transQr);
+
+                        //OnButtonAddtoCart();
+                }
             }
         }
     }
@@ -372,9 +404,25 @@ public class MainActivity
             public void onClick(View v) {
 
                 startScan();
+                qrSwitcher=true;
             }
         });
 
+
+        LinearLayout v3=(LinearLayout) menu.findItem(R.id.item_trscan).getActionView();
+
+        Button count3=(Button)v3.findViewById(R.id.scan);
+
+
+
+        count3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startScan();
+                qrSwitcher=false;
+            }
+        });
 
 
 
@@ -541,16 +589,28 @@ public class MainActivity
 
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
-            if (searchText.isEmpty()) {
+            if (searchText.isEmpty()&&(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))) {
                 productsList = realm.copyFromRealm(employeeRealmResults);
+
             } else {
-                productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("productName", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productDescription", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productPrice", searchText, Case.INSENSITIVE)
-                        .findAll());
+                if(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll());
+
+
+                }else {
+
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("categoryId", filterCategory, Case.INSENSITIVE)
+                            .findAll());
+
+            }
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();
@@ -572,14 +632,14 @@ public class MainActivity
     public void onResume() {
         super.onResume();
 
-        loadData();
+       // loadData();
     }
 
     @Override
     protected void onDestroy() {
         presenter.onStop();
-        discountRealmResults.removeChangeListeners();
-        employeeRealmResults.removeChangeListeners();
+//        discountRealmResults.removeChangeListeners();
+   //     employeeRealmResults.removeChangeListeners();
         realm.close();
         super.onDestroy();
     }
@@ -592,18 +652,13 @@ public class MainActivity
 
     @Override
     public void onRefresh() {
-        presenter.load(""+user.getBusiness_id());
-        presenter.getCategory(""+user.getBusiness_id());
+        presenter.load(user.getBusiness_id());
+        presenter.getCategory(user.getBusiness_id());
         presenter.getDiscount(user.getBusiness_id());
+        presenter.loadTransaction(user.getBusiness_id());
     }
 
-    public void loadData()
-    {
-        presenter.load(""+user.getBusiness_id());
-        presenter.load(""+user.getBusiness_id());
-        presenter.getCategory(""+user.getBusiness_id());
-        presenter.getDiscount(user.getBusiness_id());
-    }
+
 
 
 
@@ -649,8 +704,7 @@ public class MainActivity
         binding.appBarMain.swipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                binding.appBarMain.swipeRefreshLayout.setRefreshing(true);
-                onRefresh();
+
             }
         });
     }
@@ -665,10 +719,95 @@ public class MainActivity
 
 
     @Override
-    public void onTransactionSuccess() {
+    public void onTransactionSuccess(Transaction transaction) {
 
         showError("Payment Successful!");
-        startActivity(new Intent(this, MainActivity.class));
+
+
+        final Dialog dialog = new Dialog(this);
+        final DialogReceiptBinding dialogBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_receipt,
+                null,
+                false);
+
+
+
+
+        dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        adapterCart2 = new ReceiptActivityAdapter(this, getMvpView());
+        dialogBinding.recyclerView.setAdapter(adapterCart2);
+        adapterCart2.setProductList(presenter.StringtoList(transaction.getTransactionIdList()),presenter.StringtoList(transaction.getTransactionNameList()),presenter.StringtoList(transaction.getTransactionQuantityList()),presenter.StringtoList(transaction.getTransactionPriceList()));
+        adapterCart2.notifyDataSetChanged();
+
+
+        dialogBinding.orbName.setText(business.getBusinessName());
+        dialogBinding.orbAddress.setText(business.getBusinessAddress());
+        dialogBinding.orbContact.setText(business.getBusinessContact());
+        dialogBinding.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
+        dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
+        dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
+        dialogBinding.orPrice.setText("Php: "+transaction.getTransactionPrice());
+
+
+
+        if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
+            dialogBinding.viewDiscount.setVisibility(View.GONE);
+        else {
+            dialogBinding.orDiscount.setText(" Php: -" + transaction.getTransactionDiscount());
+            dialogBinding.orDiscountName.setText(transaction.getDiscountName());
+            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+
+
+
+        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                MainActivity.this.recreate();
+
+            }
+        });
+
+        dialogBinding.etReceiptEmail.setVisibility(View.VISIBLE);
+        dialogBinding.send.setVisibility(View.VISIBLE);
+        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(dialogBinding.etReceiptEmail.getText().toString().equalsIgnoreCase(""))
+                {
+                    showError("No Valid Email Address");
+                }else {
+                    dialogBinding.cancel.setVisibility(View.GONE);
+                    dialogBinding.etReceiptEmail.setVisibility(View.GONE);
+                    dialogBinding.send.setVisibility(View.GONE);
+                    takeScreenshot(dialogBinding.sendLayout,dialogBinding.etReceiptEmail.getText().toString());
+                    dialog.dismiss();
+                    MainActivity.this.recreate();
+                }
+
+            }
+        });
+
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCancelable(false);
+        dialog.show();
+
+
+
+
+
+
+
 
     }
 
@@ -899,6 +1038,10 @@ public class MainActivity
         dialogBinding.cartItemPrice.setText("Php: "+cartPrice+"");
 
 
+
+
+
+
         dialogBinding.cash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -926,6 +1069,7 @@ public class MainActivity
             public void onClick(View v) {
 
 
+
                 presenter.addTransaction(
                         vtsPrice,
                         cashCode,vtsDiscount,
@@ -942,6 +1086,7 @@ public class MainActivity
                         user.getBusiness_id());
 
 
+                showError("here3");
 
                 dialog.dismiss();
             }
@@ -957,32 +1102,34 @@ public class MainActivity
         });
 
 
-//        Log.d("tag",">>>");
-//        if(!discountId.equalsIgnoreCase(""))
-//        {
-//            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
-//            dialogBinding.cartDiscountList.setText(discountName);
-//            double discounted = 0;
-//            if(discountCode.equalsIgnoreCase("P"))
-//            {
-//              discounted = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) * (Double.parseDouble(discountValue)/100);
-//            }
-//            else
-//            {
-//                discounted = Double.parseDouble(discountValue);
-//            }
-//
-//
-//            dialogBinding.cartDiscountPrice.setText(String.valueOf(discounted));
-//
-//
-//            oldTotal = dialogBinding.cartItemPrice.getText().toString();
-//            newPrice = Double.parseDouble(dialogBinding.cartItemPrice.getText().toString()) - discounted;
-//            if(newPrice<0)
-//                newPrice = 0;
-//            dialogBinding.cartItemPrice.setText(String.valueOf(newPrice));
-//
-//        }
+        if(!discountId.equalsIgnoreCase(""))
+        {
+            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+            dialogBinding.cartDiscountList.setText(discountName);
+            double discounted = 0;
+            if(discountCode.equalsIgnoreCase("P"))
+            {
+                discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
+            }
+            else
+            {
+                discounted = Double.parseDouble(discountValue);
+            }
+
+            vtsDiscount = String.valueOf(discounted);
+            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
+
+
+            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+            newPrice = Double.parseDouble(vtsPrice) - discounted;
+            if(newPrice<0)
+                newPrice = 0;
+
+            vtsPrice = String.valueOf(newPrice);
+            dialogBinding.cartItemPrice.setText("Php: "+String.valueOf(newPrice));
+
+        }
+
 
         dialogBinding.removeDiscountPrice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1058,6 +1205,54 @@ public class MainActivity
 
 
     }
+
+    private void takeScreenshot(View v1,String email) {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +email+now + ".jpg";
+
+            // create bitmap screen capture
+            // v1 = getWindow().getDecorView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            sendMail(mPath,email);
+            //openScreenshot(imageFile);
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    public void sendMail(String path,String email) {
+        Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
+        emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+                new String[] { email });
+        emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+                "EReceipt");
+        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                "");
+        emailIntent.setType("image/png");
+        Uri myUri = Uri.parse("file://" + path);
+        emailIntent.putExtra(Intent.EXTRA_STREAM, myUri);
+        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+    }
+
 
 
 

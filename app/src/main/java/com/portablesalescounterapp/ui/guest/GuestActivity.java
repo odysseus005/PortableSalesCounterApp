@@ -3,11 +3,15 @@ package com.portablesalescounterapp.ui.guest;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -37,20 +41,30 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 import com.portablesalescounterapp.BuildConfig;
 import com.portablesalescounterapp.R;
+import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ActivityGuestListBinding;
 import com.portablesalescounterapp.databinding.ActivityMainBinding;
 import com.portablesalescounterapp.databinding.DialogAddCartBinding;
+import com.portablesalescounterapp.databinding.DialogAddCartGuestBinding;
 import com.portablesalescounterapp.databinding.DialogCartBinding;
 import com.portablesalescounterapp.databinding.DialogDiscountBinding;
+import com.portablesalescounterapp.databinding.DialogEditProductQrBinding;
+import com.portablesalescounterapp.databinding.DialogTransactionQrBinding;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
@@ -65,7 +79,10 @@ import com.portablesalescounterapp.util.CircleTransform;
 import com.portablesalescounterapp.util.DateTimeUtils;
 import com.portablesalescounterapp.util.GridSpacingItemDecoration;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Case;
@@ -98,15 +115,17 @@ public class GuestActivity
     private TextView txtEmail;
     private ImageView imgProfile;
     private Realm realm;
-   // private User user;
-    private Dialog dialog,dialog2;
+    // private User user;
+    private Dialog dialog, dialog2;
     DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
     private Products currProduct;
-    String cashCode="Cash",discountId="",discountName="",discountValue="0",discountCode,oldTotal;
-    String vtsPrice="",vtsDiscount="";
+    String cashCode = "Cash", discountId = "", discountName = "", discountValue = "0", discountCode, oldTotal;
+    String vtsPrice = "", vtsDiscount = "";
     public double newPrice;
     private String searchText;
+    private String user_id;
+    private  String  filterCategory="";
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -114,14 +133,17 @@ public class GuestActivity
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        searchText = "";
-        realm = Realm.getDefaultInstance();
-        user = realm.where(User.class).findFirst();
-
-        if (user == null) {
-            Log.e(TAG, "No User found");
+        final int id = getIntent().getIntExtra(Constants.ID, -1);
+        if (id == -1) {
+            Log.d(TAG, "no int extra found");
+            Toast.makeText(this, "Error on getting Business Details", Toast.LENGTH_SHORT).show();
             finish();
         }
+
+        user_id = String.valueOf(getIntent().getIntExtra(Constants.ID, -1));
+
+        searchText = "";
+        realm = Realm.getDefaultInstance();
 
         productList = new ArrayList<>();
         prodIdcart = new ArrayList<>();
@@ -136,15 +158,6 @@ public class GuestActivity
         getSupportActionBar().setTitle(BuildConfig.DEBUG ? "PSC Ap" : "PSC App");
 
 
-        user = realm.where(User.class).findFirstAsync();
-        user.addChangeListener(new RealmChangeListener<RealmModel>() {
-            @Override
-            public void onChange(RealmModel element) {
-                if (user.isLoaded() && user.isValid())
-                    updateUI();
-            }
-        });
-
         presenter.onStart();
         //binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
         binding.swipeRefreshLayout.setOnRefreshListener(this);
@@ -154,8 +167,6 @@ public class GuestActivity
         int spacing = 20; // 50px
         boolean includeEdge = true;
         binding.recyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
-
-
 
 
         binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -189,18 +200,18 @@ public class GuestActivity
 
 
 
-        presenter.getCategory(user.getBusiness_id());
-        categoryRealmResults = realm.where(Category.class).findAll();
-
         categoryIdList = new ArrayList<>();
         final List<String> promoList = new ArrayList<>();
 
-        presenter.getCategory(user.getBusiness_id());
+         //presenter.getCategory(user_id);
         categoryRealmResults = realm.where(Category.class).findAll();
 
         categoryRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
             @Override
             public void onChange(RealmResults<Category> element) {
+                categoryIdList.clear();
+                promoList.clear();
+
                 categoryIdList.add(0);
                 promoList.add("Select Category");
                 for (Category category : categoryRealmResults) {
@@ -210,7 +221,7 @@ public class GuestActivity
 
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(GuestActivity.this, R.layout.spinner_custom_item, promoList);
-               binding.spCategory.setAdapter(arrayAdapter);
+                binding.spCategory.setAdapter(arrayAdapter);
 
             }
 
@@ -222,11 +233,25 @@ public class GuestActivity
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int position, long id) {
 
-
+                filterCategory = ""+(categoryIdList.get(position));
+                Log.d("TAG>>>",filterCategory);
+                prepareList();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
+
+                filterCategory="";
+                prepareList();
+            }
+        });
+
+
+        binding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                OnButtonAddtoCart2();
             }
         });
 
@@ -234,34 +259,30 @@ public class GuestActivity
     }
 
 
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void ScanBar (View view ) {
+    public void ScanBar(View view) {
         requestScan();
     }
 
     // fucntion to scan barcode
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void requestScan(){
+    public void requestScan() {
         if (checkSelfPermission(Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
-        }else{
+        } else {
             startScan();
         }
     }
 
 
-    public void startScan(){
+    public void startScan() {
 
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
-      //  integrator.setBeepEnabled(false);
+        //  integrator.setBeepEnabled(false);
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.setBeepEnabled(false);
@@ -272,17 +293,17 @@ public class GuestActivity
 
 
     @Override
-    protected void onActivityResult ( int requestCode, int resultCode, Intent in ) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent in) {
         // TODO Auto-generated method stub
 
-        if( requestCode == IntentIntegrator.REQUEST_CODE ){
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
 
 
-            if( resultCode == RESULT_OK ){
-                String contents = in.getStringExtra( "SCAN_RESULT" );
+            if (resultCode == RESULT_OK) {
+                String contents = in.getStringExtra("SCAN_RESULT");
                 currProduct = presenter.getProductQr(contents);
-                if(currProduct.isLoaded()&&currProduct.isValid())
-                    OnButtonAddtoCart();
+                if (currProduct.isLoaded() && currProduct.isValid())
+                    OnButtonAddtoCart2();
 
             }
         }
@@ -295,8 +316,7 @@ public class GuestActivity
         if (requestCode == PERMISSION_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startScan();
-            }
-            else {
+            } else {
                 Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
             }
         }
@@ -323,10 +343,9 @@ public class GuestActivity
         });
 
 
-        LinearLayout v2=(LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
+        LinearLayout v2 = (LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
 
-        Button count2=(Button)v2.findViewById(R.id.scan);
-
+        Button count2 = (Button) v2.findViewById(R.id.scan);
 
 
         count2.setOnClickListener(new View.OnClickListener() {
@@ -338,11 +357,9 @@ public class GuestActivity
         });
 
 
+        LinearLayout v = (LinearLayout) menu.findItem(R.id.item_samplebadge).getActionView();
 
-
-        LinearLayout v=(LinearLayout) menu.findItem(R.id.item_samplebadge).getActionView();
-
-        Button count1=(Button)v.findViewById(R.id.counter);
+        Button count1 = (Button) v.findViewById(R.id.counter);
 
 
         count1.setText(String.valueOf(prodIdcart.size()));
@@ -351,8 +368,8 @@ public class GuestActivity
             @Override
             public void onClick(View v) {
 
-                if(prodIdcart.size()>0)
-                checkout();
+                if (prodIdcart.size() > 0)
+                    checkout();
                 else
                     showError("No Item on the Cart!");
             }
@@ -363,43 +380,33 @@ public class GuestActivity
 
     //GuestActivity Methods start
 
-    private void updateUI() {
-        txtName.setText(user.getFullName());
-        txtEmail.setText(user.getEmail());
-        String imageURL = "";
-
-        if (user.getImage() != null && !user.getImage().isEmpty()) {
-            imageURL = Endpoints.URL_IMAGE+user.getImage();//Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, user.getImage());
-        }
-
-        Log.d("GuestActivity", "imageUrl: " + imageURL);
-        Glide.with(this)
-                .load(imageURL)
-                .transform(new CircleTransform(this))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.default_user)
-                .into(imgProfile);
-
-
-
-    }
-
-
 
     private void prepareList() {
 
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
-            if (searchText.isEmpty()) {
+            if (searchText.isEmpty()&&(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))) {
                 productsList = realm.copyFromRealm(employeeRealmResults);
+
             } else {
-                productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("productName", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productDescription", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productPrice", searchText, Case.INSENSITIVE)
-                        .findAll());
+                if(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll());
+
+
+                }else {
+
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("categoryId", filterCategory, Case.INSENSITIVE)
+                            .findAll());
+
+                }
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();
@@ -421,7 +428,7 @@ public class GuestActivity
     public void onResume() {
         super.onResume();
 
-        loadData();
+
     }
 
     @Override
@@ -441,18 +448,11 @@ public class GuestActivity
 
     @Override
     public void onRefresh() {
-        presenter.load(""+user.getBusiness_id());
-        presenter.getCategory(""+user.getBusiness_id());
-        presenter.getDiscount(user.getBusiness_id());
+         presenter.load(user_id);
+         presenter.getCategory(user_id);
+         presenter.getDiscount(user_id);
     }
 
-    public void loadData()
-    {
-        presenter.load(""+user.getBusiness_id());
-        presenter.load(""+user.getBusiness_id());
-        presenter.getCategory(""+user.getBusiness_id());
-        presenter.getDiscount(user.getBusiness_id());
-    }
 
 
 
@@ -484,8 +484,6 @@ public class GuestActivity
     }
 
 
-
-
     @NonNull
     @Override
     public ViewState<GuestActivityView> createViewState() {
@@ -514,66 +512,107 @@ public class GuestActivity
 
 
     @Override
-    public void onTransactionSuccess() {
+    public void onTransactionSuccess(final Transaction transaction) {
 
-        showError("Payment Successful!");
-        startActivity(new Intent(this, GuestActivity.class));
+        showError("Order Successful!");
+        dialog = new Dialog(GuestActivity.this);
+        final DialogTransactionQrBinding dialogBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_transaction_qr,
+                null,
+                false);
+
+
+
+
+        dialogBinding.setTransaction(transaction);
+
+        try {
+
+            showError(transaction.getTransactionId()+"");
+
+            Bitmap bitmap =  TextToImageEncode((transaction.getTransactionId())+"",GuestActivity.this);
+
+            dialogBinding.productQR.setImageBitmap(bitmap);
+            dialogBinding.productQRcodeView.setText((transaction.getTransactionId()));
+        } catch (Exception e) {
+            showAlert("Error Displaying Qr Code");
+            e.printStackTrace();
+        }
+
+
+        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                takeScreenshot(dialogBinding.qrScreenshot,transaction.getTransactionPrice());
+
+            }
+        });
+
+        dialogBinding.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCancelable(false);
+        dialog.show();
+
 
     }
 
 
     @Override
-    public void  onAddDiscount(Discount discount) {
+    public void onAddDiscount(Discount discount) {
 
-            discountId = String.valueOf(discount.getDiscountId());
-            discountCode = discount.getDiscountCode();
-            discountName = discount.getDiscountName();
-            discountValue = discount.getDiscountValue();
-        if(!discountId.equalsIgnoreCase(""))
-        {
+        discountId = String.valueOf(discount.getDiscountId());
+        discountCode = discount.getDiscountCode();
+        discountName = discount.getDiscountName();
+        discountValue = discount.getDiscountValue();
+        if (!discountId.equalsIgnoreCase("")) {
             dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
             dialogBinding.cartDiscountList.setText(discountName);
             double discounted = 0;
-            if(discountCode.equalsIgnoreCase("P"))
-            {
-              discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
-            }
-            else
-            {
+            if (discountCode.equalsIgnoreCase("P")) {
+                discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue) / 100);
+            } else {
                 discounted = Double.parseDouble(discountValue);
             }
 
             vtsDiscount = String.valueOf(discounted);
-            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
+            dialogBinding.cartDiscountPrice.setText("Php: " + String.valueOf(discounted));
 
 
             oldTotal = dialogBinding.cartItemPrice.getText().toString();
             newPrice = Double.parseDouble(vtsPrice) - discounted;
-            if(newPrice<0)
+            if (newPrice < 0)
                 newPrice = 0;
 
             vtsPrice = String.valueOf(newPrice);
-            dialogBinding.cartItemPrice.setText("Php: "+String.valueOf(newPrice));
+            dialogBinding.cartItemPrice.setText("Php: " + String.valueOf(newPrice));
 
         }
-            dialog2.dismiss();
+        dialog2.dismiss();
 
     }
 
     @Override
     public void onItemRemove(Products products) {
 
-        for(int a=0;a<prodIdcart.size();a++)
-        {
-            if(String.valueOf(products.getProductId()).equalsIgnoreCase(prodIdcart.get(a)))
-            {
+        for (int a = 0; a < prodIdcart.size(); a++) {
+            if (String.valueOf(products.getProductId()).equalsIgnoreCase(prodIdcart.get(a))) {
                 productList.remove(a);
                 prodIdcart.remove(a);
                 prodNamecart.remove(a);
                 prodQuantitycart.remove(a);
                 prodPricecart.remove(a);
 
-                adapterCart.setProductList(productList,prodIdcart,prodNamecart,prodQuantitycart,prodPricecart);
+                adapterCart.setProductList(productList, prodIdcart, prodNamecart, prodQuantitycart, prodPricecart);
                 adapterCart.notifyDataSetChanged();
             }
         }
@@ -581,34 +620,34 @@ public class GuestActivity
 
 
     @Override
-    public void OnButtonAddtoCart() {
+    public void OnButtonAddtoCart2() {
+
 
 
         dialog = new Dialog(GuestActivity.this);
-        final DialogAddCartBinding dialogBinding = DataBindingUtil.inflate(
+        final DialogAddCartGuestBinding dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.dialog_add_cart,
+                R.layout.dialog_add_cart_guest,
                 null,
                 false);
 
         String prodCode;
         String prodCode2;
-        if(currProduct.getProductCode().equalsIgnoreCase("E")) {
+        if (currProduct.getProductCode().equalsIgnoreCase("E")) {
             prodCode = "pcs.";
             prodCode2 = "pc.";
-        }
-        else {
+        } else {
             prodCode = "kg";
             prodCode2 = "kilo";
         }
 
 
-        dialogBinding.viewItemPrice.setText("Php: "+currProduct.getProductPrice()+" per "+prodCode2);
-        dialogBinding.viewItemQuantity.setText("Remaining Quantity:  "+currProduct.getProductSKU()+prodCode);
+        dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
+        dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + currProduct.getProductSKU() + prodCode);
 
 
         dialogBinding.setProduct(currProduct);
-        dialogBinding.buyItemPrice.setText("Php: "+currProduct.getProductPrice());
+        dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
 
         dialogBinding.buyItemQuantity.setText("1");
         newPrice = Integer.parseInt(currProduct.getProductPrice());
@@ -616,17 +655,15 @@ public class GuestActivity
         dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-               // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
-                if(!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
-                   if(Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString())<=Integer.parseInt(currProduct.getProductSKU())) {
-                       newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
-                       dialogBinding.buyItemPrice.setText("Php: " + newPrice);
-                   }
-                   else
-                   {
-                       showError("Not Enough Stocks!");
-                       dialogBinding.buyItemQuantity.setText("1");
-                   }
+                // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
+                if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
+                    if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
+                        newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
+                        dialogBinding.buyItemPrice.setText("Php: " + newPrice);
+                    } else {
+                        showError("Not Enough Stocks!");
+                        dialogBinding.buyItemQuantity.setText("1");
+                    }
 
                 }
             }
@@ -644,13 +681,12 @@ public class GuestActivity
         dialogBinding.buyItemProdcode.setText(prodCode);
 
 
-
         dialogBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 productList.add(currProduct);
-                prodIdcart.add(currProduct.getProductId()+"");
+                prodIdcart.add(currProduct.getProductId() + "");
                 prodNamecart.add(currProduct.getProductName());
                 prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
                 prodPricecart.add(String.valueOf(newPrice));
@@ -668,7 +704,6 @@ public class GuestActivity
 
             }
         });
-
 
 
         dialog.setContentView(dialogBinding.getRoot());
@@ -691,7 +726,7 @@ public class GuestActivity
                 binding.itemView.setVisibility(View.GONE);
             }
         });
-        String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
+        String imageURL = Endpoints.URL_IMAGE + currProduct.getProductName();
         Glide.with(this)
                 .load(imageURL)
                 .skipMemoryCache(true)
@@ -701,29 +736,25 @@ public class GuestActivity
         Log.d("TAG", imageURL);
 
         binding.viewItemDesc.setText(currProduct.getProductDescription());
-        binding.viewItemPrice.setText("Php: "+currProduct.getProductPrice());
+        binding.viewItemPrice.setText("Php: " + currProduct.getProductPrice());
         binding.viewItemName.setText(currProduct.getProductName());
 
         String prodCode;
-        if(currProduct.getProductCode().equalsIgnoreCase("E"))
+        if (currProduct.getProductCode().equalsIgnoreCase("E"))
             prodCode = "pcs.";
         else
             prodCode = "kg";
-        binding.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
+        binding.viewItemQuantity.setText("Quantity: " + currProduct.getProductSKU() + prodCode);
 
 
     }
 
 
+    public void checkout() {
 
 
-
-    public void checkout()
-    {
-
-
-        dialog = new Dialog(GuestActivity.this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-          dialogBinding = DataBindingUtil.inflate(
+        dialog = new Dialog(GuestActivity.this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_cart,
                 null,
@@ -735,17 +766,16 @@ public class GuestActivity
 
         adapterCart = new CartGuestActivityAdapter(this, getMvpView());
         dialogBinding.recyclerView.setAdapter(adapterCart);
-        adapterCart.setProductList(productList,prodIdcart,prodNamecart,prodQuantitycart,prodPricecart);
+        adapterCart.setProductList(productList, prodIdcart, prodNamecart, prodQuantitycart, prodPricecart);
         adapterCart.notifyDataSetChanged();
 
         int cartPrice = 0;
 
-        for(int a=0;a<prodPricecart.size();a++)
-        {
+        for (int a = 0; a < prodPricecart.size(); a++) {
             cartPrice += Double.parseDouble(prodPricecart.get(a));
         }
         vtsPrice = String.valueOf(cartPrice);
-        dialogBinding.cartItemPrice.setText("Php: "+cartPrice+"");
+        dialogBinding.cartItemPrice.setText("Php: " + cartPrice + "");
 
 
         dialogBinding.cash.setOnClickListener(new View.OnClickListener() {
@@ -768,7 +798,7 @@ public class GuestActivity
             }
         });
 
-
+        dialogBinding.send.setText("Generate Qr Code");
 
         dialogBinding.send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -785,11 +815,10 @@ public class GuestActivity
                         presenter.listToString(prodPricecart),
                         discountId,
                         discountName,
-                        String.valueOf(user.getUserId()),
-                        user.getFullName(),
+                        "0",
+                        "Self-Checkout",
                         DateTimeUtils.getCurrentTimeStamp(),
-                        user.getBusiness_id());
-
+                        user_id);
 
 
                 dialog.dismiss();
@@ -806,7 +835,6 @@ public class GuestActivity
         });
 
 
-
         dialogBinding.removeDiscountPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -819,7 +847,6 @@ public class GuestActivity
 
             }
         });
-
 
 
         dialogBinding.cartDiscount.setOnClickListener(new View.OnClickListener() {
@@ -837,7 +864,7 @@ public class GuestActivity
                 dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(GuestActivity.this));
                 dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                adapterDiscount = new CartGuestActivityAdapter(GuestActivity.this, getMvpView());
+                adapterDiscount = new GuesttDiscountListAdapter(GuestActivity.this, getMvpView());
                 dialogBinding.recyclerView.setAdapter(adapterDiscount);
                 discountRealmResults = realm.where(Discount.class).findAllAsync();
                 discountRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Discount>>() {
@@ -858,7 +885,6 @@ public class GuestActivity
 
                     }
                 });
-
                 dialog2.setContentView(dialogBinding.getRoot());
                 dialog2.setCancelable(false);
                 dialog2.show();
@@ -866,7 +892,33 @@ public class GuestActivity
             }
         });
 
+        if(!discountId.equalsIgnoreCase(""))
+        {
+            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+            dialogBinding.cartDiscountList.setText(discountName);
+            double discounted = 0;
+            if(discountCode.equalsIgnoreCase("P"))
+            {
+                discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
+            }
+            else
+            {
+                discounted = Double.parseDouble(discountValue);
+            }
 
+            vtsDiscount = String.valueOf(discounted);
+            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
+
+
+            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+            newPrice = Double.parseDouble(vtsPrice) - discounted;
+            if(newPrice<0)
+                newPrice = 0;
+
+            vtsPrice = String.valueOf(newPrice);
+            dialogBinding.cartItemPrice.setText("Php: "+String.valueOf(newPrice));
+
+        }
 
 
         dialog.setContentView(dialogBinding.getRoot());
@@ -874,15 +926,65 @@ public class GuestActivity
         dialog.show();
 
 
-
-
-
-
-
-
     }
 
 
+    public  Bitmap TextToImageEncode(String value, Context context) throws WriterException {
+
+        Bitmap bitmap = null;
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(value, BarcodeFormat.QR_CODE,200,200);
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            bitmap = barcodeEncoder.createBitmap(bitMatrix);
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
+
+        return bitmap;
+
+    }
+
+    private void takeScreenshot(View v1,String productName) {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        try {
+            // image naming and path  to include sd card  appending name you choose for file
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +productName+now + ".jpg";
+
+            // create bitmap screen capture
+            // v1 = getWindow().getDecorView();
+            v1.setDrawingCacheEnabled(true);
+            Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+            v1.setDrawingCacheEnabled(false);
+
+            File imageFile = new File(mPath);
+
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (Throwable e) {
+            // Several error may come out with file handling or DOM
+            e.printStackTrace();
+        }
+    }
+
+
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
 
 
 }

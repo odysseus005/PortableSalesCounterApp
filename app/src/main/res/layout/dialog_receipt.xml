@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minWidth="300dp"
         android:padding="3dp"
+        android:id="@+id/send_layout"
         android:background="@color/black"
         android:orientation="vertical">
 
@@ -76,6 +79,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
+            android:visibility="gone"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="3dp"
             android:text="Tuesday, February 24, 2017"
@@ -114,9 +118,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="15dp" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+
 
 
 
@@ -262,6 +264,41 @@
                     android:orientation="vertical">
 
 
+                        <!-- email address -->
+                        <EditText
+                            android:id="@+id/et_receipt_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="Email"
+
+                            android:inputType="textEmailAddress"
+                            android:maxLength="150"
+                            android:padding="12dp"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
+                            android:textColorHint="@android:color/darker_gray" />
+
+
+
+
+                        <TextView
+                            android:id="@+id/send"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/rounded_button_solid"
+                            android:clickable="true"
+                            android:padding="8dp"
+                            android:visibility="gone"
+                            android:paddingEnd="20dp"
+                            android:paddingStart="20dp"
+                            android:text="Send to Email"
+                            android:textAllCaps="true"
+                            android:gravity="center|right"
+                            android:paddingRight="25dp"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
 
                     <TextView
                         android:id="@+id/cancel"
@@ -280,11 +317,16 @@
                         android:textColor="@color/white"
                         android:textSize="14sp" />
 
+
+
+
                 </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
+
             </LinearLayout>
 
     </LinearLayout>
+
+    </ScrollView>
 </layout>

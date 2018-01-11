@@ -3,6 +3,7 @@ package com.portablesalescounterapp.ui.main;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.model.data.Transaction;
 
 
 public interface MainActivityView extends MvpView {
@@ -27,7 +28,7 @@ public interface MainActivityView extends MvpView {
 
     void onAddDiscount(Discount discount);
 
-    void onTransactionSuccess();
+    void onTransactionSuccess(Transaction transact);
 
 
 
