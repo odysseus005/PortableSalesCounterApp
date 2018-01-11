@@ -1,5 +1,7 @@
 package com.portablesalescounterapp.ui.receipts;
 
+import android.util.Log;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Endpoints;
@@ -83,10 +85,13 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
 
     public ArrayList<String> StringtoList(String strList)
     {
-        ArrayList<String> finalOutput = null;
-        String[] items = strList.split("#");
+        ArrayList<String> finalOutput = new ArrayList<>();
+       // Log.d(">>>",strList);
+        String[] items = strList.split(":");
+        //Log.d(">>>",items+"");
         for (String item : items)
         {
+          //  Log.d(">>>",item);
             finalOutput.add(item);
 
         }

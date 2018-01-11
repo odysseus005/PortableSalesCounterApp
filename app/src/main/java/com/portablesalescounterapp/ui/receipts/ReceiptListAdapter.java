@@ -36,7 +36,7 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ItemReceiptBinding itemEmployeeBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
-                R.layout.item_restock,
+                R.layout.item_receipt,
                 parent,
                 false);
         return new ViewHolder(itemEmployeeBinding);

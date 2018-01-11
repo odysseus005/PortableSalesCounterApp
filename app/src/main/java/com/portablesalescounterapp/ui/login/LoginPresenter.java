@@ -7,6 +7,7 @@ import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.App;
 import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
 
@@ -45,7 +46,9 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                                 @Override
                                                 public void execute(Realm realm) {
                                                     User user = response.body().getUser();
+                                                    Business business = response.body().getBusiness();
                                                     realm.copyToRealmOrUpdate(user);
+                                                    realm.copyToRealmOrUpdate(business);
 
                                                 }
                                             }, new Realm.Transaction.OnSuccess() {

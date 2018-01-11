@@ -9,21 +9,22 @@ import android.view.MenuItem;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
-
+import com.portablesalescounterapp.databinding.ActivityInventoryBinding;
+import com.portablesalescounterapp.databinding.ActivityReportsBinding;
 
 
 public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> implements ReportsView {
 
-    private ActivityInventoryBinding binding;
+    private ActivityReportsBinding binding;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_item);
+        setContentView(R.layout.activity_reports);
 
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_inventory);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_reports);
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -32,16 +33,26 @@ public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> 
 
     }
 
-    @Override
-    public void onMonitorClicked() {
-        startActivity(new Intent(this, MonitorListActivity.class));
 
+
+    @Override
+    public void onSaleReport() {
+      // startActivity(new Intent(this, RestockListActivity.class));
     }
 
     @Override
-    public void onRestockClicked() {
-       startActivity(new Intent(this, RestockListActivity.class));
+    public void onTopSalesReport() {
+        // startActivity(new Intent(this, RestockListActivity.class));
+    }
 
+    @Override
+    public void onTopProductReport() {
+        // startActivity(new Intent(this, RestockListActivity.class));
+    }
+
+    @Override
+    public void onDssReport() {
+        // startActivity(new Intent(this, RestockListActivity.class));
     }
 
 

@@ -28,6 +28,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -52,6 +54,7 @@ import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
+import com.portablesalescounterapp.ui.item.product.ProductListActivity;
 import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
@@ -127,7 +130,6 @@ public class MainActivity
         prodPricecart = new ArrayList<>();
 
 
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.appBarMain.setView(getMvpView());
 
@@ -159,7 +161,7 @@ public class MainActivity
         binding.navView.setNavigationItemSelectedListener(this);
         //binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
         binding.appBarMain.swipeRefreshLayout.setOnRefreshListener(this);
-        binding.appBarMain.recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        binding.appBarMain.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         binding.appBarMain.recyclerView.setItemAnimator(new DefaultItemAnimator());
         int spanCount = 2; // 3 columns
         int spacing = 20; // 50px
@@ -197,6 +199,52 @@ public class MainActivity
                 onRefresh();
             }
         });
+
+
+        categoryIdList = new ArrayList<>();
+        final List<String> promoList2 = new ArrayList<>();
+
+        presenter.getCategory(user.getBusiness_id());
+        categoryRealmResults = realm.where(Category.class).findAll();
+
+        categoryIdList = new ArrayList<>();
+        final List<String> promoList = new ArrayList<>();
+
+        presenter.getCategory(user.getBusiness_id());
+        categoryRealmResults = realm.where(Category.class).findAll();
+
+        categoryRealmResults.addChangeListener(new RealmChangeListener<RealmResults<Category>>() {
+            @Override
+            public void onChange(RealmResults<Category> element) {
+                categoryIdList.add(0);
+                promoList.add("Select Category");
+                for (Category category : categoryRealmResults) {
+                    promoList.add(category.getCategoryName());
+                    categoryIdList.add(category.getCategoryId());
+                }
+
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_custom_item, promoList);
+               binding.appBarMain.spCategory.setAdapter(arrayAdapter);
+
+            }
+
+
+        });
+
+        binding.appBarMain.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int position, long id) {
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });
+
 
     }
 
@@ -310,28 +358,24 @@ public class MainActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
 
-        SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+
+        LinearLayout v2=(LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
+
+        Button count2=(Button)v2.findViewById(R.id.scan);
+
+
+
+        count2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public void onClick(View v) {
 
                 startScan();
-                return false
-
-                        ;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                searchText = newText;
-                //prepareList();
-                return true;
             }
         });
-        if (!searchText.isEmpty()) {
-            search.setIconified(false);
-            search.setQuery(searchText, true);
-        }
+
+
+
 
         LinearLayout v=(LinearLayout) menu.findItem(R.id.item_samplebadge).getActionView();
 
@@ -372,6 +416,9 @@ public class MainActivity
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.drawable.default_user)
                 .into(imgProfile);
+
+
+
     }
 
     @Override
@@ -436,12 +483,14 @@ public class MainActivity
             } else if (id == R.id.nav_receipts) {
                 startActivity(new Intent(this, ReceiptListActivity.class));
             } else if (id == R.id.nav_items) {
-
                 startActivity(new Intent(this, ItemActivity.class));
             } else if (id == R.id.nav_inventory) {
                 startActivity(new Intent(this, InventoryActivity.class));
             } else if (id == R.id.nav_report) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 622b83806c867eb5b55da4773a29182a8820cc88
                 startActivity(new Intent(this, SaleChartActivity.class));
             } else if (id == R.id.nav_qrcode) {
                 startActivity(new Intent(this, ProductQrListActivity.class));
@@ -614,7 +663,7 @@ public class MainActivity
     @Override
     public void onTransactionSuccess() {
 
-        showAlert("Payment Successful!");
+        showError("Payment Successful!");
         startActivity(new Intent(this, MainActivity.class));
 
     }

@@ -10,15 +10,21 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.databinding.ActivityReceiptListBinding;
+import com.portablesalescounterapp.databinding.DialogCartBinding;
+import com.portablesalescounterapp.databinding.DialogReceiptBinding;
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,16 +40,17 @@ public class ReceiptListActivity
         implements SwipeRefreshLayout.OnRefreshListener, ReceiptListView {
 
 
-    private static final int PERMISSION_READ_EXTERNAL_STORAGE = 124;
-    private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 125;
-    private static final int PERMISSION_CAMERA = 126;
+
     private ActivityReceiptListBinding binding;
     private Realm realm;
     private User user;
+    private Business business;
     private ReceiptListAdapter adapterPromo;
     private RealmResults<Transaction> employeeRealmResults;
     private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
+    private CartreceiptActivityAdapter adapterCart;
+    DialogReceiptBinding dialogBinding;
     private ProgressDialog progressDialog;
     private int emerID=0;
     private  String productCode = "E", categoryId;
@@ -58,6 +65,7 @@ public class ReceiptListActivity
                 .setImagesFolderName("PSCApp")
                 .saveInRootPicturesDirectory();
         realm = Realm.getDefaultInstance();
+        business = realm.where(Business.class).findFirst();
         user = realm.where(User.class).findFirst();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_receipt_list);
         setSupportActionBar(binding.toolbar);
@@ -178,6 +186,76 @@ public class ReceiptListActivity
 
     @Override
     public void onTransactionClicked(Transaction transaction) {
+
+
+
+        dialog = new Dialog(this);
+        dialogBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_receipt,
+                null,
+                false);
+
+
+
+
+
+
+        dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        adapterCart = new CartreceiptActivityAdapter(this, getMvpView());
+        dialogBinding.recyclerView.setAdapter(adapterCart);
+        adapterCart.setProductList(presenter.StringtoList(transaction.getTransactionIdList()),presenter.StringtoList(transaction.getTransactionNameList()),presenter.StringtoList(transaction.getTransactionQuantityList()),presenter.StringtoList(transaction.getTransactionPriceList()));
+        adapterCart.notifyDataSetChanged();
+
+
+        dialogBinding.orbName.setText(business.getBusinessName());
+        dialogBinding.orbAddress.setText(business.getBusinessAddress());
+        dialogBinding.orbContact.setText(business.getBusinessContact());
+        dialogBinding.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
+        dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
+        dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
+        dialogBinding.orPrice.setText("Php: "+transaction.getTransactionPrice());
+
+
+
+        if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
+            dialogBinding.viewDiscount.setVisibility(View.GONE);
+        else {
+            dialogBinding.orDiscount.setText(" Php: -" + transaction.getTransactionDiscount());
+            dialogBinding.orDiscountName.setText(transaction.getDiscountName());
+            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+
+
+
+        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+            }
+        });
+
+
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCancelable(false);
+        dialog.show();
+
+
+
+
+
+
+
+
+
 
 
 

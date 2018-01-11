@@ -35,7 +35,7 @@ public class Transaction extends RealmObject {
     @SerializedName("discount_id")
     @Expose
     private int discountId;
-    @SerializedName("discountName")
+    @SerializedName("discount_name")
     @Expose
     private String discountName;
 

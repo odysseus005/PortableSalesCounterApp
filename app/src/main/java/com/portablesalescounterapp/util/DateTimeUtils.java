@@ -96,13 +96,13 @@ public class DateTimeUtils {
     public static String toReadable(String dateToConvert){
         String convertedDate;
         //String[] arr = dateToConvert.split(" ");
-        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        DateFormat targetFormat = new SimpleDateFormat(FULL_23_HR_DATE, Locale.US);
         Date date = null;
         try {
             date = targetFormat.parse(dateToConvert);
 
 
-        SimpleDateFormat formatter = new SimpleDateFormat("E, MMM dd", Locale.US);
+        SimpleDateFormat formatter = new SimpleDateFormat("E, MMM dd, yyyy", Locale.US);
         convertedDate = formatter.format(date);
         return convertedDate.toUpperCase();
         } catch (Exception e) {
