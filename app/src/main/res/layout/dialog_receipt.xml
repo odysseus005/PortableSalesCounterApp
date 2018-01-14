@@ -109,6 +109,18 @@
             android:textColor="@color/black"
             android:textSize="12sp" />
 
+
+            <TextView
+                android:id="@+id/orCashierName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:gravity="left"
+                android:text="Cashier NAme"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
         </LinearLayout>
 
         <include

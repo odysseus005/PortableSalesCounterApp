@@ -99,9 +99,9 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                 .findFirst();
     }
 
-    Transaction getTransactionQr(String id){
+    Transaction getTransactionQr(int id){
         return realm.where(Transaction.class)
-                .equalTo(Constants.TRANSACTION_ID, id)
+                .equalTo("transactionId", id)
                 .findFirst();
     }
 
@@ -136,7 +136,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                               String username,
                               String date,
                               String bid) {
-        if ( transPrice.equals("") || transCode.equals("") || transDiscount.equals("") ||
+        if ( transPrice.equals("") || transCode.equals("") ||
                 idList.equals("")||date.equals("")) {
             getView().showAlert("Error Transaction!");
         }
@@ -373,6 +373,44 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                     }
                 });
     }
+
+
+    public void updateTransaction(String bussinessId,String productid,String userID,String name,String date) {
+        App.getInstance().getApiInterface().updateTransaction(Endpoints.UPDATE_TRANSACTION,productid,userID,name,date,bussinessId)
+                .enqueue(new Callback<ResultResponse>() {
+                    @Override
+                    public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                        }
+                        if (response.isSuccessful()) {
+                            switch (response.body().getResult()) {
+                                case Constants.SUCCESS:
+                                    getView().showError("Payment Confirmation Succesful!");
+                                    getView().onSelfSuccess();
+                                    break;
+
+                                default:
+                                    getView().showAlert(String.valueOf(R.string.cantConnect));
+                                    break;
+                            }
+                        } else {
+                            getView().showAlert("Oops something went wrong");
+                        }
+                    }
+
+
+                    @Override
+                    public void onFailure(Call<ResultResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                            getView().showAlert(t.getLocalizedMessage());
+                        }
+                    }
+                });
+    }
+
 
 
 

@@ -282,6 +282,16 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST(Endpoints.TRANSACTION)
+    Call<ResultResponse> updateTransaction(@Field(Constants.TAG) String tag,
+                                  @Field(Constants.TRANSACTION_ID) String product_id,
+                                           @Field(Constants.USER_ID) String user_id,
+                                           @Field(Constants.FIRST_NAME) String name,
+                                           @Field(Constants.DATE_TIME) String date,
+                                  @Field(Constants.BUSINESS_ID) String business_id
+    );
+
+    @FormUrlEncoded
+    @POST(Endpoints.TRANSACTION)
     Call<TransactionResponse> addTransaction(@Field(Constants.TAG) String tag,
                                              @Field(Constants.TRANSACTION_PRICE) String transPrice,
                                              @Field(Constants.TRANSACTION_CODE) String transCode,

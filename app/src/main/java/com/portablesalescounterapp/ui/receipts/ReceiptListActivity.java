@@ -35,6 +35,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
@@ -234,8 +235,10 @@ public class ReceiptListActivity
         dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
         dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
         dialogBinding.orPrice.setText("Php: "+transaction.getTransactionPrice());
+        dialogBinding.orCashierName.setText("Cashier Name: "+transaction.getUserName());
 
 
+        dialogBinding.etReceiptEmail.setVisibility(View.GONE);
 
         if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
             dialogBinding.viewDiscount.setVisibility(View.GONE);
@@ -314,7 +317,7 @@ public class ReceiptListActivity
                         .contains("discountName", searchText, Case.INSENSITIVE)
                         .or()
                         .contains("userName", searchText, Case.INSENSITIVE)
-                        .findAll());
+                        .findAll().sort("date", Sort.DESCENDING));
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

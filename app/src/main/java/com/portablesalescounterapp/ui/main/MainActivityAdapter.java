@@ -47,7 +47,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
-             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
+             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId()+"prod";
             Glide.with(context)
                     .load(imageURL)
                     .skipMemoryCache(true)

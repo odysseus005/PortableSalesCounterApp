@@ -28,14 +28,6 @@
             android:layout_marginBottom="8dp"
             android:visibility="gone" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:id="@+id/fb"
-            android:src="@mipmap/ic_launcher"
-            android:layout_alignRight="@+id/textUsername"
-            android:layout_alignEnd="@+id/textUsername" />
 
 
 

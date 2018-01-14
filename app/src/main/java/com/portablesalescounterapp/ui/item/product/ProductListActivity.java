@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,7 +34,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
@@ -45,6 +48,7 @@ import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.item.discount.DiscountListActivity;
+import com.portablesalescounterapp.util.AnyOrientationCaptureActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,6 +86,8 @@ public class ProductListActivity
     private int emerID=0;
     private  String productCode = "E", categoryId;
     private String searchText;
+    private final int PERMISSION_CODE = 9235;
+     DialogAddProductBinding dialogBinding;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -407,7 +413,7 @@ public class ProductListActivity
 
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
 
-        final DialogAddProductBinding dialogBinding = DataBindingUtil.inflate(
+        dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_add_product,
                 null,
@@ -433,6 +439,14 @@ public class ProductListActivity
                 dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
                 dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
+            }
+        });
+
+
+        dialogBinding.startScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               startScan();
             }
         });
 
@@ -531,6 +545,21 @@ public class ProductListActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+
+        if (requestCode == IntentIntegrator.REQUEST_CODE) {
+
+
+            if (resultCode == RESULT_OK) {
+                String contents = data.getStringExtra("SCAN_RESULT");
+
+                dialogBinding.etBarcode.setText(contents);
+
+
+            }
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
 
 
@@ -582,7 +611,7 @@ public class ProductListActivity
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(emerID!=0)
-                        presenter.upload(user.getEmail()+emerID+emerID,imageFile);
+                        presenter.upload(emerID+"prod",imageFile);
                         else
                             showAlert("Error on Uploading Image");
                     }
@@ -594,6 +623,15 @@ public class ProductListActivity
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == PERMISSION_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startScan();
+            } else {
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         switch (requestCode) {
             case PERMISSION_READ_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) { // Permission Granted
@@ -642,6 +680,42 @@ public class ProductListActivity
             adapterPromo.notifyDataSetChanged();
         }
     }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void ScanBar(View view) {
+        requestScan();
+    }
+
+    // fucntion to scan barcode
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void requestScan() {
+        if (checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PERMISSION_CODE);
+        } else {
+            startScan();
+        }
+    }
+
+
+    public void startScan() {
+
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setOrientationLocked(false);
+        //  integrator.setBeepEnabled(false);
+        integrator.setPrompt("Scan Product Bar Code/Qr Code");
+        integrator.setCameraId(0);  // Use a specific camera of the device
+        integrator.setBeepEnabled(false);
+        integrator.setBarcodeImageEnabled(true);
+        integrator.initiateScan();
+
+    }
+
+
 
 
 

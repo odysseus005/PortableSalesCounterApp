@@ -295,7 +295,9 @@ public class ProductQrListActivity
             Bitmap bitmap =  TextToImageEncode("psc"+(product.getProductId()+1000)+"",ProductQrListActivity.this);
 
             dialogBinding.productQR.setImageBitmap(bitmap);
+            dialogBinding.productQRName.setText(""+product.getProductName());
             dialogBinding.productQRcodeView.setText((product.getProductId()+1000)+"");
+
         } catch (Exception e) {
             showAlert("Error Displaying Qr Code");
             e.printStackTrace();

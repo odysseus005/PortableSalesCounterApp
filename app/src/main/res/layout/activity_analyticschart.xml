@@ -7,7 +7,7 @@
 
         <variable
             name="view"
-            type="com.portablesalescounterapp.ui.reports.ReportsView" />
+            type="com.portablesalescounterapp.ui.reports.analytics.AnalyticsChartView" />
     </data>
 
 
@@ -16,8 +16,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-
-
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -29,15 +27,33 @@
             android:weightSum="1"
             />
 
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChart"
+            android:layout_width="match_parent"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp" />
+
+
         <android.support.v7.widget.CardView
-            android:id="@+id/card_sr"
+            android:id="@+id/card_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
-            android:onClick="@{() -> view.onSRClicked()}"
+            android:visibility="gone"
+            android:onClick=""
             android:foreground="?android:selectableItemBackground"
             android:orientation="vertical">
 
@@ -57,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableTint="#777777"
-                        android:text="Sales Report"
+                        android:text="Monitor Inventory"
                         android:textColor="@color/darkGray"
                         android:layout_margin="10dp"
                         android:textSize="18sp"
@@ -70,14 +86,15 @@
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
-            android:id="@+id/card_ar"
+            android:id="@+id/card_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:clickable="true"
-            android:onClick="@{() -> view.onARClicked()}"
+            android:visibility="gone"
+            android:onClick=""
             android:foreground="?android:selectableItemBackground"
             android:orientation="vertical">
 
@@ -96,52 +113,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableTint="#777777"
-                android:text="Analytics Report"
+                android:text="Restock Products"
                 android:textColor="@color/darkGray"
                 android:layout_margin="10dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:targetApi="m" />
-
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_dss"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:onClick="@{() -> view.onDSSClicked()}"
-            android:foreground="?android:selectableItemBackground"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_margin="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_restock" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTint="#777777"
-                    android:text="Decision Support System(Inventory)"
-                    android:textColor="@color/darkGray"
-                    android:layout_margin="10dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:targetApi="m" />
 
             </LinearLayout>
 

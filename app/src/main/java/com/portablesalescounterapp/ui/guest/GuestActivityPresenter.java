@@ -103,7 +103,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                               String username,
                               String date,
                               String bid) {
-        if ( transPrice.equals("") || transCode.equals("") || transDiscount.equals("") ||
+        if ( transPrice.equals("") || transCode.equals("") ||
                 idList.equals("")||date.equals("")) {
             getView().showAlert("Error Transaction!");
         }

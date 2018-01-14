@@ -30,6 +30,8 @@ public interface MainActivityView extends MvpView {
 
     void onTransactionSuccess(Transaction transact);
 
+    void onSelfSuccess();
+
 
 
 

@@ -22,6 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import com.portablesalescounterapp.databinding.DialogEditMonitorBinding;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.guest.GuestActivity;
 import com.portablesalescounterapp.util.DateTimeUtils;
 
 import java.io.File;
@@ -52,6 +54,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
@@ -73,12 +76,14 @@ public class MonitorListActivity
     private Dialog dialog;
     private ProgressDialog progressDialog;
     private String searchText;
+    private String sorter="Name";
 
     @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        searchText="";
 
         EasyImage.configuration(this)
                 .setImagesFolderName("PSCApp")
@@ -121,13 +126,48 @@ public class MonitorListActivity
                 onRefresh();
             }
         });
+
+
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Name");
+        categories.add("Product ID");
+        categories.add("Quantity Ascending");
+        categories.add("Quantity Descending");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spCategory.setAdapter(dataAdapter);
+
+
+        binding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                // Showing selected spinner item
+
+               // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                sorter= item;
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+
+            }
+        });
+
     }
 
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
 
 
 
@@ -301,17 +341,90 @@ public class MonitorListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
             if (searchText.isEmpty()) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                if(sorter.equalsIgnoreCase("name")) {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+                }
+                else if(sorter.equalsIgnoreCase("Product ID"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productId", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Quantity Ascending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort(" productSKU", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Quantity Descending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort(" productSKU", Sort.DESCENDING));
+
+                }else
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+
+                }
             } else {
-                productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("productName", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productRestock", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("userName", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productTotal", searchText, Case.INSENSITIVE)
-                        .findAll());
+
+                if(sorter.equalsIgnoreCase("name")) {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productName", Sort.ASCENDING));
+                }
+                else if(sorter.equalsIgnoreCase("Product ID"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productId", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Quantity Ascending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort(" productSKU", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Quantity Descending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort(" productSKU", Sort.DESCENDING));
+
+                }else
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productName", Sort.ASCENDING));
+
+                }
+
+
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

@@ -65,8 +65,14 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.reports.analytics.AnalyticsChartActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
+
+        <activity
             android:name=".ui.reports.salesReport.SaleChartActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="sensorLandscape"/>
 
         <activity
             android:name=".ui.reports.ReportsActivity"
@@ -88,13 +94,7 @@
             android:name=".ui.inventory.monitor.MonitorListActivity"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.reports.ReportsActivity"
-            android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name=".ui.reports.salesReport.SaleChartActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.receipts.ReceiptListActivity"

@@ -61,6 +61,8 @@
                         android:id="@+id/companyImageLayout"
                         android:layout_width="match_parent"
                         android:gravity="center"
+                        android:padding="3dp"
+                        android:background="@color/transBlack"
                         android:layout_margin="8dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -76,7 +78,7 @@
                             android:layout_width="wrap_content"
                             android:layout_marginTop="8dp"
                             android:layout_height="wrap_content"
-                            android:text='@{transaction.transactionPrice}'
+                            android:id="@+id/productQRPrice"
                             android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
                             android:textColor="@color/white"

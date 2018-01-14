@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
@@ -94,6 +95,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     protected  void onResume()
     {
         super.onResume();
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
     }
     @Override

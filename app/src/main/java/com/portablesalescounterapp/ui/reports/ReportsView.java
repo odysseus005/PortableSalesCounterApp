@@ -14,4 +14,10 @@ public interface ReportsView extends MvpView {
 
     void onDssReport();
 
+    void onSRClicked();
+
+    void onARClicked();
+
+    void onDSSClicked();
+
 }

@@ -45,8 +45,9 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-            holder.itemEmergencyBinding.setTransaction(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
+              if(employeeList.get(position).getUserId()!=0)
+                holder.itemEmergencyBinding.setTransaction(employeeList.get(position));
 
             //
         // holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");

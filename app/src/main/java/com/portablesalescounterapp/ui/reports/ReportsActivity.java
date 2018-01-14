@@ -11,6 +11,8 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.databinding.ActivityInventoryBinding;
 import com.portablesalescounterapp.databinding.ActivityReportsBinding;
+import com.portablesalescounterapp.ui.reports.analytics.AnalyticsChartActivity;
+import com.portablesalescounterapp.ui.reports.salesReport.SaleChartActivity;
 
 
 public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> implements ReportsView {
@@ -37,7 +39,7 @@ public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> 
 
     @Override
     public void onSaleReport() {
-      // startActivity(new Intent(this, RestockListActivity.class));
+       startActivity(new Intent(this, SaleChartActivity.class));
     }
 
     @Override
@@ -52,6 +54,22 @@ public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> 
 
     @Override
     public void onDssReport() {
+        // startActivity(new Intent(this, RestockListActivity.class));
+    }
+
+
+    @Override
+    public void onSRClicked() {
+         startActivity(new Intent(this, SaleChartActivity.class));
+    }
+
+    @Override
+    public void onARClicked() {
+         startActivity(new Intent(this, AnalyticsChartActivity.class));
+    }
+
+    @Override
+    public void onDSSClicked() {
         // startActivity(new Intent(this, RestockListActivity.class));
     }
 

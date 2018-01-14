@@ -58,6 +58,7 @@ import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.guest.GuestActivity;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
 import com.portablesalescounterapp.ui.item.product.ProductListActivity;
@@ -67,6 +68,8 @@ import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
 import com.portablesalescounterapp.ui.receipts.CartreceiptActivityAdapter;
 import com.portablesalescounterapp.ui.receipts.ReceiptListActivity;
+import com.portablesalescounterapp.ui.reports.ReportsActivity;
+import com.portablesalescounterapp.ui.reports.analytics.AnalyticsChartActivity;
 import com.portablesalescounterapp.ui.reports.salesReport.SaleChartActivity;
 import com.portablesalescounterapp.util.AnyOrientationCaptureActivity;
 import com.portablesalescounterapp.util.CircleTransform;
@@ -111,7 +114,7 @@ public class MainActivity
     private ImageView imgProfile;
     private Realm realm;
     private User user;
-    private Dialog dialog,dialog2;
+    private Dialog dialog,dialog2,dialogTC;
     DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
     private Products currProduct;
@@ -123,6 +126,7 @@ public class MainActivity
     private String filterCategory="";
     private ReceiptActivityAdapter adapterCart2;
     boolean qrSwitcher=true;
+     DialogReceiptBinding dialogBindingSuccess;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -238,10 +242,9 @@ public class MainActivity
                     categoryIdList.add(category.getCategoryId());
                 }
 
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_custom_item, promoList);
-               binding.appBarMain.spCategory.setAdapter(arrayAdapter);
-
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item, promoList);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                binding.appBarMain.spCategory.setAdapter(arrayAdapter);
             }
 
 
@@ -321,7 +324,9 @@ public class MainActivity
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
       //  integrator.setBeepEnabled(false);
+        if(qrSwitcher)
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
+        else integrator.setPrompt("Scan Order Code");
         integrator.setCameraId(0);  // Use a specific camera of the device
         integrator.setBeepEnabled(false);
         integrator.setBarcodeImageEnabled(true);
@@ -337,23 +342,34 @@ public class MainActivity
         if( requestCode == IntentIntegrator.REQUEST_CODE ){
 
 
-            if( resultCode == RESULT_OK ){
-                String contents = in.getStringExtra( "SCAN_RESULT" );
+            if( resultCode == RESULT_OK ) {
 
-                if(qrSwitcher) {
-                    currProduct = presenter.getProductQr(contents);
-                    if (currProduct.isLoaded() && currProduct.isValid())
-                        OnButtonAddtoCart();
+                try {
+                    String contents = in.getStringExtra("SCAN_RESULT");
 
-                }else
-                {
-                    transQr = presenter.getTransactionQr(contents);
-                    if (transQr.isLoaded() && transQr.isValid())
-                        onTransactionSuccess(transQr);
+                    if (qrSwitcher) {
+                        currProduct = presenter.getProductQr(contents);
+                        if (currProduct.isLoaded() && currProduct.isValid())
+                            OnButtonAddtoCart();
+
+                    } else {
+                        transQr = presenter.getTransactionQr(Integer.parseInt(contents));
+                        if (transQr.getUserId() == 0) {
+                            if (transQr.isLoaded() && transQr.isValid())
+
+                                onTransactionSuccess(transQr);
+                        } else {
+                            showAlert("Transaction Order is Already Paid!");
+                        }
 
                         //OnButtonAddtoCart();
+                    }
+                } catch (Exception e) {
+                    showError("Cannot Read Code!");
                 }
+
             }
+
         }
     }
 
@@ -393,18 +409,17 @@ public class MainActivity
         });
 
 
-        LinearLayout v2=(LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
+      /*  LinearLayout v2=(LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
 
         Button count2=(Button)v2.findViewById(R.id.scan);
 
 
 
-        count2.setOnClickListener(new View.OnClickListener() {
+       v2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startScan();
-                qrSwitcher=true;
+
             }
         });
 
@@ -415,7 +430,7 @@ public class MainActivity
 
 
 
-        count3.setOnClickListener(new View.OnClickListener() {
+        v3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -423,7 +438,7 @@ public class MainActivity
                 qrSwitcher=false;
             }
         });
-
+*/
 
 
         LinearLayout v=(LinearLayout) menu.findItem(R.id.item_samplebadge).getActionView();
@@ -537,7 +552,7 @@ public class MainActivity
                 startActivity(new Intent(this, InventoryActivity.class));
             } else if (id == R.id.nav_report) {
 
-                startActivity(new Intent(this, SaleChartActivity.class));
+                startActivity(new Intent(this, ReportsActivity.class));
             } else if (id == R.id.nav_qrcode) {
                 startActivity(new Intent(this, ProductQrListActivity.class));
             } else if (id == R.id.nav_profile) {
@@ -623,6 +638,20 @@ public class MainActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
+            case R.id.item_trscan:
+
+                qrSwitcher=false;
+                startScan();
+            return  true;
+
+            case R.id.item_qrscan:
+
+                qrSwitcher=true;
+                startScan();
+                return  true;
+
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -631,7 +660,7 @@ public class MainActivity
     @Override
     public void onResume() {
         super.onResume();
-
+          //  qrSwitcher=true;
        // loadData();
     }
 
@@ -719,13 +748,15 @@ public class MainActivity
 
 
     @Override
-    public void onTransactionSuccess(Transaction transaction) {
+    public void onTransactionSuccess(final Transaction transaction) {
 
+        if(qrSwitcher)
         showError("Payment Successful!");
 
 
-        final Dialog dialog = new Dialog(this);
-        final DialogReceiptBinding dialogBinding = DataBindingUtil.inflate(
+
+         dialogTC = new Dialog(this);
+        dialogBindingSuccess = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_receipt,
                 null,
@@ -734,31 +765,31 @@ public class MainActivity
 
 
 
-        dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+        dialogBindingSuccess.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        dialogBindingSuccess.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         adapterCart2 = new ReceiptActivityAdapter(this, getMvpView());
-        dialogBinding.recyclerView.setAdapter(adapterCart2);
+        dialogBindingSuccess.recyclerView.setAdapter(adapterCart2);
         adapterCart2.setProductList(presenter.StringtoList(transaction.getTransactionIdList()),presenter.StringtoList(transaction.getTransactionNameList()),presenter.StringtoList(transaction.getTransactionQuantityList()),presenter.StringtoList(transaction.getTransactionPriceList()));
         adapterCart2.notifyDataSetChanged();
 
 
-        dialogBinding.orbName.setText(business.getBusinessName());
-        dialogBinding.orbAddress.setText(business.getBusinessAddress());
-        dialogBinding.orbContact.setText(business.getBusinessContact());
-        dialogBinding.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
-        dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
-        dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
-        dialogBinding.orPrice.setText("Php: "+transaction.getTransactionPrice());
-
+        dialogBindingSuccess.orbName.setText(business.getBusinessName());
+        dialogBindingSuccess.orbAddress.setText(business.getBusinessAddress());
+        dialogBindingSuccess.orbContact.setText(business.getBusinessContact());
+        dialogBindingSuccess.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
+        dialogBindingSuccess.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
+        dialogBindingSuccess.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
+        dialogBindingSuccess.orPrice.setText("Php: "+transaction.getTransactionPrice());
+        dialogBindingSuccess.orCashierName.setText("Cashier Name: "+transaction.getUserName());
 
 
         if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
-            dialogBinding.viewDiscount.setVisibility(View.GONE);
+            dialogBindingSuccess.viewDiscount.setVisibility(View.GONE);
         else {
-            dialogBinding.orDiscount.setText(" Php: -" + transaction.getTransactionDiscount());
-            dialogBinding.orDiscountName.setText(transaction.getDiscountName());
-            dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
+            dialogBindingSuccess.orDiscount.setText(" Php: -" + transaction.getTransactionDiscount());
+            dialogBindingSuccess.orDiscountName.setText(transaction.getDiscountName());
+            dialogBindingSuccess.viewDiscount.setVisibility(View.VISIBLE);
         }
 
 
@@ -767,49 +798,73 @@ public class MainActivity
 
 
 
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+        dialogBindingSuccess.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                dialog.dismiss();
+                dialogTC.dismiss();
                 MainActivity.this.recreate();
 
             }
         });
 
-        dialogBinding.etReceiptEmail.setVisibility(View.VISIBLE);
-        dialogBinding.send.setVisibility(View.VISIBLE);
-        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+
+        dialogBindingSuccess.etReceiptEmail.setVisibility(View.VISIBLE);
+        dialogBindingSuccess.send.setVisibility(View.VISIBLE);
+        Log.d(">>>>","1>"+qrSwitcher);
+        if(!qrSwitcher) {
+            dialogBindingSuccess.send.setText("Confirm Checkout");
+        }
+
+        dialogBindingSuccess.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(dialogBinding.etReceiptEmail.getText().toString().equalsIgnoreCase(""))
+                if(dialogBindingSuccess.etReceiptEmail.getText().toString().equalsIgnoreCase(""))
                 {
                     showError("No Valid Email Address");
                 }else {
-                    dialogBinding.cancel.setVisibility(View.GONE);
-                    dialogBinding.etReceiptEmail.setVisibility(View.GONE);
-                    dialogBinding.send.setVisibility(View.GONE);
-                    takeScreenshot(dialogBinding.sendLayout,dialogBinding.etReceiptEmail.getText().toString());
-                    dialog.dismiss();
-                    MainActivity.this.recreate();
+
+                    Log.d(">>>>",""+qrSwitcher);
+                    if(!qrSwitcher)
+                    {
+
+                        presenter.updateTransaction(user.getBusiness_id(),String.valueOf(transaction.getTransactionId()),String.valueOf(user.getUserId()),user.getFullName(), String.valueOf(DateTimeUtils.getCurrentTimeStamp()));
+                        qrSwitcher=true;
+
+                    }
+                    else {
+                        dialogBindingSuccess.cancel.setVisibility(View.GONE);
+                        dialogBindingSuccess.etReceiptEmail.setVisibility(View.GONE);
+                        dialogBindingSuccess.send.setVisibility(View.GONE);
+                        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString());
+                        dialogTC.dismiss();
+                        MainActivity.this.recreate();
+
+                    }
                 }
 
             }
         });
 
-        dialog.setContentView(dialogBinding.getRoot());
-        dialog.setCancelable(false);
-        dialog.show();
-
-
-
-
-
-
-
+        dialogTC.setContentView(dialogBindingSuccess.getRoot());
+        dialogTC.setCancelable(false);
+        dialogTC.show();
 
     }
+
+    @Override
+    public void  onSelfSuccess() {
+
+        dialogBindingSuccess.cancel.setVisibility(View.GONE);
+        dialogBindingSuccess.etReceiptEmail.setVisibility(View.GONE);
+        dialogBindingSuccess.send.setVisibility(View.GONE);
+        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString());
+        dialogTC.dismiss();
+        MainActivity.this.recreate();
+
+    }
+
 
 
     @Override
@@ -874,96 +929,97 @@ public class MainActivity
     public void OnButtonAddtoCart() {
 
 
-        dialog = new Dialog(MainActivity.this);
-        final DialogAddCartBinding dialogBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.dialog_add_cart,
-                null,
-                false);
-
-        String prodCode;
-        String prodCode2;
-        if(currProduct.getProductCode().equalsIgnoreCase("E")) {
-            prodCode = "pcs.";
-            prodCode2 = "pc.";
+        if(currProduct.getProductSKU().equalsIgnoreCase("0")||currProduct.getProductSKU().equalsIgnoreCase(""))
+        {
+            showError("Out of Stock!");
         }
         else {
-            prodCode = "kg";
-            prodCode2 = "kilo";
-        }
+            dialog = new Dialog(MainActivity.this);
+            final DialogAddCartBinding dialogBinding = DataBindingUtil.inflate(
+                    getLayoutInflater(),
+                    R.layout.dialog_add_cart,
+                    null,
+                    false);
+
+            String prodCode;
+            String prodCode2;
+            if (currProduct.getProductCode().equalsIgnoreCase("E")) {
+                prodCode = "pcs.";
+                prodCode2 = "pc.";
+            } else {
+                prodCode = "kg";
+                prodCode2 = "kilo";
+            }
 
 
-        dialogBinding.viewItemPrice.setText("Php: "+currProduct.getProductPrice()+" per "+prodCode2);
-        dialogBinding.viewItemQuantity.setText("Remaining Quantity:  "+currProduct.getProductSKU()+prodCode);
+            dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
+            dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + currProduct.getProductSKU() + prodCode);
 
 
-        dialogBinding.setProduct(currProduct);
-        dialogBinding.buyItemPrice.setText("Php: "+currProduct.getProductPrice());
+            dialogBinding.setProduct(currProduct);
+            dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
 
-        dialogBinding.buyItemQuantity.setText("1");
-        newPrice = Integer.parseInt(currProduct.getProductPrice());
+            dialogBinding.buyItemQuantity.setText("1");
+            newPrice = Integer.parseInt(currProduct.getProductPrice());
 
-        dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
+            dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {
-               // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
-                if(!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
-                   if(Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString())<=Integer.parseInt(currProduct.getProductSKU())) {
-                       newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
-                       dialogBinding.buyItemPrice.setText("Php: " + newPrice);
-                   }
-                   else
-                   {
-                       showError("Not Enough Stocks!");
-                       dialogBinding.buyItemQuantity.setText("1");
-                   }
+                public void afterTextChanged(Editable s) {
+                    // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
+                    if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
+                        if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
+                            newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
+                            dialogBinding.buyItemPrice.setText("Php: " + newPrice);
+                        } else {
+                            showError("Not Enough Stocks!");
+                            dialogBinding.buyItemQuantity.setText(currProduct.getProductSKU());
+                        }
+
+                    }
+                }
+
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                }
+            });
+
+
+            dialogBinding.buyItemProdcode.setText(prodCode);
+
+
+            dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    productList.add(currProduct);
+                    prodIdcart.add(currProduct.getProductId() + "");
+                    prodNamecart.add(currProduct.getProductName());
+                    prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
+                    prodPricecart.add(String.valueOf(newPrice));
+
+                    MainActivity.this.invalidateOptionsMenu();
+
+                    dialog.dismiss();
+                }
+            });
+            dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    dialog.dismiss();
 
                 }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-            }
-        });
+            });
 
 
-        dialogBinding.buyItemProdcode.setText(prodCode);
-
-
-
-        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                productList.add(currProduct);
-                prodIdcart.add(currProduct.getProductId()+"");
-                prodNamecart.add(currProduct.getProductName());
-                prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
-                prodPricecart.add(String.valueOf(newPrice));
-
-                MainActivity.this.invalidateOptionsMenu();
-
-                dialog.dismiss();
-            }
-        });
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-
-            }
-        });
-
-
-
-        dialog.setContentView(dialogBinding.getRoot());
-        dialog.setCancelable(false);
-        dialog.show();
+            dialog.setContentView(dialogBinding.getRoot());
+            dialog.setCancelable(false);
+            dialog.show();
+        }
 
 
     }
@@ -1086,7 +1142,7 @@ public class MainActivity
                         user.getBusiness_id());
 
 
-                showError("here3");
+             //   showError("here3");
 
                 dialog.dismiss();
             }

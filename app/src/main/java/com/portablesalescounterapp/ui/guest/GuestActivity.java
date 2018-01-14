@@ -220,7 +220,8 @@ public class GuestActivity
                 }
 
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(GuestActivity.this, R.layout.spinner_custom_item, promoList);
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(GuestActivity.this, android.R.layout.simple_spinner_item, promoList);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 binding.spCategory.setAdapter(arrayAdapter);
 
             }
@@ -324,7 +325,7 @@ public class GuestActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.guest_menu, menu);
 
 
         SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
@@ -342,6 +343,7 @@ public class GuestActivity
             }
         });
 
+        /*
 
         LinearLayout v2 = (LinearLayout) menu.findItem(R.id.item_qrscan).getActionView();
 
@@ -355,7 +357,7 @@ public class GuestActivity
                 startScan();
             }
         });
-
+*/
 
         LinearLayout v = (LinearLayout) menu.findItem(R.id.item_samplebadge).getActionView();
 
@@ -419,6 +421,10 @@ public class GuestActivity
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
+            case R.id.item_qrscan:
+                startScan();
+                return  true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -434,8 +440,8 @@ public class GuestActivity
     @Override
     protected void onDestroy() {
         presenter.onStop();
-        discountRealmResults.removeChangeListeners();
-        employeeRealmResults.removeChangeListeners();
+//        discountRealmResults.removeChangeListeners();
+ //       employeeRealmResults.removeChangeListeners();
         realm.close();
         super.onDestroy();
     }
@@ -529,14 +535,17 @@ public class GuestActivity
 
         try {
 
-            showError(transaction.getTransactionId()+"");
+
 
             Bitmap bitmap =  TextToImageEncode((transaction.getTransactionId())+"",GuestActivity.this);
 
             dialogBinding.productQR.setImageBitmap(bitmap);
-            dialogBinding.productQRcodeView.setText((transaction.getTransactionId()));
-        } catch (Exception e) {
+            dialogBinding.productQRPrice.setText("Php: "+transaction.getTransactionPrice());
+            dialogBinding.productQRcodeView.setText(""+(transaction.getTransactionId()));
+        }
+        catch (Exception e) {
             showAlert("Error Displaying Qr Code");
+            Log.d("TAG>>",e+"");
             e.printStackTrace();
         }
 
@@ -662,7 +671,7 @@ public class GuestActivity
                         dialogBinding.buyItemPrice.setText("Php: " + newPrice);
                     } else {
                         showError("Not Enough Stocks!");
-                        dialogBinding.buyItemQuantity.setText("1");
+                        dialogBinding.buyItemQuantity.setText(currProduct.getProductSKU());
                     }
 
                 }
