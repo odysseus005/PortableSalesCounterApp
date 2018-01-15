@@ -44,10 +44,12 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        Log.d("TAG>>,",employeeList.get(position).getProductStatus());
 
+        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
-             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId()+"prod";
+            String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId() + "prod";
             Glide.with(context)
                     .load(imageURL)
                     .skipMemoryCache(true)
@@ -55,6 +57,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     .error(R.drawable.placeholder)
                     .into(holder.itemEmergencyBinding.productPicture);
             Log.d("TAG", imageURL);
+        }
 
     }
 

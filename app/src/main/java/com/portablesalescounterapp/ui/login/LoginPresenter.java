@@ -23,6 +23,7 @@ import retrofit2.Response;
 public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
     private int login_counter = 0;
     private static final String TAG = LoginPresenter.class.getSimpleName();
+    User user;
 
     public void login(final String email, final String password) {
         if (email.isEmpty() || email.equals("")) {
@@ -45,7 +46,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                             realm.executeTransactionAsync(new Realm.Transaction() {
                                                 @Override
                                                 public void execute(Realm realm) {
-                                                    User user = response.body().getUser();
+                                                    user = response.body().getUser();
                                                     Business business = response.body().getBusiness();
                                                     realm.copyToRealmOrUpdate(user);
                                                     realm.copyToRealmOrUpdate(business);
@@ -55,7 +56,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                                 @Override
                                                 public void onSuccess() {
                                                     realm.close();
-                                                    getView().onLoginSuccess();
+                                                    getView().onLoginSuccess(user);
                                                 }
                                             }, new Realm.Transaction.OnError() {
                                                 @Override
@@ -98,6 +99,60 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                         }
                     });
         }
+    }
+
+
+
+    public void firstLogin(String userId) {
+        getView().startLoading();
+        App.getInstance().getApiInterface().updateUserCode(Endpoints.FIRSTLOGIN,userId).enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, final Response<LoginResponse> response) {
+                getView().stopLoading();
+                if (response.isSuccessful()) {
+                    if (response.body().getResult().equals(Constants.SUCCESS)) {
+
+                        final Realm realm = Realm.getDefaultInstance();
+                        realm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                user = response.body().getUser();
+                                realm.copyToRealmOrUpdate(user);
+
+
+                            }
+                        }, new Realm.Transaction.OnSuccess() {
+                            @Override
+                            public void onSuccess() {
+                                realm.close();
+                                getView().onLoginSuccess(user);
+                            }
+                        }, new Realm.Transaction.OnError() {
+                            @Override
+                            public void onError(Throwable error) {
+                                realm.close();
+                                Log.e(TAG, "onError: Unable to save USER", error);
+                                getView().showAlert("Error Saving API Response");
+                            }
+                        });
+                    } else {
+                        getView().showAlert(String.valueOf(R.string.cantConnect));
+                    }
+                } else {
+                    getView().showAlert(response.message() != null ? response.message()
+                            : "Unknown Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                getView().stopLoading();
+                Log.e(TAG, "onFailure: Error calling login api", t);
+                getView().stopLoading();
+                getView().showAlert("Error Connecting to Server");
+            }
+        });
+
     }
 
 

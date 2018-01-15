@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -48,16 +49,20 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-            holder.itemEmergencyBinding.setProduct(employeeList.get(position));
-            holder.itemEmergencyBinding.setView(view);
-           String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
+        if(!(employeeList.get(position).getProductStatus().equalsIgnoreCase("A"))) {
+           holder.itemEmergencyBinding.prodLayout.setVisibility(View.GONE);
+        }
+
+        holder.itemEmergencyBinding.setProduct(employeeList.get(position));
+        holder.itemEmergencyBinding.setView(view);
+        String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
         Glide.with(context)
-                    .load(imageURL)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .error(R.drawable.placeholder)
-                    .into(holder.itemEmergencyBinding.imageProfile);
-            Log.d("TAG", imageURL);
+                .load(imageURL)
+                .skipMemoryCache(true)
+                .centerCrop()
+                .error(R.drawable.placeholder)
+                .into(holder.itemEmergencyBinding.imageProfile);
+        Log.d("TAG", imageURL);
 
     }
 

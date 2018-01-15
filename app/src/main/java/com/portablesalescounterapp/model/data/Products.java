@@ -40,6 +40,10 @@ public class Products extends RealmObject {
     @Expose
     private String productCode;
 
+    @SerializedName("productStatus")
+    @Expose
+    private String productStatus;
+
     @SerializedName("category_id")
     @Expose
     private String categoryId;
@@ -139,7 +143,13 @@ public class Products extends RealmObject {
         this.productCode = productCode;
     }
 
+    public String getProductStatus() {
+        return productStatus;
+    }
 
+    public void setProductStatus(String productStatus) {
+        this.productStatus = productStatus;
+    }
 
 
 

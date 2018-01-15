@@ -43,6 +43,10 @@ public class User extends RealmObject {
     @Expose
     private String position;
 
+    @SerializedName("firstlogin")
+    @Expose
+    private String firstlogin;
+
     @SerializedName("business_id")
     @Expose
     private String business_id;
@@ -151,6 +155,15 @@ public class User extends RealmObject {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+
+    public String getFirstlogin() {
+        return firstlogin;
+    }
+
+    public void setFirstlogin(String firstlogin) {
+        this.firstlogin = firstlogin;
     }
 
 

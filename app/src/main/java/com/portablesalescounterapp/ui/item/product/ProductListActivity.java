@@ -84,7 +84,7 @@ public class ProductListActivity
     private Dialog dialog;
     private ProgressDialog progressDialog;
     private int emerID=0;
-    private  String productCode = "E", categoryId;
+    private  String productCode = "E", categoryId="0";
     private String searchText;
     private final int PERMISSION_CODE = 9235;
      DialogAddProductBinding dialogBinding;

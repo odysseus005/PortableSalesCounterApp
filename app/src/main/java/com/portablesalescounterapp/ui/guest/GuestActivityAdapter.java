@@ -46,16 +46,19 @@ public class GuestActivityAdapter extends RecyclerView.Adapter<GuestActivityAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-            holder.itemEmergencyBinding.setProduct(employeeList.get(position));
-            holder.itemEmergencyBinding.setView(view);
-             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
-            Glide.with(context)
-                    .load(imageURL)
-                    .skipMemoryCache(true)
-                    .centerCrop()
-                    .error(R.drawable.placeholder)
-                    .into(holder.itemEmergencyBinding.productPicture);
-            Log.d("TAG", imageURL);
+        Log.d("TAG>>,",employeeList.get(position).getProductStatus());
+            if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
+                holder.itemEmergencyBinding.setProduct(employeeList.get(position));
+                holder.itemEmergencyBinding.setView(view);
+                String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
+                Glide.with(context)
+                        .load(imageURL)
+                        .skipMemoryCache(true)
+                        .centerCrop()
+                        .error(R.drawable.placeholder)
+                        .into(holder.itemEmergencyBinding.productPicture);
+                Log.d("TAG", imageURL);
+            }
 
     }
 

@@ -47,14 +47,15 @@ public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
+        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
-            if(employeeList.get(position).getProductCode().equalsIgnoreCase("E"))
+            if (employeeList.get(position).getProductCode().equalsIgnoreCase("E"))
                 holder.itemEmergencyBinding.prodCode.setText(" pcs.");
             else
                 holder.itemEmergencyBinding.prodCode.setText(" kg");
             //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, employeeList.get(position).getImage());
-
+        }
 
     }
 

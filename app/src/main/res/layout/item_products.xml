@@ -121,6 +121,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/prodLayout"
                     android:orientation="horizontal">
                     <TextView
                         android:id="@+id/cancel"

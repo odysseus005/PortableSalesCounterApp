@@ -21,7 +21,7 @@ public interface LoginView extends MvpView {
 
     void stopLoading();
 
-    void onLoginSuccess();
+    void onLoginSuccess(User user);
 
     void onForgotPasswordButtonClicked();
 

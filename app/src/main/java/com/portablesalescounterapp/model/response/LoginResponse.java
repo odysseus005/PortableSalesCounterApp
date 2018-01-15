@@ -1,10 +1,13 @@
 package com.portablesalescounterapp.model.response;
 
 
+import com.google.gson.annotations.SerializedName;
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.User;
 
 public class LoginResponse extends ResultResponse {
+
+    @SerializedName("user")
     private User user;
 
     public User getUser() {
@@ -26,6 +29,7 @@ public class LoginResponse extends ResultResponse {
         this.business = business;
     }
 
+    @SerializedName("business")
     private Business business;
 
 

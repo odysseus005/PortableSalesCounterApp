@@ -50,38 +50,33 @@ public class ProductQrListAdapter extends RecyclerView.Adapter<ProductQrListAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
 
 
-
-
+        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
 
 
-
-            if((employeeList.get(position).getProductBar().equalsIgnoreCase("")&&employeeList.get(position).getProductQr().equalsIgnoreCase(""))){
+            if ((employeeList.get(position).getProductBar().equalsIgnoreCase("") && employeeList.get(position).getProductQr().equalsIgnoreCase(""))) {
                 holder.itemEmergencyBinding.add.setVisibility(View.VISIBLE);
                 holder.itemEmergencyBinding.delete.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.productQRcode.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.productBarcode.setVisibility(View.GONE);
-            }else if (employeeList.get(position).getProductBar().equalsIgnoreCase("0")&&employeeList.get(position).getProductQr().equalsIgnoreCase("")){
+            } else if (employeeList.get(position).getProductBar().equalsIgnoreCase("0") && employeeList.get(position).getProductQr().equalsIgnoreCase("")) {
                 holder.itemEmergencyBinding.add.setVisibility(View.VISIBLE);
                 holder.itemEmergencyBinding.delete.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.productQRcode.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.productBarcode.setVisibility(View.GONE);
-            }
-            else if(!(employeeList.get(position).getProductBar().isEmpty())) {
-                holder.itemEmergencyBinding.productBarcode.setText("Product Bar Code : "+employeeList.get(position).getProductBar());
+            } else if (!(employeeList.get(position).getProductBar().isEmpty())) {
+                holder.itemEmergencyBinding.productBarcode.setText("Product Bar Code : " + employeeList.get(position).getProductBar());
                 holder.itemEmergencyBinding.add.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.delete.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.productQRcode.setVisibility(View.GONE);
-            }else
-            {
+            } else {
                 holder.itemEmergencyBinding.add.setVisibility(View.GONE);
                 holder.itemEmergencyBinding.delete.setVisibility(View.VISIBLE);
             }
 
 
-
-             String imageURL = Endpoints.URL_IMAGE +employeeList.get(position).getProductName() ;
+            String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
             Glide.with(context)
                     .load(imageURL)
                     .skipMemoryCache(true)
@@ -89,6 +84,7 @@ public class ProductQrListAdapter extends RecyclerView.Adapter<ProductQrListAdap
                     .error(R.drawable.placeholder)
                     .into(holder.itemEmergencyBinding.imageProfile);
             Log.d("TAG", imageURL);
+        }
 
     }
 

@@ -19,6 +19,7 @@ import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.databinding.ActivityLoginBinding;
+import com.portablesalescounterapp.databinding.DialogVerificationBinding;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.business.BusinessListActivity;
 import com.portablesalescounterapp.ui.business.BusinessListView;
@@ -76,7 +77,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
          user = realm.where(User.class).findFirst();
         if (user != null) {
-            onLoginSuccess();
+            onLoginSuccess(user);
         }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login);
         binding.setView(getMvpView());
@@ -186,10 +187,40 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
 
     @Override
-    public void onLoginSuccess() {
+    public void onLoginSuccess(final User user) {
 
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
+
+        if(!(user.getFirstlogin().equalsIgnoreCase("true")))
+        {
+
+            Dialog dialog = new Dialog(LoginActivity.this);
+            final DialogVerificationBinding dialogBinding = DataBindingUtil.inflate(
+                    getLayoutInflater(),
+                    R.layout.dialog_verification,
+                    null,
+                    false);
+            dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(dialogBinding.etCode.getText().toString().equalsIgnoreCase(user.getFirstlogin()))
+                        presenter.firstLogin(String.valueOf(user.getUserId()));
+                    else
+                        showAlert("Invalid Code");
+
+                }
+            });
+            dialog.setContentView(dialogBinding.getRoot());
+            dialog.setCancelable(false);
+            dialog.show();
+
+
+
+        }else {
+
+            showAlert("Verification Successful!");
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
 
     }
 

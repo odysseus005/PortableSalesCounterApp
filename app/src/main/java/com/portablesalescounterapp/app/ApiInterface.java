@@ -3,6 +3,8 @@ package com.portablesalescounterapp.app;
 
 
 
+import android.util.Log;
+
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
@@ -92,6 +94,12 @@ public interface ApiInterface {
                           @Field(Constants.BIRTHDAY) String birthday,
                           @Field(Constants.ADDRESS) String address,
                           @Field(Constants.POSITION) String position);
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.CLIENT)
+    Call<LoginResponse> updateUserCode(@Field(Constants.TAG) String tag,
+                             @Field(Constants.USER_ID) String user_id);
 
 
     @FormUrlEncoded
