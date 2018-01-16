@@ -467,17 +467,17 @@ public class MainActivity
     private void updateUI() {
         txtName.setText(user.getFullName());
         txtEmail.setText(user.getEmail());
-        String imageURL = "";
+        String imageURL =  Endpoints.URL_IMAGE+user.getEmail();
 
-        if (user.getImage() != null && !user.getImage().isEmpty()) {
-            imageURL = Endpoints.URL_IMAGE+user.getImage();//Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, user.getImage());
-        }
+       // if (user.getImage() != null && !user.getImage().isEmpty()) {
+            //Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, user.getImage());
+       // }
 
         Log.d("GuestActivity", "imageUrl: " + imageURL);
         Glide.with(this)
                 .load(imageURL)
                 .transform(new CircleTransform(this))
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.drawable.default_user)
                 .into(imgProfile);
 
@@ -1037,10 +1037,12 @@ public class MainActivity
                 binding.appBarMain.itemView.setVisibility(View.GONE);
             }
         });
-        String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
+        String imageURL = Endpoints.URL_IMAGE + currProduct.getProductId() + "prod";
+       // String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
         Glide.with(this)
                 .load(imageURL)
-                .skipMemoryCache(true)
+             //   .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
                 .error(R.drawable.placeholder)
                 .into(binding.appBarMain.productImage);

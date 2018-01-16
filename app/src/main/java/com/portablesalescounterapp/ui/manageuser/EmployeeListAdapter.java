@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
@@ -55,7 +56,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
         String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getEmail();
         Glide.with(context)
                     .load(imageURL)
-                    .skipMemoryCache(true)
+                   .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .centerCrop()
                     .error(R.drawable.default_user)
                     .into(holder.itemEmergencyBinding.imageProfile);

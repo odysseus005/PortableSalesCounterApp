@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
 
@@ -79,11 +80,14 @@ public class ProductQrListAdapter extends RecyclerView.Adapter<ProductQrListAdap
             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
             Glide.with(context)
                     .load(imageURL)
-                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .centerCrop()
                     .error(R.drawable.placeholder)
                     .into(holder.itemEmergencyBinding.imageProfile);
             Log.d("TAG", imageURL);
+        }else
+        {
+            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 
     }

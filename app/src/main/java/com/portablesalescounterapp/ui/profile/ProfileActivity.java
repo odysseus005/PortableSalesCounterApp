@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
@@ -66,13 +67,16 @@ public class ProfileActivity extends MvpViewStateActivity<ProfileView, ProfilePr
                     String imageURL = "https://payapp.tip.edu.ph/api/storage/app/image/default_buyer.png";
 
                 //    if (user.getImage() != null && !user.getImage().isEmpty()) {
-                        imageURL = Endpoints.URL_IMAGE+user.getEmail();
+                 //   String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId() + "prod";
+
+                    imageURL = Endpoints.URL_IMAGE+user.getEmail();
                         Log.d("TAG",imageURL);
                     //}
                     Glide.with(ProfileActivity.this)
                             .load(imageURL)
                             .transform(new CircleTransform(ProfileActivity.this))
-                           .skipMemoryCache(true)
+                            //.skipMemoryCache(true)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .error(R.drawable.default_buyer)
                             .into(binding.layoutHeader.imageView);
                 }

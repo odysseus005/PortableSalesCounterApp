@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Constants;
@@ -102,7 +103,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
         Glide.with(this)
                 .load(imageURL)
                 .transform(new CircleTransform(this))
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.drawable.default_buyer)
                 .into(binding.imageView);
     }

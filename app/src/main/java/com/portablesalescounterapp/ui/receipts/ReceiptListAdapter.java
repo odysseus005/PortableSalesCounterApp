@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.portablesalescounterapp.R;
@@ -47,7 +48,7 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
 
             holder.itemEmergencyBinding.setView(view);
               if(employeeList.get(position).getUserId()!=0)
-                holder.itemEmergencyBinding.setTransaction(employeeList.get(position));
+                holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
 
             //
         // holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");

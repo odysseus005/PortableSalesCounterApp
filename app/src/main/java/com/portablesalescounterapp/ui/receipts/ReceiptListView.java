@@ -17,5 +17,7 @@ public interface ReceiptListView extends MvpView {
 
     void onTransactionClicked(Transaction transact);
 
+    void onButtonRefund(Transaction transact);
+
 
 }

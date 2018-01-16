@@ -735,10 +735,11 @@ public class GuestActivity
                 binding.itemView.setVisibility(View.GONE);
             }
         });
-        String imageURL = Endpoints.URL_IMAGE + currProduct.getProductName();
+        String imageURL = Endpoints.URL_IMAGE + currProduct.getProductId() + "prod";
+        //String imageURL = Endpoints.URL_IMAGE + currProduct.getProductName()+"prod";
         Glide.with(this)
                 .load(imageURL)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
                 .error(R.drawable.placeholder)
                 .into(binding.productImage);

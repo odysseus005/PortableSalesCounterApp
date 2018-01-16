@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
@@ -55,6 +56,9 @@ public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.
             else
                 holder.itemEmergencyBinding.prodCode.setText(" kg");
             //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, employeeList.get(position).getImage());
+        }else
+        {
+            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 
     }

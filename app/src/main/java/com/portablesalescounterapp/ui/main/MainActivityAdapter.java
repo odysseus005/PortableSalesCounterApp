@@ -5,9 +5,11 @@ import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ItemProductsMainBinding;
@@ -34,6 +36,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         ItemProductsMainBinding itemEmployeeBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.getContext()),
                 R.layout.item_products_main,
@@ -46,17 +49,22 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         Log.d("TAG>>,",employeeList.get(position).getProductStatus());
 
+
         if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId() + "prod";
             Glide.with(context)
                     .load(imageURL)
-                    .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .centerCrop()
                     .error(R.drawable.placeholder)
                     .into(holder.itemEmergencyBinding.productPicture);
             Log.d("TAG", imageURL);
+        }
+        else
+        {
+            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 
     }

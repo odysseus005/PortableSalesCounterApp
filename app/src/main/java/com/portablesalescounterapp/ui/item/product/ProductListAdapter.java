@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ItemProductsBinding;
@@ -55,10 +56,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
         holder.itemEmergencyBinding.setProduct(employeeList.get(position));
         holder.itemEmergencyBinding.setView(view);
-        String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
+        //String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductName();
+        String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId() + "prod";
         Glide.with(context)
                 .load(imageURL)
-                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
                 .error(R.drawable.placeholder)
                 .into(holder.itemEmergencyBinding.imageProfile);

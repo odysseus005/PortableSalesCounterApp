@@ -112,7 +112,7 @@ public class ReceiptListActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
 
         SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -303,7 +303,7 @@ public class ReceiptListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Transaction> productsList;
             if (searchText.isEmpty()) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                productsList = realm.copyFromRealm(employeeRealmResults.sort("date", Sort.DESCENDING));
             } else {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
                         .contains("transactionPrice", searchText, Case.INSENSITIVE)

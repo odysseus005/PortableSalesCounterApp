@@ -481,7 +481,7 @@ public class EmployeeListActivity
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(emerID!=0)
-                        presenter.upload(user.getEmail()+emerID+emerID,imageFile);
+                        presenter.upload(user.getEmail(),imageFile);
                         else
                             showAlert("Error on Uploading Image");
                     }
