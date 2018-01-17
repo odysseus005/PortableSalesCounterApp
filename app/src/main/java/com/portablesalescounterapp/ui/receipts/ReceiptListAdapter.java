@@ -50,6 +50,12 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
               if(employeeList.get(position).getUserId()!=0)
                 holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
 
+              if(employeeList.get(position).getTransactionStatus().equalsIgnoreCase("D"))
+              {
+                  holder.itemEmergencyBinding.refund.setVisibility(View.GONE);
+                  holder.itemEmergencyBinding.refunded.setVisibility(View.VISIBLE);
+              }
+
             //
         // holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");
 

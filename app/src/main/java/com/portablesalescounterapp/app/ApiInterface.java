@@ -298,6 +298,15 @@ public interface ApiInterface {
                                   @Field(Constants.BUSINESS_ID) String business_id
     );
 
+
+    @FormUrlEncoded
+    @POST(Endpoints.TRANSACTION)
+    Call<ResultResponse> refundTransaction(@Field(Constants.TAG) String tag,
+                                           @Field(Constants.TRANSACTION_ID) String product_id,
+                                           @Field(Constants.TRANSACTION_IDLIST) String transIdList,
+                                           @Field(Constants.TRANSACTION_QUANTITYLIST) String transQuanList,
+                                           @Field(Constants.BUSINESS_ID) String business_id
+    );
     @FormUrlEncoded
     @POST(Endpoints.TRANSACTION)
     Call<TransactionResponse> addTransaction(@Field(Constants.TAG) String tag,

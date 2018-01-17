@@ -217,7 +217,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
 
         }else {
 
-            showAlert("Verification Successful!");
+
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
