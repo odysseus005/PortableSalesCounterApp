@@ -68,6 +68,10 @@ public class Transaction extends RealmObject {
     @Expose
     private String transactionPriceList;
 
+    @SerializedName("transactionStatus")
+    @Expose
+    private String transactionStatus;
+
 
     public int getTransactionId() {
         return transactionId;
@@ -182,5 +186,12 @@ public class Transaction extends RealmObject {
     }
 
 
+    public String getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(String transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
 
 }

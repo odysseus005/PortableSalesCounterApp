@@ -3,11 +3,14 @@ package com.portablesalescounterapp.ui.receipts;
 import android.util.Log;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
+import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.App;
+import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Restock;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.model.response.ResultResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +83,41 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
 
 
 
+
+    public void refundTransaction(String bussinessId,String transactid,String transIdlist,String transQuantitylist) {
+        App.getInstance().getApiInterface().refundTransaction(Endpoints.REFUND_TRANSACTION,transactid,transIdlist,transQuantitylist,bussinessId)
+                .enqueue(new Callback<ResultResponse>() {
+                    @Override
+                    public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                        }
+                        if (response.isSuccessful()) {
+                            switch (response.body().getResult()) {
+                                case Constants.SUCCESS:
+                                    getView().showAlert("Refund Successful!");
+                                    break;
+
+                                default:
+                                    getView().showAlert(String.valueOf(R.string.cantConnect));
+                                    break;
+                            }
+                        } else {
+                            getView().showAlert("Oops something went wrong");
+                        }
+                    }
+
+
+                    @Override
+                    public void onFailure(Call<ResultResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        if (isViewAttached()) {
+                            getView().stopRefresh();
+                            getView().showAlert(t.getLocalizedMessage());
+                        }
+                    }
+                });
+    }
 
 
 

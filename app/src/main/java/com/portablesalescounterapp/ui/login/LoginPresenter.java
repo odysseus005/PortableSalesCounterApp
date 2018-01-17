@@ -125,7 +125,10 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                             @Override
                             public void onSuccess() {
                                 realm.close();
+
+                                getView().showAlert("Verification Successful!");
                                 getView().onLoginSuccess(user);
+
                             }
                         }, new Realm.Transaction.OnError() {
                             @Override

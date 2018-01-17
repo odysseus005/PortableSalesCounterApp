@@ -386,7 +386,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         if (response.isSuccessful()) {
                             switch (response.body().getResult()) {
                                 case Constants.SUCCESS:
-                                    getView().showError("Payment Confirmation Succesful!");
+                                    getView().showError("Payment Confirmation Successful!");
                                     getView().onSelfSuccess();
                                     break;
 

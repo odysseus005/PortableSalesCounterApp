@@ -287,6 +287,13 @@ public class ReceiptListActivity
     }
 
 
+    @Override
+    public void onButtonRefund(Transaction transact) {
+
+            presenter.refundTransaction(user.getBusiness_id(),String.valueOf(transact.getTransactionId()),transact.getTransactionIdList(),transact.getTransactionQuantityList());
+    }
+
+
 
 
 
