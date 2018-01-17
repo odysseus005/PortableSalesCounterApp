@@ -47,7 +47,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d("TAG>>,",employeeList.get(position).getProductStatus());
+
 
 
         if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
@@ -64,6 +64,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         }
         else
         {
+            holder.itemEmergencyBinding.setView(null);
             holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 

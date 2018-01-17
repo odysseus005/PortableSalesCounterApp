@@ -3,6 +3,7 @@ package com.portablesalescounterapp.ui.receipts;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,14 +47,19 @@ public class ReceiptListAdapter extends RecyclerView.Adapter<ReceiptListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-            holder.itemEmergencyBinding.setView(view);
-              if(employeeList.get(position).getUserId()!=0)
-                holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
 
-              if(employeeList.get(position).getTransactionStatus().equalsIgnoreCase("D"))
-              {
-                  holder.itemEmergencyBinding.refund.setVisibility(View.GONE);
-                  holder.itemEmergencyBinding.refunded.setVisibility(View.VISIBLE);
+        Log.d(">>>>"+position,"user>>"+employeeList.get(position).getUserId());
+
+              if((employeeList.get(position).getUserId()==0))
+                holder.itemEmergencyBinding.setView(null);
+              else {
+                  holder.itemEmergencyBinding.setView(view);
+                  holder.itemEmergencyBinding.setTransaction(employeeList.get(position));
+
+                  if (employeeList.get(position).getTransactionStatus().equalsIgnoreCase("D")) {
+                      holder.itemEmergencyBinding.refund.setVisibility(View.GONE);
+                      holder.itemEmergencyBinding.refunded.setVisibility(View.VISIBLE);
+                  }
               }
 
             //

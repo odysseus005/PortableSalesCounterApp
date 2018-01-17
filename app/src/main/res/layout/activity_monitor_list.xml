@@ -36,7 +36,7 @@
                 android:id="@+id/sp_category"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:layout_marginTop="3dp"
+                android:layout_margin="8dp"
                 android:background="@drawable/bg_spinner"
                 android:fontFamily="sans-serif"
                 android:padding="5dp"

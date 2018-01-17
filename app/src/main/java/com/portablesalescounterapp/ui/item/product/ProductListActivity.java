@@ -63,6 +63,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
@@ -87,6 +88,7 @@ public class ProductListActivity
     private  String productCode = "E", categoryId="0";
     private String searchText;
     private final int PERMISSION_CODE = 9235;
+    private String sorter="Name";
      DialogAddProductBinding dialogBinding;
 
     @SuppressWarnings("ConstantConditions")
@@ -136,7 +138,44 @@ public class ProductListActivity
                 onRefresh();
             }
         });
-    }
+
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Name");
+        categories.add("Product ID");
+        categories.add("Price Ascending");
+        categories.add("Price Descending");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spCategory.setAdapter(dataAdapter);
+
+
+        binding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                // Showing selected spinner item
+
+                // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                sorter= item;
+
+                prepareList();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+
+            }
+        });
+
+
+
+}
 
 
 
@@ -605,7 +644,7 @@ public class ProductListActivity
         imageView.setImageBitmap(bitmap);
 
         new AlertDialog.Builder(this)
-                .setTitle("Upload Profile Picture")
+                .setTitle("Upload Product Picture")
                 .setView(view)
                 .setPositiveButton("UPLOAD", new DialogInterface.OnClickListener() {
                     @Override
@@ -666,6 +705,90 @@ public class ProductListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
             if (searchText.isEmpty()) {
+                if(sorter.equalsIgnoreCase("name")) {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+                }
+                else if(sorter.equalsIgnoreCase("Product ID"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productId", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Price Ascending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productPrice", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Price Descending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productPrice", Sort.DESCENDING));
+
+                }else
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+
+                }
+            } else {
+
+                if(sorter.equalsIgnoreCase("name")) {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productName", Sort.ASCENDING));
+                }
+                else if(sorter.equalsIgnoreCase("Product ID"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productId", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Price Ascending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productPrice", Sort.ASCENDING));
+
+                }else if(sorter.equalsIgnoreCase("Price Descending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productPrice", Sort.DESCENDING));
+
+                }else
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productDescription", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .findAll().sort("productName", Sort.ASCENDING));
+
+                }
+
+
+            }
+            adapterPromo.setProductList(productsList);
+            adapterPromo.notifyDataSetChanged();
+        }
+
+    }
+
+        /*if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
+            List<Products> productsList;
+            if (searchText.isEmpty()) {
                 productsList = realm.copyFromRealm(employeeRealmResults);
             } else {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
@@ -679,7 +802,7 @@ public class ProductListActivity
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();
         }
-    }
+    }*/
 
 
 

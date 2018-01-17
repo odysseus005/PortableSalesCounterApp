@@ -87,6 +87,7 @@ public class ProductQrListAdapter extends RecyclerView.Adapter<ProductQrListAdap
             Log.d("TAG", imageURL);
         }else
         {
+            holder.itemEmergencyBinding.setView(null);
             holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 

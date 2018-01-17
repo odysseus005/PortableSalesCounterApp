@@ -58,6 +58,7 @@ public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.
             //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, employeeList.get(position).getImage());
         }else
         {
+            holder.itemEmergencyBinding.setView(null);
             holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 

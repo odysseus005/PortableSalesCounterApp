@@ -155,7 +155,7 @@ public class MainActivity
         binding.appBarMain.setView(getMvpView());
 
         setSupportActionBar(binding.appBarMain.toolbar);
-        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "PSC Ap" : "PSC App");
+        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "Smart Sales Counter" : "Smart Sales Counter");
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.drawerLayout,
                 binding.appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -286,7 +286,7 @@ public class MainActivity
             nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
             nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
             nav_Menu.findItem(R.id.nav_inventory).setVisible(false);
-            nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
+            nav_Menu.findItem(R.id.nav_report).setVisible(false);
 
         }else if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
         {

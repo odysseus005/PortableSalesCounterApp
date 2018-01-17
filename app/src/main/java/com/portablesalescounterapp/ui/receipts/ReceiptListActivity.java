@@ -149,7 +149,7 @@ public class ReceiptListActivity
     @Override
     protected void onDestroy() {
         presenter.onStop();
-        employeeRealmResults.removeChangeListeners();
+       // employeeRealmResults.removeChangeListeners();
         realm.close();
         super.onDestroy();
     }
@@ -324,7 +324,7 @@ public class ReceiptListActivity
                         .contains("discountName", searchText, Case.INSENSITIVE)
                         .or()
                         .contains("userName", searchText, Case.INSENSITIVE)
-                        .findAll().sort("date", Sort.DESCENDING));
+                        .findAll().sort("transactionId", Sort.DESCENDING));
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

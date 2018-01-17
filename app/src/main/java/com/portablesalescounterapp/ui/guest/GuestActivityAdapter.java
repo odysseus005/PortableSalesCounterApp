@@ -63,6 +63,7 @@ public class GuestActivityAdapter extends RecyclerView.Adapter<GuestActivityAdap
             }else
             {
                 holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
+                holder.itemEmergencyBinding.setView(null);
             }
 
     }

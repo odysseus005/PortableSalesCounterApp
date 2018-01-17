@@ -150,7 +150,7 @@ public class MonitorListActivity
 
                // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
                 sorter= item;
-
+               prepareList();
 
             }
 
@@ -350,11 +350,11 @@ public class MonitorListActivity
 
                 }else if(sorter.equalsIgnoreCase("Quantity Ascending"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort(" productSKU", Sort.ASCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productSKU", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Descending"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort(" productSKU", Sort.DESCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productSKU", Sort.DESCENDING));
 
                 }else
                 {
@@ -396,7 +396,7 @@ public class MonitorListActivity
                             .contains("userName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
-                            .findAll().sort(" productSKU", Sort.ASCENDING));
+                            .findAll().sort("productSKU", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Descending"))
                 {
@@ -408,7 +408,7 @@ public class MonitorListActivity
                             .contains("userName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
-                            .findAll().sort(" productSKU", Sort.DESCENDING));
+                            .findAll().sort("productSKU", Sort.DESCENDING));
 
                 }else
                 {
