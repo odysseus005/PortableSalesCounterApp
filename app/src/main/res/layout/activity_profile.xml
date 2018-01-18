@@ -61,7 +61,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Sex"
+                android:text="Address"
                 android:textSize="20sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 
@@ -103,7 +103,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Age"
+                android:text="Birthday"
                 android:textSize="20sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
 

@@ -6,4 +6,6 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 public interface SaleChartView extends MvpView {
 
 
+
+    void showAlert(String message);
 }

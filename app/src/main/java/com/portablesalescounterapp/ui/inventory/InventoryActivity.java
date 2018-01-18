@@ -29,7 +29,7 @@ public class InventoryActivity extends MvpActivity<InventoryView, InventoryPrese
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Items");
+        getSupportActionBar().setTitle("Inventory");
 
 
     }

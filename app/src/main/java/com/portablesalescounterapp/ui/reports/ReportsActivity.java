@@ -9,8 +9,10 @@ import android.view.MenuItem;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
+import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.databinding.ActivityInventoryBinding;
 import com.portablesalescounterapp.databinding.ActivityReportsBinding;
+import com.portablesalescounterapp.ui.guest.GuestActivity;
 import com.portablesalescounterapp.ui.reports.analytics.AnalyticsChartActivity;
 import com.portablesalescounterapp.ui.reports.salesReport.SaleChartActivity;
 
@@ -60,17 +62,24 @@ public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> 
 
     @Override
     public void onSRClicked() {
-         startActivity(new Intent(this, SaleChartActivity.class));
+
+        Intent intent = new Intent(this, SaleChartActivity.class);
+        intent.putExtra(Constants.REPORT_TYPE, 1);
+        startActivity(intent);
     }
 
     @Override
     public void onARClicked() {
-         startActivity(new Intent(this, AnalyticsChartActivity.class));
+        Intent intent = new Intent(this, SaleChartActivity.class);
+        intent.putExtra(Constants.REPORT_TYPE, 2);
+        startActivity(intent);
     }
 
     @Override
     public void onDSSClicked() {
-        // startActivity(new Intent(this, RestockListActivity.class));
+        Intent intent = new Intent(this, SaleChartActivity.class);
+        intent.putExtra(Constants.REPORT_TYPE, 3);
+        startActivity(intent);
     }
 
 

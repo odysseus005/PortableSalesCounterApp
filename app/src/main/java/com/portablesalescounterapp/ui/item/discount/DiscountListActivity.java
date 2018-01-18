@@ -221,8 +221,8 @@ public class DiscountListActivity
 
         if(emergency.getDiscountCode().equalsIgnoreCase("S"))
         {
-            dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
-            dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+            dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+            dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
 
         }
 
@@ -231,8 +231,8 @@ public class DiscountListActivity
             @Override
             public void onClick(View v) {
                 discountCode = "P";
-                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
-                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
 
             }
         });
@@ -241,8 +241,8 @@ public class DiscountListActivity
             @Override
             public void onClick(View v) {
                 discountCode = "S";
-                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
-                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
 
             }
         });
@@ -304,8 +304,8 @@ public class DiscountListActivity
             @Override
             public void onClick(View v) {
                 discountCode = "P";
-                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
-                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
 
             }
         });
@@ -314,8 +314,8 @@ public class DiscountListActivity
             @Override
             public void onClick(View v) {
                 discountCode = "S";
-                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
-                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.sigma.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.colorPrimary));
+                dialogBinding.percent.setBackgroundColor(ContextCompat.getColor(DiscountListActivity.this, R.color.lightGray));
 
             }
         });

@@ -24,6 +24,7 @@ public class Endpoints {
 
     //Business
     public static final String BUSINESS_REGISTER = "registerBusiness";
+    public static final String BUSINESS_UPDATE = "updateBusiness";
 
 
     //Employee

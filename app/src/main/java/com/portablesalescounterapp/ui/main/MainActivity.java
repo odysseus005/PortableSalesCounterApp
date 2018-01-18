@@ -58,6 +58,8 @@ import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.ui.editbusiness.EditBusinessActivity;
+import com.portablesalescounterapp.ui.editbusiness.EditBusinessView;
 import com.portablesalescounterapp.ui.guest.GuestActivity;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
@@ -287,6 +289,7 @@ public class MainActivity
             nav_Menu.findItem(R.id.nav_qrcode).setVisible(false);
             nav_Menu.findItem(R.id.nav_inventory).setVisible(false);
             nav_Menu.findItem(R.id.nav_report).setVisible(false);
+            nav_Menu.findItem(R.id.nav_businessprofile).setVisible(false);
 
         }else if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
         {
@@ -294,6 +297,7 @@ public class MainActivity
             nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
             nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
             nav_Menu.findItem(R.id.nav_sales_png).setVisible(false);
+            nav_Menu.findItem(R.id.nav_businessprofile).setVisible(false);
 
 
         }
@@ -557,7 +561,11 @@ public class MainActivity
                 startActivity(new Intent(this, ProductQrListActivity.class));
             } else if (id == R.id.nav_profile) {
                 startActivity(new Intent(this, ProfileActivity.class));
-            } else if (id == R.id.nav_logout) {
+            }
+             else if (id == R.id.nav_businessprofile) {
+                  startActivity(new Intent(this, EditBusinessActivity.class));
+            }
+            else if (id == R.id.nav_logout) {
                 logOut(user);
             }
 

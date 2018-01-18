@@ -170,7 +170,7 @@
                                                 android:paddingStart="20dp"
                                                 android:text="BUY"
                                                 android:textColor="@color/white"
-                                                android:textSize="14sp" />
+                                                android:textSize="11sp" />
 
                                         </LinearLayout>
 

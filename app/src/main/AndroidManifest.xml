@@ -49,6 +49,10 @@
         android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.editbusiness.EditBusinessActivity"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
             android:name=".ui.item.category.CategoryListActivity"
             android:windowSoftInputMode="adjustResize" />
 

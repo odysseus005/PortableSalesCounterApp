@@ -12,6 +12,7 @@ public class Constants {
     public static final String EMAIL = "email";
     public static final String PASSWORD = "password";
     public static final String DATE_TIME = "datetime";
+    public static final String REPORT_TYPE = "reportType";
 
     //Login and Register
     public static final String SUCCESS = "success";

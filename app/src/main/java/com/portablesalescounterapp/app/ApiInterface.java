@@ -64,6 +64,16 @@ public interface ApiInterface {
                                           @Field(Constants.BUSINESS_DESCRIPTION) String bDescription
     );
 
+    @FormUrlEncoded
+    @POST(Endpoints.CLIENT)
+    Call<Business> updateBusiness(@Field(Constants.TAG) String tag,
+                                          @Field(Constants.BUSINESS_ID) String user_id,
+                                          @Field(Constants.BUSINESS_NAME) String bName,
+                                          @Field(Constants.BUSINESS_ADDRESS) String bAddress,
+                                          @Field(Constants.BUSINESS_CONTACT) String bContact,
+                                          @Field(Constants.BUSINESS_DESCRIPTION) String bDescription
+    );
+
 
 
     @FormUrlEncoded

@@ -1,4 +1,4 @@
-package com.portablesalescounterapp.ui.profile.edit;
+package com.portablesalescounterapp.ui.editbusiness;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -30,9 +30,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
-import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
+import com.portablesalescounterapp.databinding.ActivityEditBusinessBinding;
 import com.portablesalescounterapp.databinding.ActivityEditProfileBinding;
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.util.CircleTransform;
 
@@ -44,19 +45,19 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import io.realm.Realm;
-
 import pl.aprilapps.easyphotopicker.EasyImage;
 
-public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfilePresenter> implements EditProfileView {
+public class EditBusinessActivity extends MvpActivity<EditBusinessView, EditBusinessPresenter> implements EditBusinessView {
 
     private static final int PERMISSION_READ_EXTERNAL_STORAGE = 124;
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 125;
     private static final int PERMISSION_CAMERA = 126;
-    private ActivityEditProfileBinding binding;
+    private ActivityEditBusinessBinding binding;
     private Realm realm;
-    private String TAG = EditProfileActivity.class.getSimpleName();
+    private String TAG = EditBusinessActivity.class.getSimpleName();
     private ProgressDialog progressDialog;
     private User user;
+    private Business business;
     private Dialog dialog;
 
     @Override
@@ -67,17 +68,19 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
         EasyImage.configuration(this)
                 .setImagesFolderName("psc")
                 .saveInRootPicturesDirectory();
-        setContentView(R.layout.activity_edit_profile);
+        setContentView(R.layout.activity_edit_business);
         //setRetainInstance(true);
-        realm = Realm.getDefaultInstance();
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_profile);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_edit_business);
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         binding.setActivity(this);
+        realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-        binding.setUser(user);
+        business = realm.where(Business.class).findFirst();
+        binding.setUser(business);
 
         presenter.onStart();
         loadImage();
@@ -90,8 +93,8 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
 
     @NonNull
     @Override
-    public EditProfilePresenter createPresenter() {
-        return new EditProfilePresenter();
+    public EditBusinessPresenter createPresenter() {
+        return new EditBusinessPresenter();
     }
 
     private void loadImage() {
@@ -109,12 +112,11 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
     }
     public void onEdit() {
 
-        presenter.updateUser(user.getUserId() + "",
-                binding.firstName.getText().toString(),
-                binding.lastName.getText().toString(),
-                binding.contact.getText().toString(),
-                binding.birthday.getText().toString(),
-                binding.address.getText().toString(),"");
+        presenter.updateUser(String.valueOf(business.getBusinessId()),
+                binding.bname.getText().toString(),
+                binding.badd.getText().toString(),
+                binding.bcont.getText().toString(),
+                binding.bdesc.getText().toString());
     }
 
     @Override
@@ -140,47 +142,16 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
         }
     }
 
-    @Override
-    public void onChangePassword(){
-        presenter.updateUser(user.getUserId() + "",
-                binding.firstName.getText().toString(),
-                binding.lastName.getText().toString(),
-                binding.contact.getText().toString(),
-                binding.birthday.getText().toString(),
-                binding.address.getText().toString(),"");
-    }
+
 
 
     @Override
     public void finishAct() {
         finish();
-        showAlert("Profile Updated");
+        showAlert("Business Profile Updated");
     }
 
-    @Override
-    public void onBirthdayClicked() {
-        Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                binding.birthday.setText(dateFormatter.format(newDate.getTime()));
-            }
-
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
-
-    }
-
-    @Override
-    public void onPasswordChanged() {
-        if(dialog.isShowing()){
-            dialog.dismiss();
-            showAlert("Password Successfully Changed!");
-        }
-    }
 
 
     @Override
@@ -285,7 +256,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
             public void onCanceled(EasyImage.ImageSource source, int type) {
                 //Cancel handling, you might wanna remove taken photo if it was canceled
                 if (source == EasyImage.ImageSource.CAMERA) {
-                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(EditProfileActivity.this);
+                    File photoFile = EasyImage.lastlyTakenButCanceledPhoto(EditBusinessActivity.this);
                     if (photoFile != null) //noinspection ResultOfMethodCallIgnored
                         photoFile.delete();
                 }
@@ -314,7 +285,7 @@ public class EditProfileActivity extends MvpActivity<EditProfileView, EditProfil
                 .setPositiveButton("UPLOAD", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        presenter.upload(user.getEmail(),imageFile);
+                        presenter.upload(business.getBusinessId()+"",imageFile);
                     }
                 })
                 .setNegativeButton("CANCEL", null)
