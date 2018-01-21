@@ -7,15 +7,15 @@
 
         <variable
             name="activity"
-            type="com.portablesalescounterapp.ui.profile.edit.EditProfileActivity" />
+            type="com.portablesalescounterapp.ui.editbusiness.EditBusinessActivity" />
 
         <variable
             name="user"
-            type="com.portablesalescounterapp.model.data.User" />
+            type="com.portablesalescounterapp.model.data.Business" />
 
         <variable
             name="view"
-            type="com.portablesalescounterapp.ui.profile.edit.EditProfileView" />
+            type="com.portablesalescounterapp.ui.editbusiness.EditBusinessView" />
     </data>
 
     <LinearLayout
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:onClick="@{() -> activity.onChangeUserImage()}"
-                    android:text="Select Profile Photo"
+                    android:text="Select Business Photo"
                     android:textColor="@android:color/white" />
 
             </LinearLayout>
@@ -83,19 +83,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Personal Info"
+                    android:text="Business Info"
                     android:textColor="@color/darkGray"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/first_name"
+                    android:id="@+id/bname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="First name"
                     android:inputType="textPersonName"
-                    android:text="@{user.firstname}"
+                    android:text="@{user.businessName}"
                     android:textSize="14sp" />
 
                 <EditText
@@ -104,40 +104,41 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:hint="Last name"
-                    android:text="@{user.lastname}"
+                    android:visibility="gone"
                     android:inputType="textPersonName"
+                    android:text=" "
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/contact"
+                    android:id="@+id/bdesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:hint="Contact"
                     android:inputType="phone"
-                    android:text="@{user.contact}"
+                    android:text="@{user.businessDescription}"
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/birthday"
+                    android:id="@+id/badd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:focusable="false"
                     android:hint="Birthday"
-                    android:text="@{user.birthday}"
+                    android:text="@{user.businessAddress}"
                     android:textSize="14sp" />
                    <!-- android:onClick="@{()->view.onBirthdayClicked()}"
                     android:text="@{user.birthday}"
                     android:textSize="14sp" />-->
 
                 <EditText
-                    android:id="@+id/address"
+                    android:id="@+id/bcont"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:hint="Address"
-                    android:text="@{user.address}"
+                    android:text="@{user.businessContact}"
                     android:textSize="14sp" />
 
                 <TextView

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.User;
 
 import java.util.List;
@@ -88,6 +89,13 @@ public class App extends Application {
         User user = realm.where(User.class).findFirst();
 
         return user;
+    }
+
+    public static Business getBusiness(){
+        Realm realm = Realm.getDefaultInstance();
+        Business business = realm.where(Business.class).findFirst();
+
+        return business;
     }
 
     private OkHttpClient.Builder getOkHttpClientImage() {

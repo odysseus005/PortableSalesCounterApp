@@ -173,7 +173,7 @@ public class EmployeeListActivity
     @Override
     protected void onDestroy() {
         presenter.onStop();
-        employeeRealmResults.removeChangeListeners();
+        //employeeRealmResults.removeChangeListeners();
         realm.close();
         super.onDestroy();
     }

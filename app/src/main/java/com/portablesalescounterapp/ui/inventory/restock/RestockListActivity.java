@@ -70,7 +70,7 @@ public class RestockListActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_restock_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Product");
+        getSupportActionBar().setTitle("Restocked Product Record");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));

@@ -93,7 +93,7 @@ public class MonitorListActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_monitor_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Product");
+        getSupportActionBar().setTitle("Product Inventory");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
