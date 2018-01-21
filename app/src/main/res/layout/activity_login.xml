@@ -127,7 +127,7 @@
             android:background="@null"
             android:onClick="@{()-> view.onRegisterButtonClicked()}"
             android:padding="10dp"
-            android:text="Sign Up New Account"
+            android:text="Sign Up New Business Account"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"
             android:textAllCaps="false"

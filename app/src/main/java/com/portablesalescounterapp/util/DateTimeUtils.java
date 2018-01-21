@@ -3,6 +3,10 @@ package com.portablesalescounterapp.util;
 import android.util.Log;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +21,26 @@ public class DateTimeUtils {
     public static final String FULL_23_HR_DATE = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_ONLY = "MMM dd, yyyy";
     public static final String DATE_NUM_ONLY = "MM.dd.yyyy";
+
+
+    public static String parseDoubleTL(Double value){
+
+
+        String g = NumberFormat.getCurrencyInstance().format(Double.parseDouble(""+value));
+
+
+            return NumberFormat.getNumberInstance(Locale.US).format(value);
+
+       // DecimalFormat df =  new DecimalFormat("#.#", new DecimalFormatSymbols(Locale.US));
+       // Double doublePrice = 0.0;
+       /* try {
+            doublePrice =  df.parse(value).doubleValue();
+            Log.d("convert>>> ", doublePrice+"");
+        } catch (ParseException e) {
+            Log.d("convert>>> ", e+"");
+        }*/
+       // return String.valueOf(g);
+    }
 
 
     public static String getCurrentTimeStamp(){

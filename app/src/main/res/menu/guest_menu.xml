@@ -8,11 +8,6 @@
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/item_qrscan"
-        android:title="Scan Product Code"
-        android:orderInCategory="100"
-        app:actionLayout="@layout/button_scan"/>
 
 
     <item

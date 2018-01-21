@@ -338,6 +338,7 @@ public class MainActivity
         integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
+
       //  integrator.setBeepEnabled(false);
         if(qrSwitcher)
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
@@ -891,7 +892,7 @@ public class MainActivity
                         dialogBindingSuccess.cancel.setVisibility(View.GONE);
                         dialogBindingSuccess.etReceiptEmail.setVisibility(View.GONE);
                         dialogBindingSuccess.send.setVisibility(View.GONE);
-                        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString());
+                        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString(),business.getBusinessName(),user.getFullName());
                         dialogTC.dismiss();
                         MainActivity.this.recreate();
 
@@ -913,7 +914,7 @@ public class MainActivity
         dialogBindingSuccess.cancel.setVisibility(View.GONE);
         dialogBindingSuccess.etReceiptEmail.setVisibility(View.GONE);
         dialogBindingSuccess.send.setVisibility(View.GONE);
-        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString());
+        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString(),business.getBusinessName(),user.getFullName());
         dialogTC.dismiss();
         MainActivity.this.recreate();
 
@@ -943,7 +944,7 @@ public class MainActivity
             }
 
             vtsDiscount = String.valueOf(discounted);
-            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
+            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(DateTimeUtils.parseDoubleTL(discounted)));
 
 
             oldTotal = dialogBinding.cartItemPrice.getText().toString();
@@ -1011,10 +1012,11 @@ public class MainActivity
 
 
             dialogBinding.setProduct(currProduct);
-            dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
+            dialogBinding.buyItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
 
             dialogBinding.buyItemQuantity.setText("1");
-            newPrice = Integer.parseInt(currProduct.getProductPrice());
+
+            newPrice = Double.parseDouble(currProduct.getProductPrice());
 
             dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
 
@@ -1022,7 +1024,7 @@ public class MainActivity
                     // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
                     if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
                         if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
-                            newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
+                            newPrice = (Double.parseDouble(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
                             dialogBinding.buyItemPrice.setText("Php: " + newPrice);
                         } else {
                             showError("Not Enough Stocks!");
@@ -1045,6 +1047,8 @@ public class MainActivity
             dialogBinding.buyItemProdcode.setText(prodCode);
 
 
+
+
             dialogBinding.send.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1053,7 +1057,7 @@ public class MainActivity
                     prodIdcart.add(currProduct.getProductId() + "");
                     prodNamecart.add(currProduct.getProductName());
                     prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
-                    prodPricecart.add(String.valueOf(newPrice));
+                    prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
 
                     MainActivity.this.invalidateOptionsMenu();
 
@@ -1103,7 +1107,7 @@ public class MainActivity
         Log.d("TAG", imageURL);
 
         binding.appBarMain.viewItemDesc.setText(currProduct.getProductDescription());
-        binding.appBarMain.viewItemPrice.setText("Php: "+currProduct.getProductPrice());
+        binding.appBarMain.viewItemPrice.setText("Php: "+ DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
         binding.appBarMain.viewItemName.setText(currProduct.getProductName());
 
         String prodCode;
@@ -1140,14 +1144,15 @@ public class MainActivity
         adapterCart.setProductList(productList,prodIdcart,prodNamecart,prodQuantitycart,prodPricecart);
         adapterCart.notifyDataSetChanged();
 
-        int cartPrice = 0;
+        double cartPrice = 0;
 
         for(int a=0;a<prodPricecart.size();a++)
         {
-            cartPrice += Double.parseDouble(prodPricecart.get(a));
+            cartPrice += Double.parseDouble(prodPricecart.get(a).replace(",",""));
         }
+       // Log.d("TAG",">>>"+DateTimeUtils.parseDoubleTL(cartPrice));
         vtsPrice = String.valueOf(cartPrice);
-        dialogBinding.cartItemPrice.setText("Php: "+cartPrice+"");
+        dialogBinding.cartItemPrice.setText("Php: "+DateTimeUtils.parseDoubleTL(cartPrice));
 
 
 
@@ -1318,7 +1323,7 @@ public class MainActivity
 
     }
 
-    private void takeScreenshot(View v1,String email) {
+    private void takeScreenshot(View v1,String email,String bname, String cname) {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
@@ -1340,7 +1345,7 @@ public class MainActivity
             outputStream.flush();
             outputStream.close();
 
-            sendMail(mPath,email);
+            sendMail(mPath,email,bname,cname);
             //openScreenshot(imageFile);
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM
@@ -1351,14 +1356,20 @@ public class MainActivity
 
 
 
-    public void sendMail(String path,String email) {
+    public void sendMail(String path,String email,String bname, String cname) {
         Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
         emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
                 new String[] { email });
         emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-                "EReceipt");
+                "E-Receipt from "+bname);
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-                "");
+                "Hi,\n" +
+                        "\n" +
+                        "Thank you for buying goods from Business name. Your E-Receipt is attached below.\n" +
+                        "\n" +
+                        "Best Regards,\n" +
+                        cname+"\n" +
+                        bname);
         emailIntent.setType("image/png");
         Uri myUri = Uri.parse("file://" + path);
         emailIntent.putExtra(Intent.EXTRA_STREAM, myUri);

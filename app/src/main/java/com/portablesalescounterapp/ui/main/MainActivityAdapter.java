@@ -14,6 +14,7 @@ import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ItemProductsMainBinding;
 import com.portablesalescounterapp.model.data.Products;
+import com.portablesalescounterapp.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
         if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
+            holder.itemEmergencyBinding.mainPrice.setText("Php: " +DateTimeUtils.parseDoubleTL(Double.parseDouble(employeeList.get(position).getProductPrice())));
             String imageURL = Endpoints.URL_IMAGE + employeeList.get(position).getProductId() + "prod";
             Glide.with(context)
                     .load(imageURL)

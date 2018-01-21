@@ -147,7 +147,7 @@
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text="DELETE CODE"
+                        android:text="REMOVE"
                         android:layout_gravity="center"
                         android:textAllCaps="true"
                         android:gravity="center|right"

@@ -422,9 +422,6 @@ public class GuestActivity
                 onBackPressed();
                 return true;
 
-            case R.id.item_qrscan:
-                startScan();
-                return  true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -457,6 +454,7 @@ public class GuestActivity
          presenter.load(user_id);
          presenter.getCategory(user_id);
          presenter.getDiscount(user_id);
+
     }
 
 
@@ -594,7 +592,8 @@ public class GuestActivity
             }
 
             vtsDiscount = String.valueOf(discounted);
-            dialogBinding.cartDiscountPrice.setText("Php: " + String.valueOf(discounted));
+            //dialogBinding.cartDiscountPrice.setText("Php: " + String.valueOf(discounted));
+            dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(DateTimeUtils.parseDoubleTL(discounted)));
 
 
             oldTotal = dialogBinding.cartItemPrice.getText().toString();
@@ -656,10 +655,11 @@ public class GuestActivity
 
 
         dialogBinding.setProduct(currProduct);
-        dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
+      //  dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
+        dialogBinding.buyItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
 
         dialogBinding.buyItemQuantity.setText("1");
-        newPrice = Integer.parseInt(currProduct.getProductPrice());
+        newPrice = Double.parseDouble(currProduct.getProductPrice());
 
         dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
 
@@ -667,7 +667,7 @@ public class GuestActivity
                 // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
                 if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
                     if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
-                        newPrice = (Integer.parseInt(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
+                        newPrice = (Double.parseDouble(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
                         dialogBinding.buyItemPrice.setText("Php: " + newPrice);
                     } else {
                         showError("Not Enough Stocks!");
@@ -698,7 +698,8 @@ public class GuestActivity
                 prodIdcart.add(currProduct.getProductId() + "");
                 prodNamecart.add(currProduct.getProductName());
                 prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
-                prodPricecart.add(String.valueOf(newPrice));
+                prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
+              //  prodPricecart.add(String.valueOf(newPrice));
 
                 GuestActivity.this.invalidateOptionsMenu();
 
@@ -746,7 +747,8 @@ public class GuestActivity
         Log.d("TAG", imageURL);
 
         binding.viewItemDesc.setText(currProduct.getProductDescription());
-        binding.viewItemPrice.setText("Php: " + currProduct.getProductPrice());
+        binding.viewItemPrice.setText("Php: "+ DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
+      //  binding.viewItemPrice.setText("Php: " + currProduct.getProductPrice());
         binding.viewItemName.setText(currProduct.getProductName());
 
         String prodCode;
@@ -771,21 +773,28 @@ public class GuestActivity
                 false);
 
 
+
+
         dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        dialogBinding.cartDiscount.setVisibility(View.GONE);
         adapterCart = new CartGuestActivityAdapter(this, getMvpView());
         dialogBinding.recyclerView.setAdapter(adapterCart);
         adapterCart.setProductList(productList, prodIdcart, prodNamecart, prodQuantitycart, prodPricecart);
         adapterCart.notifyDataSetChanged();
 
-        int cartPrice = 0;
+        double cartPrice = 0;
 
         for (int a = 0; a < prodPricecart.size(); a++) {
-            cartPrice += Double.parseDouble(prodPricecart.get(a));
+           // cartPrice += Double.parseDouble(prodPricecart.get(a));
+            cartPrice += Double.parseDouble(prodPricecart.get(a).replace(",",""));
+
         }
         vtsPrice = String.valueOf(cartPrice);
-        dialogBinding.cartItemPrice.setText("Php: " + cartPrice + "");
+       // dialogBinding.cartItemPrice.setText("Php: " + cartPrice + "");
+        dialogBinding.cartItemPrice.setText("Php: "+DateTimeUtils.parseDoubleTL(cartPrice));
+
 
 
         dialogBinding.cash.setOnClickListener(new View.OnClickListener() {

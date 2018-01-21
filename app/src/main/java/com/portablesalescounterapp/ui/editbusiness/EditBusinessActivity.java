@@ -100,7 +100,7 @@ public class EditBusinessActivity extends MvpActivity<EditBusinessView, EditBusi
     private void loadImage() {
         String imageURL = "https://payapp.tip.edu.ph/api/storage/app/image/default_buyer.png";
        // if (user.getImage() != null && !user.getImage().isEmpty()) {
-            imageURL = Endpoints.URL_IMAGE+user.getEmail();
+            imageURL = Endpoints.URL_IMAGE+business.getBusinessId();
             Log.d("TAG",imageURL);
        // }
         Glide.with(this)
@@ -280,7 +280,7 @@ public class EditBusinessActivity extends MvpActivity<EditBusinessView, EditBusi
         imageView.setImageBitmap(bitmap);
 
         new AlertDialog.Builder(this)
-                .setTitle("Upload Profile Picture")
+                .setTitle("Upload Business Picture")
                 .setView(view)
                 .setPositiveButton("UPLOAD", new DialogInterface.OnClickListener() {
                     @Override

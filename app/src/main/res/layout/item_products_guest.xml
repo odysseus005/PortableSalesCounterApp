@@ -63,6 +63,7 @@
                 android:textStyle="bold"
                 android:textSize="16sp" />
             <TextView
+                android:id="@+id/guestPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
@@ -71,7 +72,6 @@
                 android:layout_marginBottom="5dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:text='@{"Php: "+product.productPrice}'
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="14sp" />

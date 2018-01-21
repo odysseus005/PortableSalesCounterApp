@@ -18,110 +18,80 @@
         android:id="@+id/eventCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:minWidth="100dp"
-        app:cardCornerRadius="3dp"
-        app:cardElevation="3dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:onClick="@{() -> presenter.onEventSelect(event)}"
+        android:clickable="true"
         android:foreground="?selectableItemBackground"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-
-
+            <ImageView
+                android:id="@+id/eventImage"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/sample_event"
+                android:scaleType="centerCrop"
+                 />
 
             <LinearLayout
+                android:id="@+id/eventInfoLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:orientation="vertical">
+                android:layout_below="@+id/eventImage"
+                android:orientation="vertical"
+                android:padding="10dp">
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{business.businessName}'
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-
-
-                <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:text='@{"Description: "+business.businessDescription}'
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:textColor="@color/darkGray"
-                android:textSize="14sp" />
+                    android:text="@{business.businessName}"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text='@{"Address: "+business.businessAddress}'
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
+                    android:text="@{business.businessDescription}"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text='@{"Contact No. "+business.businessContact}'
-                    android:layout_alignParentStart="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/darkGray"
+                    android:text="@{business.businessAddress}"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
-
-
-
-
-
-                <include
-                    layout="@layout/design_divider"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="5dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:background="@drawable/rounded_button_solid"
-                        android:clickable="true"
-
-                        android:padding="8dp"
-                        android:paddingEnd="20dp"
-                        android:paddingStart="20dp"
-                        android:onClick="@{()->view.OnButtonClick(business)}"
-                        android:text="SHOP"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-
-
-                </LinearLayout>
-
-
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/eventInfoLayout"
+                android:background="@color/lightestGray"
+                android:orientation="horizontal" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider"
+                android:padding="10dp"
+                android:id="@+id/bcontact"
+                android:text='@{business.businessContact}'
+                android:textColor="@color/black"
+                android:textSize="12sp" />
 
+        </RelativeLayout>
 
 
     </android.support.v7.widget.CardView>

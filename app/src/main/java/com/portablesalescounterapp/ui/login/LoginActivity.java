@@ -59,6 +59,8 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
         realm = Realm.getDefaultInstance();
 
 
+
+        dialog = new Dialog(LoginActivity.this);
     //KEYHASH
        /* try {
             PackageInfo info = getPackageManager().getPackageInfo(

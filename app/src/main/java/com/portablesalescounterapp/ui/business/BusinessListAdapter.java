@@ -3,10 +3,14 @@ package com.portablesalescounterapp.ui.business;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.portablesalescounterapp.R;
+import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ItemBusinessBinding;
 import com.portablesalescounterapp.model.data.Business;
 
@@ -38,6 +42,9 @@ public class BusinessListAdapter extends RecyclerView.Adapter<BusinessListAdapte
                 R.layout.item_business,
                 parent,
                 false);
+
+
+
         return new ViewHolder(itemEmployeeBinding);
     }
 
@@ -46,7 +53,14 @@ public class BusinessListAdapter extends RecyclerView.Adapter<BusinessListAdapte
         holder.itemEmergencyBinding.setBusiness(categoryList.get(position));
         holder.itemEmergencyBinding.setView(view);
 
-
+        String imageURL = Endpoints.URL_IMAGE + categoryList.get(position).getBusinessId();
+        Glide.with(context)
+                .load(imageURL)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop()
+                .error(R.drawable.sample_event)
+                .into(holder.itemEmergencyBinding.eventImage);
+        Log.d("TAG", imageURL);
 
     }
 
