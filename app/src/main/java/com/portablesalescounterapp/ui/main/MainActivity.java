@@ -3,6 +3,7 @@ package com.portablesalescounterapp.ui.main;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -94,6 +96,9 @@ public class MainActivity
         implements SwipeRefreshLayout.OnRefreshListener , NavigationView.OnNavigationItemSelectedListener, MainActivityView {
 
     private final int PERMISSION_CODE = 9235;
+    private static final int MY_PERMISSIONS_REQUEST = 1;
+    public static final int MY_PERMISSIONS_REQUEST_CAMERA = 100;
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
     private CartDiscountListAdapter adapterDiscount;
@@ -142,6 +147,12 @@ public class MainActivity
         if (user == null) {
             Log.e(TAG, "No User found");
             finish();
+        }
+
+        int Permission_All = 1;
+        String[] Permissions = { Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if(!hasPermissions(this, Permissions)){
+            ActivityCompat.requestPermissions(this, Permissions, Permission_All);
         }
 
         productList = new ArrayList<>();
@@ -334,6 +345,18 @@ public class MainActivity
 
     }
 
+    public static boolean hasPermissions(Context context, String... permissions){
+
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M && context!=null && permissions!=null){
+            for(String permission: permissions){
+                if(ActivityCompat.checkSelfPermission(context, permission)!=PackageManager.PERMISSION_GRANTED){
+                    return  false;
+                }
+            }
+        }
+        return true;
+    }
+
 
     @Override
     protected void onActivityResult ( int requestCode, int resultCode, Intent in ) {
@@ -385,6 +408,29 @@ public class MainActivity
             else {
                 Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        switch (requestCode) {
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+            case MY_PERMISSIONS_REQUEST:{
+                if(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                }else{
+
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_CAMERA:{
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                }
+                return;
+            }
+
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.view.GravityCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,6 +46,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
     private ProgressDialog progressDialog;
     private Realm realm;
     User user;
+    Dialog dialog;
 
 
 
@@ -193,7 +195,7 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
         if(!(user.getFirstlogin().equalsIgnoreCase("true")))
         {
 
-            Dialog dialog = new Dialog(LoginActivity.this);
+            dialog = new Dialog(LoginActivity.this);
             final DialogVerificationBinding dialogBinding = DataBindingUtil.inflate(
                     getLayoutInflater(),
                     R.layout.dialog_verification,
@@ -222,6 +224,37 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
             finish();
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (dialog.isShowing()) {
+
+            final Realm realm = Realm.getDefaultInstance();
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.deleteAll();
+                }
+            }, new Realm.Transaction.OnSuccess() {
+                @Override
+                public void onSuccess() {
+                    realm.close();
+                    dialog.dismiss();
+                }
+            }, new Realm.Transaction.OnError() {
+                @Override
+                public void onError(Throwable error) {
+                    error.printStackTrace();
+                    realm.close();
+                    Toast.makeText(LoginActivity.this, "Realm Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+        } else {
+            finish();
+        }
     }
 
     @Override
@@ -267,11 +300,6 @@ public class LoginActivity extends MvpViewStateActivity<LoginView, LoginPresente
   //      loginViewState.setPassword(binding.etPassword.getText().toString());
     }
 
-    @Override
-    public  void onBackPressed()
-    {
-        finish();
 
-    }
 }
 
