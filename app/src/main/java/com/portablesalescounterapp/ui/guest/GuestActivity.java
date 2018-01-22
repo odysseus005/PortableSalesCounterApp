@@ -114,6 +114,7 @@ public class GuestActivity
     private TextView txtName;
     private TextView txtEmail;
     private ImageView imgProfile;
+    public int skuLimiter=0;
     private Realm realm;
     // private User user;
     private Dialog dialog, dialog2;
@@ -632,93 +633,113 @@ public class GuestActivity
 
 
 
-        dialog = new Dialog(GuestActivity.this);
-        final DialogAddCartGuestBinding dialogBinding = DataBindingUtil.inflate(
-                getLayoutInflater(),
-                R.layout.dialog_add_cart_guest,
-                null,
-                false);
-
-        String prodCode;
-        String prodCode2;
-        if (currProduct.getProductCode().equalsIgnoreCase("E")) {
-            prodCode = "pcs.";
-            prodCode2 = "pc.";
-        } else {
-            prodCode = "kg";
-            prodCode2 = "kilo";
+        skuLimiter=0;
+        for(int a=0;a<prodIdcart.size();a++)
+        {
+            if((prodIdcart.get(a)).equalsIgnoreCase(String.valueOf(currProduct.getProductId())))
+                skuLimiter = Integer.parseInt(prodQuantitycart.get(a));
         }
 
 
-        dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
-        dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + currProduct.getProductSKU() + prodCode);
+        if(currProduct.getProductSKU().equalsIgnoreCase("0")||currProduct.getProductSKU().equalsIgnoreCase(""))
+        {
+            showError("Out of Stock!");
+        }
+        else if(String.valueOf(Integer.parseInt(currProduct.getProductSKU())-skuLimiter).equalsIgnoreCase("0")||String.valueOf((Integer.parseInt(currProduct.getProductSKU())-skuLimiter)).equalsIgnoreCase(""))
+        {
+            showError("Out of Stock! Product is already in the cart");
+        }
+        else {
+
+            dialog = new Dialog(GuestActivity.this);
+            final DialogAddCartGuestBinding dialogBinding = DataBindingUtil.inflate(
+                    getLayoutInflater(),
+                    R.layout.dialog_add_cart_guest,
+                    null,
+                    false);
+
+            String prodCode;
+            String prodCode2;
+            if (currProduct.getProductCode().equalsIgnoreCase("E")) {
+                prodCode = "pcs.";
+                prodCode2 = "pc.";
+            } else {
+                prodCode = "kg";
+                prodCode2 = "kilo";
+            }
 
 
-        dialogBinding.setProduct(currProduct);
-      //  dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
-        dialogBinding.buyItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
+            dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
+            dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + (Integer.parseInt(currProduct.getProductSKU())-skuLimiter) + prodCode);
 
-        dialogBinding.buyItemQuantity.setText("1");
-        newPrice = Double.parseDouble(currProduct.getProductPrice());
 
-        dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
+            dialogBinding.setProduct(currProduct);
+            //  dialogBinding.buyItemPrice.setText("Php: " + currProduct.getProductPrice());
+            dialogBinding.buyItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
 
-            public void afterTextChanged(Editable s) {
-                // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
-                if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
-                    if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
-                        newPrice = (Double.parseDouble(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
-                        dialogBinding.buyItemPrice.setText("Php: " + newPrice);
-                    } else {
-                        showError("Not Enough Stocks!");
-                        dialogBinding.buyItemQuantity.setText(currProduct.getProductSKU());
+            dialogBinding.buyItemQuantity.setText("1");
+            newPrice = Double.parseDouble(currProduct.getProductPrice());
+
+            dialogBinding.buyItemQuantity.addTextChangedListener(new TextWatcher() {
+
+                public void afterTextChanged(Editable s) {
+                    // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
+                    if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
+                        if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= (Integer.parseInt(currProduct.getProductSKU())-skuLimiter)) {
+                            newPrice = (Double.parseDouble(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
+                            dialogBinding.buyItemPrice.setText("Php: " + newPrice);
+                        } else {
+                            showError("Not Enough Stocks!");
+                            dialogBinding.buyItemQuantity.setText(String.valueOf(Integer.parseInt(currProduct.getProductSKU())-skuLimiter));
+                        }
+
                     }
+                }
+
+                public void beforeTextChanged(CharSequence s, int start,
+                                              int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start,
+                                          int before, int count) {
+                }
+            });
+
+
+            dialogBinding.buyItemProdcode.setText(prodCode);
+
+
+            dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    productList.add(currProduct);
+                    prodIdcart.add(currProduct.getProductId() + "");
+                    prodNamecart.add(currProduct.getProductName());
+                    prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
+                    prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
+                    //  prodPricecart.add(String.valueOf(newPrice));
+
+                    GuestActivity.this.invalidateOptionsMenu();
+
+                    dialog.dismiss();
+                }
+            });
+            dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    dialog.dismiss();
 
                 }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-            }
-        });
+            });
 
 
-        dialogBinding.buyItemProdcode.setText(prodCode);
+            dialog.setContentView(dialogBinding.getRoot());
+            dialog.setCancelable(false);
+            dialog.show();
 
-
-        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                productList.add(currProduct);
-                prodIdcart.add(currProduct.getProductId() + "");
-                prodNamecart.add(currProduct.getProductName());
-                prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
-                prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
-              //  prodPricecart.add(String.valueOf(newPrice));
-
-                GuestActivity.this.invalidateOptionsMenu();
-
-                dialog.dismiss();
-            }
-        });
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                dialog.dismiss();
-
-            }
-        });
-
-
-        dialog.setContentView(dialogBinding.getRoot());
-        dialog.setCancelable(false);
-        dialog.show();
+        }
 
 
     }

@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
@@ -57,6 +59,7 @@ public class ReceiptListActivity
     DialogReceiptBinding dialogBinding;
     private ProgressDialog progressDialog;
     private String searchText;
+    private String sorter="Date Descending";
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -106,6 +109,39 @@ public class ReceiptListActivity
                 onRefresh();
             }
         });
+
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Date Descending");
+        categories.add("Date Ascending");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spCategory.setAdapter(dataAdapter);
+
+
+        binding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                // Showing selected spinner item
+
+                // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                sorter= item;
+
+                prepareList();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+
+            }
+        });
+
     }
 
 
@@ -310,8 +346,33 @@ public class ReceiptListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Transaction> productsList;
             if (searchText.isEmpty()) {
+
+                if(sorter.equalsIgnoreCase("Date Descending"))
                 productsList = realm.copyFromRealm(employeeRealmResults.sort("date", Sort.DESCENDING));
+                else
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("date", Sort.ASCENDING));
+
             } else {
+
+                if (sorter.equalsIgnoreCase("Date Descending"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("transactionPrice", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("transactionDiscount", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("transactionCode", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("date", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("discountName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .findAll().sort("transactionId", Sort.DESCENDING));
+
+            }
+            else
+            {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
                         .contains("transactionPrice", searchText, Case.INSENSITIVE)
                         .or()
@@ -324,7 +385,9 @@ public class ReceiptListActivity
                         .contains("discountName", searchText, Case.INSENSITIVE)
                         .or()
                         .contains("userName", searchText, Case.INSENSITIVE)
-                        .findAll().sort("transactionId", Sort.DESCENDING));
+                        .findAll().sort("transactionId", Sort.ASCENDING));
+
+            }
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

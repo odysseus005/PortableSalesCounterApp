@@ -301,7 +301,7 @@ public class ProductListActivity
             @Override
             public void onClick(View v) {
                 PopupMenu popupMenu = new PopupMenu(ProductListActivity.this, dialogBinding.btnChangeImage);
-                popupMenu.inflate(R.menu.edit_user_image);
+                popupMenu.inflate(R.menu.edit_product_image);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {

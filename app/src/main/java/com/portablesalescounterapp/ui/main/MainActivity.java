@@ -1043,7 +1043,7 @@ public class MainActivity
                             dialogBinding.buyItemPrice.setText("Php: " + newPrice);
                         } else {
                             showError("Not Enough Stocks!");
-                            dialogBinding.buyItemQuantity.setText((Integer.parseInt(currProduct.getProductSKU())-skuLimiter));
+                            dialogBinding.buyItemQuantity.setText(String.valueOf((Integer.parseInt(currProduct.getProductSKU())-skuLimiter)));
                         }
 
                     }
