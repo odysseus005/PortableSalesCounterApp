@@ -109,7 +109,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
         }
         else {
             getView().startLoading();
-            App.getInstance().getApiInterface().addTransaction(Endpoints.ADD_TRANSACTION,transPrice,
+            App.getInstance().getApiInterface().addTransaction(Endpoints.ADD_TRANSACTION_GUEST,transPrice,
                     transCode,
                     transDiscount,
                     idList,

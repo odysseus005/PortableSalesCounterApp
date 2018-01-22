@@ -21,7 +21,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:onClick="@{() -> presenter.onEventSelect(event)}"
+        android:onClick="@{() -> view.OnButtonClick(business)}"
         android:clickable="true"
         android:foreground="?selectableItemBackground"
         android:orientation="vertical">

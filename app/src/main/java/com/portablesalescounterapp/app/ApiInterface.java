@@ -305,6 +305,10 @@ public interface ApiInterface {
                                            @Field(Constants.USER_ID) String user_id,
                                            @Field(Constants.FIRST_NAME) String name,
                                            @Field(Constants.DATE_TIME) String date,
+                                           @Field(Constants.TRANSACTION_IDLIST) String transIdList,
+                                           @Field(Constants.TRANSACTION_NAMELIST) String transNameList,
+                                           @Field(Constants.TRANSACTION_QUANTITYLIST) String transQuanList,
+                                           @Field(Constants.TRANSACTION_PRICELIST) String transPriceList,
                                   @Field(Constants.BUSINESS_ID) String business_id
     );
 

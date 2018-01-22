@@ -133,6 +133,7 @@ public class MainActivity
     private String filterCategory="";
     private ReceiptActivityAdapter adapterCart2;
     boolean qrSwitcher=true;
+    public int skuLimiter=0;
      DialogReceiptBinding dialogBindingSuccess;
 
     @SuppressWarnings("ConstantConditions")
@@ -884,7 +885,7 @@ public class MainActivity
                     if(!qrSwitcher)
                     {
 
-                        presenter.updateTransaction(user.getBusiness_id(),String.valueOf(transaction.getTransactionId()),String.valueOf(user.getUserId()),user.getFullName(), String.valueOf(DateTimeUtils.getCurrentTimeStamp()));
+                        presenter.updateTransaction(user.getBusiness_id(),String.valueOf(transaction.getTransactionId()),String.valueOf(user.getUserId()),user.getFullName(), String.valueOf(DateTimeUtils.getCurrentTimeStamp()),transaction.getTransactionIdList(),transaction.getTransactionNameList(),transaction.getTransactionQuantityList(),transaction.getTransactionPriceList());
                         qrSwitcher=true;
 
                     }
@@ -984,9 +985,23 @@ public class MainActivity
     public void OnButtonAddtoCart() {
 
 
+            skuLimiter=0;
+        for(int a=0;a<prodIdcart.size();a++)
+        {
+            if((prodIdcart.get(a)).equalsIgnoreCase(String.valueOf(currProduct.getProductId())))
+                   skuLimiter = Integer.parseInt(prodQuantitycart.get(a));
+        }
+
+
+
+
         if(currProduct.getProductSKU().equalsIgnoreCase("0")||currProduct.getProductSKU().equalsIgnoreCase(""))
         {
             showError("Out of Stock!");
+        }
+        else if(String.valueOf(Integer.parseInt(currProduct.getProductSKU())-skuLimiter).equalsIgnoreCase("0")||String.valueOf((Integer.parseInt(currProduct.getProductSKU())-skuLimiter)).equalsIgnoreCase(""))
+        {
+            showError("Out of Stock! Product is already in the cart");
         }
         else {
             dialog = new Dialog(MainActivity.this);
@@ -1008,7 +1023,7 @@ public class MainActivity
 
 
             dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
-            dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + currProduct.getProductSKU() + prodCode);
+            dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + (Integer.parseInt(currProduct.getProductSKU())-skuLimiter) + prodCode);
 
 
             dialogBinding.setProduct(currProduct);
@@ -1023,12 +1038,12 @@ public class MainActivity
                 public void afterTextChanged(Editable s) {
                     // Log.d("TAG<>>>",currProduct.getProductPrice()+"< >"+dialogBinding.buyItemQuantity.getText().toString());
                     if (!dialogBinding.buyItemQuantity.getText().toString().equalsIgnoreCase("")) {
-                        if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= Integer.parseInt(currProduct.getProductSKU())) {
+                        if (Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()) <= (Integer.parseInt(currProduct.getProductSKU())-skuLimiter)) {
                             newPrice = (Double.parseDouble(currProduct.getProductPrice()) * Integer.parseInt(dialogBinding.buyItemQuantity.getText().toString()));
                             dialogBinding.buyItemPrice.setText("Php: " + newPrice);
                         } else {
                             showError("Not Enough Stocks!");
-                            dialogBinding.buyItemQuantity.setText(currProduct.getProductSKU());
+                            dialogBinding.buyItemQuantity.setText((Integer.parseInt(currProduct.getProductSKU())-skuLimiter));
                         }
 
                     }

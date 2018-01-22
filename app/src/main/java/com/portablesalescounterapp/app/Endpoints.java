@@ -70,6 +70,7 @@ public class Endpoints {
     public static final String ALL_TRANSACTION = "allTransaction";
     public static final String UPDATE_TRANSACTION = "updateTransaction";
     public static final String REFUND_TRANSACTION = "refundTransaction";
+    public static final String ADD_TRANSACTION_GUEST = "addTransactionGuest";
 
 
 }

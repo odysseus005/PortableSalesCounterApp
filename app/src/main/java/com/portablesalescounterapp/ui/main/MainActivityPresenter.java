@@ -375,8 +375,14 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
     }
 
 
-    public void updateTransaction(String bussinessId,String productid,String userID,String name,String date) {
-        App.getInstance().getApiInterface().updateTransaction(Endpoints.UPDATE_TRANSACTION,productid,userID,name,date,bussinessId)
+    public void updateTransaction(String bussinessId,String productid,String userID,String name,String date,String idList,
+                                  String nameList,
+                                  String quanList,
+                                  String priceList) {
+        App.getInstance().getApiInterface().updateTransaction(Endpoints.UPDATE_TRANSACTION,productid,userID,name,date,idList,
+                nameList,
+                quanList,
+                priceList,bussinessId)
                 .enqueue(new Callback<ResultResponse>() {
                     @Override
                     public void onResponse(Call<ResultResponse> call, final Response<ResultResponse> response) {
