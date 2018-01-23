@@ -876,10 +876,10 @@ public class MainActivity
             @Override
             public void onClick(View v) {
 
-                if(dialogBindingSuccess.etReceiptEmail.getText().toString().equalsIgnoreCase(""))
-                {
-                    showError("No Valid Email Address");
-                }else {
+//                if(dialogBindingSuccess.etReceiptEmail.getText().toString().equalsIgnoreCase(""))
+//                {
+//                    showError("No Valid Email Address");
+//                }else {
 
                     Log.d(">>>>",""+qrSwitcher);
                     if(!qrSwitcher)
@@ -898,7 +898,7 @@ public class MainActivity
                         MainActivity.this.recreate();
 
                     }
-                }
+               // }
 
             }
         });
@@ -912,10 +912,12 @@ public class MainActivity
     @Override
     public void  onSelfSuccess() {
 
+        if(!(dialogBindingSuccess.etReceiptEmail.getText().toString().equalsIgnoreCase("")))
+            takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString(),business.getBusinessName(),user.getFullName());
+
         dialogBindingSuccess.cancel.setVisibility(View.GONE);
         dialogBindingSuccess.etReceiptEmail.setVisibility(View.GONE);
         dialogBindingSuccess.send.setVisibility(View.GONE);
-        takeScreenshot(dialogBindingSuccess.sendLayout, dialogBindingSuccess.etReceiptEmail.getText().toString(),business.getBusinessName(),user.getFullName());
         dialogTC.dismiss();
         MainActivity.this.recreate();
 
@@ -1368,6 +1370,21 @@ public class MainActivity
         }
     }
 
+
+//    public void createImage(Bitmap bmp) {
+//        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//        bmp.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
+//        File file = new File(Environment.getExternalStorageDirectory() +
+//                "/capturedscreenandroid.jpg");
+//        try {
+//            file.createNewFile();
+//            FileOutputStream outputStream = new FileOutputStream(file);
+//            outputStream.write(bytes.toByteArray());
+//            outputStream.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 
 
