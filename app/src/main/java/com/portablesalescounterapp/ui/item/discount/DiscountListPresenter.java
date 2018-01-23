@@ -39,6 +39,7 @@ public class DiscountListPresenter extends MvpBasePresenter<DiscountListView> {
                         if (isViewAttached()) {
                             getView().stopRefresh();
                         }
+
                         if (response.isSuccessful()) {
                             final Realm realm = Realm.getDefaultInstance();
                             realm.executeTransactionAsync(new Realm.Transaction() {
@@ -94,7 +95,12 @@ public class DiscountListPresenter extends MvpBasePresenter<DiscountListView> {
                         @Override
                         public void onResponse(Call<List<Discount>> call, final Response<List<Discount>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+                            if(response.message().equalsIgnoreCase("existing"))
+                            {
+                                getView().showAlert("Discount Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -111,7 +117,10 @@ public class DiscountListPresenter extends MvpBasePresenter<DiscountListView> {
                         public void onFailure(Call<List<Discount>> call, Throwable t) {
 
                             getView().stopLoading();
-                            getView().showAlert("Error Connecting to Server");
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Discount Already Exist!");
+                            else
+                                getView().showAlert("Error Connecting to Server");
                         }
                     });
         }
@@ -131,7 +140,12 @@ public class DiscountListPresenter extends MvpBasePresenter<DiscountListView> {
                         @Override
                         public void onResponse(Call<List<Discount>> call, final Response<List<Discount>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+                            if(response.message().equalsIgnoreCase("existing"))
+                            {
+                                getView().showAlert("Discount Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -149,7 +163,11 @@ public class DiscountListPresenter extends MvpBasePresenter<DiscountListView> {
                         public void onFailure(Call<List<Discount>> call, Throwable t) {
 
                             getView().stopLoading();
-                            getView().showAlert("Error Connecting to Server");
+
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Discount Already Exist!");
+                            else
+                                getView().showAlert("Error Connecting to Server");
                         }
                     });
         }

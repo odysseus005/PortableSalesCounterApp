@@ -53,6 +53,7 @@ public class Products extends RealmObject {
     @Expose
     private int businessId;
 
+
     public String getProductSKU() {
         return productSKU;
     }

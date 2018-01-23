@@ -71,6 +71,7 @@ public class CategoryListActivity
     private int emerID=0;
     private String totalCategory = "0";
     private String searchText;
+     DialogEditCategoryBinding dialogBinding;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -237,7 +238,7 @@ public class CategoryListActivity
         emerID = emergency.getCategoryId();
 
         dialog = new Dialog(CategoryListActivity.this);
-        final DialogEditCategoryBinding dialogBinding = DataBindingUtil.inflate(
+         dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_edit_category,
                 null,
@@ -279,6 +280,7 @@ public class CategoryListActivity
     public void onEditCategCount(String count) {
 
         totalCategory = count;
+        dialogBinding.totalCateg.setText("No. of Products : "+totalCategory);
 
     }
 

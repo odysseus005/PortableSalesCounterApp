@@ -43,7 +43,8 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                         if (isViewAttached()) {
                             getView().stopRefresh();
                         }
-                        if (response.isSuccessful()) {
+
+                       if (response.isSuccessful()) {
                             final Realm realm = Realm.getDefaultInstance();
                             realm.executeTransactionAsync(new Realm.Transaction() {
                                 @Override
@@ -122,7 +123,12 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                         @Override
                         public void onResponse(Call<List<Category>> call, final Response<List<Category>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+                            if(response.message().equalsIgnoreCase("existing"))
+                            {
+                                getView().showAlert("Category Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -139,7 +145,10 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                         public void onFailure(Call<List<Category>> call, Throwable t) {
 
                             getView().stopLoading();
-                            getView().showAlert("Error Connecting to Server");
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Category Already Exist!");
+                            else
+                                getView().showAlert("Error Connecting to Server");
                         }
                     });
         }
@@ -158,7 +167,12 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                         @Override
                         public void onResponse(Call<List<Category>> call, final Response<List<Category>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+                            if(response.message().equalsIgnoreCase("existing"))
+                            {
+                                getView().showAlert("Category Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -176,7 +190,10 @@ public class CategoryListPresenter extends MvpBasePresenter<CategoryListView> {
                         public void onFailure(Call<List<Category>> call, Throwable t) {
 
                             getView().stopLoading();
-                            getView().showAlert("Error Connecting to Server");
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Category Already Exist!");
+                            else
+                                getView().showAlert("Error Connecting to Server");
                         }
                     });
         }

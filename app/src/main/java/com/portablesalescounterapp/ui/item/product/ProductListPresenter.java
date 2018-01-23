@@ -1,5 +1,6 @@
 package com.portablesalescounterapp.ui.item.product;
 
+import android.util.Log;
 import android.util.Patterns;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
@@ -101,7 +102,14 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         @Override
                         public void onResponse(Call<List<Products>> call, final Response<List<Products>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+
+
+                            if(response.message().contains("existing"))
+                            {
+                                getView().showAlert("Product Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -117,9 +125,16 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         @Override
                         public void onFailure(Call<List<Products>> call, Throwable t) {
 
+
                             getView().stopLoading();
+
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Product Already Exist!");
+                            else
                             getView().showAlert("Error Connecting to Server");
                         }
+
+
                     });
         }
     }
@@ -143,7 +158,12 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         @Override
                         public void onResponse(Call<List<Products>> call, final Response<List<Products>> response) {
                             getView().stopLoading();
-                            if (response.isSuccessful()) {
+
+                            if(response.message().equalsIgnoreCase("existing"))
+                            {
+                                getView().showAlert("Product Already Exist!");
+                            }
+                            else if (response.isSuccessful()) {
                                 realm.executeTransaction(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -161,7 +181,12 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         public void onFailure(Call<List<Products>> call, Throwable t) {
 
                             getView().stopLoading();
-                            getView().showAlert("Error Connecting to Server");
+
+
+                            if(t.getMessage().contains("Expected"))
+                                getView().showAlert("Product Already Exist!");
+                            else
+                                getView().showAlert("Error Connecting to Server");
                         }
                     });
         }
