@@ -28,10 +28,13 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.databinding.ActivitySalechartBinding;
+import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.login.LoginActivity;
 import com.portablesalescounterapp.ui.register.RegisterActivity;
 
 import java.util.ArrayList;
+
+import io.realm.Realm;
 
 
 public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPresenter> implements SaleChartView {
@@ -39,6 +42,9 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
     private ActivitySalechartBinding binding;
     private ProgressDialog progressDialog;
     String url="";
+    private Realm realm;
+    private User user;
+
 
 
 
@@ -47,7 +53,8 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_salechart);
 
-
+        realm = Realm.getDefaultInstance();
+        user = realm.where(User.class).findFirst();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_salechart);
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
@@ -63,17 +70,19 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
         }
         if(id==1)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php";
+            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php?business_id="+user.getBusiness_id();
+            //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php";
         }else if(id==2)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php";
+            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php?business_id="+user.getBusiness_id();
+            //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php";
         }
         else if(id==3)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php";
+            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php?business_id="+user.getBusiness_id();
+           // url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php";
         }
-
-        getSupportActionBar().setTitle("Sales Chart (Rainy Season) ");
+        
 
         binding.webview.clearCache(true);
         binding.webview.clearHistory();
