@@ -137,6 +137,7 @@ public class MainActivity
     boolean qrSwitcher=true;
     boolean changeChecker =false;
     public int skuLimiter=0;
+    public boolean scanChecker=false;
      DialogReceiptBinding dialogBindingSuccess;
 
     @SuppressWarnings("ConstantConditions")
@@ -382,8 +383,10 @@ public class MainActivity
 
                     if (qrSwitcher) {
                         currProduct = presenter.getProductQr(contents);
-                        if (currProduct.isLoaded() && currProduct.isValid())
+                        if (currProduct.isLoaded() && currProduct.isValid()) {
                             OnButtonAddtoCart();
+                            scanChecker=true;
+                        }
 
                     } else {
                         transQr = presenter.getTransactionQr(Integer.parseInt(contents));
@@ -543,6 +546,8 @@ public class MainActivity
 
     @Override
     public void onBackPressed() {
+
+
         if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
         } else {
@@ -1028,6 +1033,9 @@ public class MainActivity
             }
 
 
+
+
+
             dialogBinding.viewItemPrice.setText("Php: " + currProduct.getProductPrice() + " per " + prodCode2);
             dialogBinding.viewItemQuantity.setText("Remaining Quantity:  " + (Integer.parseInt(currProduct.getProductSKU())-skuLimiter) + prodCode);
 
@@ -1071,7 +1079,27 @@ public class MainActivity
             dialogBinding.buyItemProdcode.setText(prodCode);
 
 
+            if(scanChecker)
+                dialogBinding.buy.setVisibility(View.VISIBLE);
 
+                dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        productList.add(currProduct);
+                        prodIdcart.add(currProduct.getProductId() + "");
+                        prodNamecart.add(currProduct.getProductName());
+                        prodQuantitycart.add(dialogBinding.buyItemQuantity.getText().toString());
+                        prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
+
+                        MainActivity.this.invalidateOptionsMenu();
+
+                        dialog.dismiss();
+
+                        qrSwitcher=true;
+                        startScan();
+                    }
+                });
 
             dialogBinding.send.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1377,6 +1405,7 @@ public class MainActivity
 
 
     }
+
 
     private void takeScreenshot(View v1,String email,String bname, String cname) {
         Date now = new Date();
