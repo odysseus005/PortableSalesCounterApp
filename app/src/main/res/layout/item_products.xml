@@ -150,7 +150,23 @@
                         android:paddingEnd="20dp"
                         android:onClick="@{()->view.OnButtonDelete(product)}"
                         android:paddingStart="20dp"
-                        android:text="DELETE"
+                        android:text="ARCHIVE"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/arch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/rounded_button_solid"
+                        android:clickable="true"
+                        android:padding="8dp"
+                        android:layout_margin="10dp"
+                        android:paddingEnd="20dp"
+                        android:onClick="@{()->view.OnButtonArchive(product)}"
+                        android:paddingStart="20dp"
+                        android:text="UNARCHIVE"
                         android:textColor="@color/white"
                         android:textSize="14sp" />
 

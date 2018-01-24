@@ -235,6 +235,11 @@ public interface ApiInterface {
     @POST(Endpoints.PRODUCT)
     Call<List<Products>> deleteProduct(@Field(Constants.TAG) String tag, @Field(Constants.PRODUCT_ID) String prod_id,@Field(Constants.BUSINESS_ID) String business_id);
 
+    @FormUrlEncoded
+    @POST(Endpoints.PRODUCT)
+    Call<List<Products>> restoreProduct(@Field(Constants.TAG) String tag, @Field(Constants.PRODUCT_ID) String prod_id,@Field(Constants.BUSINESS_ID) String business_id);
+
+
 
     @FormUrlEncoded
     @POST(Endpoints.PRODUCT)

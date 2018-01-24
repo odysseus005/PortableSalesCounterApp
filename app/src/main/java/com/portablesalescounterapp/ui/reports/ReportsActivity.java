@@ -32,7 +32,7 @@ public class ReportsActivity extends MvpActivity<ReportsView, ReportsPresenter> 
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Items");
+        getSupportActionBar().setTitle("Reports and Analytics");
 
 
     }

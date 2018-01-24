@@ -224,6 +224,38 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
 
     }
 
+    public void restoreContact(String prodId,String businessId) {
+
+        getView().startLoading();
+        App.getInstance().getApiInterface().restoreProduct(Endpoints.RESTORE_PRODUCT,prodId,businessId)
+                .enqueue(new Callback<List<Products>>() {
+                    @Override
+                    public void onResponse(Call<List<Products>> call, final Response<List<Products>> response) {
+                        getView().stopLoading();
+                        if (response.isSuccessful()) {
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+
+                                    getView().onRefreshDelete();
+                                }
+                            });
+                        } else {
+                            getView().showAlert("Oops something went wrong");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Products>> call, Throwable t) {
+
+                        getView().stopLoading();
+                        getView().showAlert("Error Connecting to Server");
+                    }
+                });
+
+    }
+
+
 
     public void upload(String fname, final File imageFile) {
         // create RequestBody instance from file

@@ -800,6 +800,9 @@ public class GuestActivity
         dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         dialogBinding.cartDiscount.setVisibility(View.GONE);
+        dialogBinding.calcu1.setVisibility(View.GONE);
+        dialogBinding.calcu2.setVisibility(View.GONE);
+
         adapterCart = new CartGuestActivityAdapter(this, getMvpView());
         dialogBinding.recyclerView.setAdapter(adapterCart);
         adapterCart.setProductList(productList, prodIdcart, prodNamecart, prodQuantitycart, prodPricecart);

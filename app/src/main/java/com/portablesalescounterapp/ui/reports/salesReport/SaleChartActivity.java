@@ -44,6 +44,7 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
     String url="";
     private Realm realm;
     private User user;
+    private String title;
 
 
 
@@ -59,8 +60,13 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
         binding.setView(getMvpView());
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+        getSupportActionBar().setTitle("Generate Reports");
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.show();
 
         final int id = getIntent().getIntExtra(Constants.REPORT_TYPE, -1);
         if (id == -1) {
@@ -72,17 +78,21 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
         {
             url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php?business_id="+user.getBusiness_id();
             //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php";
+            title="";
         }else if(id==2)
         {
             url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php?business_id="+user.getBusiness_id();
             //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php";
+            title="";
         }
         else if(id==3)
         {
             url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php?business_id="+user.getBusiness_id();
            // url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php";
+            title="";
         }
-        
+
+
 
         binding.webview.clearCache(true);
         binding.webview.clearHistory();
@@ -99,8 +109,10 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (progressDialog.isShowing()) {
-                    progressDialog.dismiss();
+                if (progressDialog != null) {
+                    if (progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
                 }
             }
 

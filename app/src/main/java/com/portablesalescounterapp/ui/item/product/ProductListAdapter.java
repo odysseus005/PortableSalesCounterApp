@@ -51,8 +51,11 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         if(!(employeeList.get(position).getProductStatus().equalsIgnoreCase("A"))) {
-           holder.itemEmergencyBinding.prodLayout.setVisibility(View.GONE);
+           holder.itemEmergencyBinding.send.setVisibility(View.GONE);
+            holder.itemEmergencyBinding.cancel.setVisibility(View.GONE);
         }
+        else
+            holder.itemEmergencyBinding.arch.setVisibility(View.GONE);
 
         holder.itemEmergencyBinding.setProduct(employeeList.get(position));
         holder.itemEmergencyBinding.setView(view);

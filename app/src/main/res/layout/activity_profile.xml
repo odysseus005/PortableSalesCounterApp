@@ -21,6 +21,10 @@
         android:orientation="vertical"
         tools:context="com.pocholomia.paynamics.ui.profile.ProfileActivity">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,6 +130,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+        </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

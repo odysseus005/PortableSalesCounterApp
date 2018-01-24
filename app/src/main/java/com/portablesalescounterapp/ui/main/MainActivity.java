@@ -33,6 +33,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -133,6 +135,7 @@ public class MainActivity
     private String filterCategory="";
     private ReceiptActivityAdapter adapterCart2;
     boolean qrSwitcher=true;
+    boolean changeChecker =false;
     public int skuLimiter=0;
      DialogReceiptBinding dialogBindingSuccess;
 
@@ -306,7 +309,9 @@ public class MainActivity
         }else if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
         {
 
+            nav_Menu.findItem(R.id.nav_items).setVisible(false);
             nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
+            nav_Menu.findItem(R.id.nav_report).setVisible(false);
             nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
             nav_Menu.findItem(R.id.nav_sales_png).setVisible(false);
             nav_Menu.findItem(R.id.nav_businessprofile).setVisible(false);
@@ -339,8 +344,7 @@ public class MainActivity
         integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
-
-      //  integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
         if(qrSwitcher)
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
         else integrator.setPrompt("Scan Order Code");
@@ -1032,6 +1036,9 @@ public class MainActivity
             dialogBinding.buyItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
 
             dialogBinding.buyItemQuantity.setText("1");
+            dialogBinding.buyItemQuantity.setSelectAllOnFocus(true);
+            dialogBinding.buyItemQuantity.selectAll();
+           // dialogBinding.buyItemQuantity.requestFocus();
 
             newPrice = Double.parseDouble(currProduct.getProductPrice());
 
@@ -1090,7 +1097,7 @@ public class MainActivity
                 }
             });
 
-
+            dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             dialog.setContentView(dialogBinding.getRoot());
             dialog.setCancelable(false);
             dialog.show();
@@ -1145,6 +1152,7 @@ public class MainActivity
     {
 
 
+
         dialog = new Dialog(MainActivity.this,android.R.style.Theme_Black_NoTitleBar_Fullscreen);
           dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
@@ -1172,6 +1180,33 @@ public class MainActivity
         dialogBinding.cartItemPrice.setText("Php: "+DateTimeUtils.parseDoubleTL(cartPrice));
 
 
+
+
+        dialogBinding.calcuCash.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                    if (Double.parseDouble(dialogBinding.calcuCash.getText().toString()) < (Double.parseDouble(vtsPrice))) {
+
+                        showError("Cash Not Enough!");
+                       // dialogBinding.calcuCash.setText("0.00");
+                        changeChecker = false;
+
+                    } else {
+                        changeChecker = true;
+                      Double change =  (Double.parseDouble(dialogBinding.calcuCash.getText().toString())) - (Double.parseDouble(vtsPrice));
+                      dialogBinding.calcuChange.setText("Php: "+change);
+                    }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        });
 
 
 
@@ -1202,27 +1237,30 @@ public class MainActivity
             @Override
             public void onClick(View v) {
 
+                if(!changeChecker)
+                    showError("Cash Not Enough!");
+                else
+                {
+                    presenter.addTransaction(
+                            vtsPrice,
+                            cashCode, vtsDiscount,
+                            // dialogBinding.cartDiscountPrice.getText().toString(),
+                            presenter.listToString(prodIdcart),
+                            presenter.listToString(prodNamecart),
+                            presenter.listToString(prodQuantitycart),
+                            presenter.listToString(prodPricecart),
+                            discountId,
+                            discountName,
+                            String.valueOf(user.getUserId()),
+                            user.getFullName(),
+                            DateTimeUtils.getCurrentTimeStamp(),
+                            user.getBusiness_id());
 
 
-                presenter.addTransaction(
-                        vtsPrice,
-                        cashCode,vtsDiscount,
-                       // dialogBinding.cartDiscountPrice.getText().toString(),
-                        presenter.listToString(prodIdcart),
-                        presenter.listToString(prodNamecart),
-                        presenter.listToString(prodQuantitycart),
-                        presenter.listToString(prodPricecart),
-                        discountId,
-                        discountName,
-                        String.valueOf(user.getUserId()),
-                        user.getFullName(),
-                        DateTimeUtils.getCurrentTimeStamp(),
-                        user.getBusiness_id());
+                    //   showError("here3");
 
-
-             //   showError("here3");
-
-                dialog.dismiss();
+                    dialog.dismiss();
+                }
             }
         });
 

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.User;
 
-public class LoginResponse extends ResultResponse {
+public class LoginResponse {
 
     @SerializedName("user")
     private User user;
@@ -31,6 +31,19 @@ public class LoginResponse extends ResultResponse {
 
     @SerializedName("business")
     private Business business;
+
+
+    private String result;
+
+    public String getResult() {
+        return result;
+    }
+
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
 
 
 }

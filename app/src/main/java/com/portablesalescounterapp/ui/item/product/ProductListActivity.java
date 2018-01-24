@@ -287,6 +287,11 @@ public class ProductListActivity
     }
 
     @Override
+    public void OnButtonArchive(Products products) {
+        presenter.restoreContact(Integer.toString(products.getProductId()),user.getBusiness_id());
+    }
+
+    @Override
     public void OnButtonEdit(final Products products) {
 
         emerID = products.getProductId();

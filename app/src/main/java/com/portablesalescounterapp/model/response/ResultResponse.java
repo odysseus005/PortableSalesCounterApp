@@ -2,6 +2,7 @@ package com.portablesalescounterapp.model.response;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.portablesalescounterapp.model.data.User;
 
 public class ResultResponse {
 
@@ -53,4 +54,19 @@ public class ResultResponse {
     public void setImage(String image) {
         this.image = image;
     }
+
+
+    @SerializedName("user")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
 }

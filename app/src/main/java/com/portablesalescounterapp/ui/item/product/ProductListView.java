@@ -22,5 +22,7 @@ public interface ProductListView extends MvpView {
 
     void dismiss();
 
+    void OnButtonArchive(Products employee);
+
 
 }
