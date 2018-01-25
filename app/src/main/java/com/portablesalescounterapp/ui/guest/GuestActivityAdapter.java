@@ -50,7 +50,12 @@ public class GuestActivityAdapter extends RecyclerView.Adapter<GuestActivityAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         Log.d("TAG>>,",employeeList.get(position).getProductStatus());
-            if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
+            if(employeeList.get(position).getProductStatus().equalsIgnoreCase("D")) {
+                holder.itemEmergencyBinding.setView(null);
+            }else
+            {
+
+
                 holder.itemEmergencyBinding.setProduct(employeeList.get(position));
                 holder.itemEmergencyBinding.setView(view);
                 holder.itemEmergencyBinding.guestPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(employeeList.get(position).getProductPrice())));
@@ -62,10 +67,6 @@ public class GuestActivityAdapter extends RecyclerView.Adapter<GuestActivityAdap
                         .error(R.drawable.placeholder)
                         .into(holder.itemEmergencyBinding.productPicture);
                 Log.d("TAG", imageURL);
-            }else
-            {
-                holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
-                holder.itemEmergencyBinding.setView(null);
             }
 
     }

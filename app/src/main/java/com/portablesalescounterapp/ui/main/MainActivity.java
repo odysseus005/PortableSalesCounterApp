@@ -345,12 +345,11 @@ public class MainActivity
         integrator.setCaptureActivity(AnyOrientationCaptureActivity.class);
         integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
         integrator.setOrientationLocked(false);
-        integrator.setBeepEnabled(true);
         if(qrSwitcher)
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
         else integrator.setPrompt("Scan Order Code");
         integrator.setCameraId(0);  // Use a specific camera of the device
-        integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
         integrator.setBarcodeImageEnabled(true);
         integrator.initiateScan();
 
@@ -670,7 +669,7 @@ public class MainActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
             if (searchText.isEmpty()&&(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll());
 
             } else {
                 if(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))

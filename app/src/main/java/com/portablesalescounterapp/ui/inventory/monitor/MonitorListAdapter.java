@@ -48,7 +48,12 @@ public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
+        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("D")) {
+
+            holder.itemEmergencyBinding.setView(null);
+            }else
+        {
+
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
             if (employeeList.get(position).getProductCode().equalsIgnoreCase("E"))
@@ -56,10 +61,7 @@ public class MonitorListAdapter extends RecyclerView.Adapter<MonitorListAdapter.
             else
                 holder.itemEmergencyBinding.prodCode.setText(" kg");
             //String imageURL = Endpoints.IMAGE_URL.replace(Endpoints.IMG_HOLDER, employeeList.get(position).getImage());
-        }else
-        {
-            holder.itemEmergencyBinding.setView(null);
-            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
+
         }
 
     }

@@ -88,7 +88,6 @@ public class ProductQrListAdapter extends RecyclerView.Adapter<ProductQrListAdap
         }else
         {
             holder.itemEmergencyBinding.setView(null);
-            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 
     }

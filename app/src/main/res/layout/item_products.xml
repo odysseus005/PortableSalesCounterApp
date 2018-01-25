@@ -162,6 +162,7 @@
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
+                        android:visibility="gone"
                         android:layout_margin="10dp"
                         android:paddingEnd="20dp"
                         android:onClick="@{()->view.OnButtonArchive(product)}"

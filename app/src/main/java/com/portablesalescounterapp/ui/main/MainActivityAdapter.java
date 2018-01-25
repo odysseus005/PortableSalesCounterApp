@@ -51,7 +51,13 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
 
 
-        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("A")) {
+        if(employeeList.get(position).getProductStatus().equalsIgnoreCase("D")) {
+            holder.itemEmergencyBinding.setView(null);
+        }
+        else
+        {
+
+
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
             holder.itemEmergencyBinding.mainPrice.setText("Php: " +DateTimeUtils.parseDoubleTL(Double.parseDouble(employeeList.get(position).getProductPrice())));
@@ -63,11 +69,6 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
                     .error(R.drawable.placeholder)
                     .into(holder.itemEmergencyBinding.productPicture);
             Log.d("TAG", imageURL);
-        }
-        else
-        {
-            holder.itemEmergencyBinding.setView(null);
-            holder.itemEmergencyBinding.eventCard.setVisibility(View.GONE);
         }
 
     }
