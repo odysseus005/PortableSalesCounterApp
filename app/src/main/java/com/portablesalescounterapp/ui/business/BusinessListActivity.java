@@ -213,7 +213,6 @@ public class BusinessListActivity
     }
 
 
-
     private void prepareList() {
 
         if (discountRealmResults.isLoaded() && discountRealmResults.isValid()) {
@@ -222,11 +221,11 @@ public class BusinessListActivity
                 productsList = realm.copyFromRealm(discountRealmResults);
             } else {
                 productsList = realm.copyFromRealm(discountRealmResults.where()
-                        .contains("discountName", searchText, Case.INSENSITIVE)
+                        .contains("businessName", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("discountValue", searchText, Case.INSENSITIVE)
+                        .contains("businessContact", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("discountCode", searchText, Case.INSENSITIVE)
+                        .contains("businessAddress", searchText, Case.INSENSITIVE)
                         .findAll());
             }
             adapterPromo.setDiscountList(productsList);

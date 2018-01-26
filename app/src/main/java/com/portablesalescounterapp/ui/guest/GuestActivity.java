@@ -389,7 +389,7 @@ public class GuestActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
             if (searchText.isEmpty()&&(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll());
 
             } else {
                 if(filterCategory.equalsIgnoreCase("")||filterCategory.equalsIgnoreCase("0"))
@@ -400,6 +400,7 @@ public class GuestActivity
                             .contains("productDescription", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productPrice", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll());
 
 
@@ -407,6 +408,7 @@ public class GuestActivity
 
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("categoryId", filterCategory, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll());
 
                 }

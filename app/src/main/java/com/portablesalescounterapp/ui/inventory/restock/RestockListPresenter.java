@@ -54,12 +54,12 @@ public class RestockListPresenter extends MvpBasePresenter<RestockListView> {
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Process Transaction!");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Process Transaction!");
                         }
                     }
 
@@ -68,7 +68,7 @@ public class RestockListPresenter extends MvpBasePresenter<RestockListView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Can't Connect to the Server");
                         }
                     }
                 });

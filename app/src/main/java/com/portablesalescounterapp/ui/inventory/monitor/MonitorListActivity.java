@@ -342,23 +342,23 @@ public class MonitorListActivity
             List<Products> productsList;
             if (searchText.isEmpty()) {
                 if(sorter.equalsIgnoreCase("name")) {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll().sort("productName", Sort.ASCENDING));
                 }
                 else if(sorter.equalsIgnoreCase("Product ID"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productId", Sort.ASCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll().sort("productId", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Ascending"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productSKU", Sort.ASCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll().sort("productSKU", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Descending"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productSKU", Sort.DESCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll().sort("productSKU", Sort.DESCENDING));
 
                 }else
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("productName", Sort.ASCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll().sort("productName", Sort.ASCENDING));
 
                 }
             } else {
@@ -367,11 +367,10 @@ public class MonitorListActivity
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
-                            .contains("productRestock", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .contains("productSKU", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll().sort("productName", Sort.ASCENDING));
                 }
                 else if(sorter.equalsIgnoreCase("Product ID"))
@@ -379,11 +378,10 @@ public class MonitorListActivity
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
-                            .contains("productRestock", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .contains("productSKU", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll().sort("productId", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Ascending"))
@@ -391,11 +389,10 @@ public class MonitorListActivity
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
-                            .contains("productRestock", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .contains("productSKU", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll().sort("productSKU", Sort.ASCENDING));
 
                 }else if(sorter.equalsIgnoreCase("Quantity Descending"))
@@ -403,11 +400,10 @@ public class MonitorListActivity
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
-                            .contains("productRestock", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .contains("productSKU", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll().sort("productSKU", Sort.DESCENDING));
 
                 }else
@@ -415,11 +411,10 @@ public class MonitorListActivity
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
-                            .contains("productRestock", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("userName", searchText, Case.INSENSITIVE)
+                            .contains("productSKU", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .notEqualTo("productStatus","D")
                             .findAll().sort("productName", Sort.ASCENDING));
 
                 }

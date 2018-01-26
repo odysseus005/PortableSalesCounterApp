@@ -314,7 +314,7 @@ public class MainActivity
             nav_Menu.findItem(R.id.nav_manageusers).setVisible(false);
             nav_Menu.findItem(R.id.nav_report).setVisible(false);
             nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
-            nav_Menu.findItem(R.id.nav_sales_png).setVisible(false);
+            nav_Menu.findItem(R.id.nav_sales).setVisible(false);
             nav_Menu.findItem(R.id.nav_businessprofile).setVisible(false);
 
 
@@ -598,7 +598,7 @@ public class MainActivity
                     .show();
 
         }else {*/
-            if (id == R.id.nav_sales_png) {
+            if (id == R.id.nav_sales) {
                 startActivity(new Intent(this, MainActivity.class));
 
             } else if (id == R.id.nav_manageusers) {
@@ -680,14 +680,14 @@ public class MainActivity
                             .contains("productDescription", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productPrice", searchText, Case.INSENSITIVE)
-                            .findAll());
+                            .notEqualTo("productStatus","D").findAll());
 
 
                 }else {
 
                     productsList = realm.copyFromRealm(employeeRealmResults.where()
                             .contains("categoryId", filterCategory, Case.INSENSITIVE)
-                            .findAll());
+                            .notEqualTo("productStatus","D").findAll());
 
             }
             }
@@ -936,15 +936,25 @@ public class MainActivity
     @Override
     public void  onAddDiscount(Discount discount) {
 
+
+        if(discountId.equals("A")) {
+            vtsPrice = String.valueOf(oldTotal);
+            dialogBinding.cartItemPrice.setText(oldTotal);
+            dialogBinding.viewDiscount.setVisibility(View.GONE);
+
+        }
+
             discountId = String.valueOf(discount.getDiscountId());
             discountCode = discount.getDiscountCode();
             discountName = discount.getDiscountName();
             discountValue = discount.getDiscountValue();
+
         if(!discountId.equalsIgnoreCase(""))
         {
             dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
             dialogBinding.cartDiscountList.setText(discountName);
             double discounted = 0;
+            Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
             if(discountCode.equalsIgnoreCase("P"))
             {
               discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
@@ -958,7 +968,7 @@ public class MainActivity
             dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(DateTimeUtils.parseDoubleTL(discounted)));
 
 
-            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+            oldTotal = vtsPrice;
             newPrice = Double.parseDouble(vtsPrice) - discounted;
             if(newPrice<0)
                 newPrice = 0;
@@ -987,6 +997,9 @@ public class MainActivity
                 adapterCart.setProductList(productList,prodIdcart,prodNamecart,prodQuantitycart,prodPricecart);
                 adapterCart.notifyDataSetChanged();
             }
+
+            MainActivity.this.invalidateOptionsMenu();
+
         }
     }
 
@@ -1213,17 +1226,26 @@ public class MainActivity
 
             public void afterTextChanged(Editable s) {
 
-                    if (Double.parseDouble(dialogBinding.calcuCash.getText().toString()) < (Double.parseDouble(vtsPrice))) {
+                if(!dialogBinding.calcuCash.getText().toString().equals("")) {
 
-                        showError("Cash Not Enough!");
-                       // dialogBinding.calcuCash.setText("0.00");
-                        changeChecker = false;
+                    try {
+                        if (Double.parseDouble(dialogBinding.calcuCash.getText().toString()) < (Double.parseDouble(vtsPrice))) {
 
-                    } else {
-                        changeChecker = true;
-                      Double change =  (Double.parseDouble(dialogBinding.calcuCash.getText().toString())) - (Double.parseDouble(vtsPrice));
-                      dialogBinding.calcuChange.setText("Php: "+change);
+                            showError("Cash Not Enough!");
+                            // dialogBinding.calcuCash.setText("0.00");
+                            changeChecker = false;
+
+                        } else {
+                            changeChecker = true;
+                            Double change = (Double.parseDouble(dialogBinding.calcuCash.getText().toString())) - (Double.parseDouble(vtsPrice));
+                            dialogBinding.calcuChange.setText("Php: " + String.valueOf(DateTimeUtils.parseDoubleTL(change)));
+                        }
                     }
+                    catch (Exception e)
+                    {
+                        showError("Invalid Value!");
+                    }
+                }
             }
 
             public void beforeTextChanged(CharSequence s, int start,
@@ -1306,8 +1328,10 @@ public class MainActivity
             dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
             dialogBinding.cartDiscountList.setText(discountName);
             double discounted = 0;
+
             if(discountCode.equalsIgnoreCase("P"))
             {
+                Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
                 discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
             }
             else
@@ -1319,7 +1343,7 @@ public class MainActivity
             dialogBinding.cartDiscountPrice.setText("Php: "+String.valueOf(discounted));
 
 
-            oldTotal = dialogBinding.cartItemPrice.getText().toString();
+            oldTotal = vtsPrice;
             newPrice = Double.parseDouble(vtsPrice) - discounted;
             if(newPrice<0)
                 newPrice = 0;
@@ -1335,10 +1359,11 @@ public class MainActivity
             public void onClick(View v) {
 
 
-                discountId = "";
+                discountId = "A";
                 vtsPrice = String.valueOf(oldTotal);
-                dialogBinding.cartItemPrice.setText(oldTotal);
+                dialogBinding.cartItemPrice.setText("PHP: "+oldTotal);
                 dialogBinding.viewDiscount.setVisibility(View.GONE);
+                Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
 
             }
         });

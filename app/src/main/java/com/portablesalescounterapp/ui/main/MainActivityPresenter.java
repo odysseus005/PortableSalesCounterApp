@@ -76,7 +76,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -85,7 +85,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect!");
                         }
                     }
                 });
@@ -243,7 +243,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -252,7 +252,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect!");
                         }
                     }
                 });
@@ -292,7 +292,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -301,7 +301,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect!");
                         }
                     }
                 });
@@ -359,7 +359,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -368,7 +368,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect!");
                         }
                     }
                 });
@@ -411,7 +411,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect!");
                         }
                     }
                 });

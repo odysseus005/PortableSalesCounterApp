@@ -64,6 +64,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
@@ -412,19 +413,17 @@ public class ProductQrListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Products> productsList;
             if (searchText.isEmpty()) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll());
             } else {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("firstname", searchText, Case.INSENSITIVE)
+                        .contains("productName", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("lastname", searchText, Case.INSENSITIVE)
+                        .contains("productBar", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("birthday", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("address", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("contact", searchText, Case.INSENSITIVE)
-                        .findAll());
+                        .contains("productQr", searchText, Case.INSENSITIVE)
+                        .notEqualTo("productStatus","D")
+                        .findAll().sort("productName", Sort.ASCENDING));
+
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

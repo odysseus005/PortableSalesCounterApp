@@ -109,7 +109,7 @@ public class RestockListActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_add, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
 
         SearchView search = (SearchView) menu.findItem(R.id.action_search).getActionView();
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -235,9 +235,9 @@ public class RestockListActivity
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
                         .contains("productName", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("productDescription", searchText, Case.INSENSITIVE)
+                        .contains("productRestock", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("productPrice", searchText, Case.INSENSITIVE)
+                        .contains("productTotal", searchText, Case.INSENSITIVE)
                         .findAll());
             }
             adapterPromo.setProductList(productsList);
