@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:hint="Contact"
-                    android:inputType="phone"
+                    android:inputType="textPostalAddress"
                     android:text="@{user.businessDescription}"
                     android:textSize="14sp" />
 
@@ -138,6 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:hint="Address"
+                    android:inputType="phone"
                     android:text="@{user.businessContact}"
                     android:textSize="14sp" />
 
