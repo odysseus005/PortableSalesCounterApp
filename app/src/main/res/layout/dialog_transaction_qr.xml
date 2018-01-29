@@ -9,7 +9,7 @@
 
         <variable
             name="transaction"
-            type="com.portablesalescounterapp.model.data.Transaction" />
+            type="com.portablesalescounterapp.model.data.PreTransaction" />
 
         <variable
             name="contentVisible"

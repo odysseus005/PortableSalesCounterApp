@@ -2,6 +2,7 @@ package com.portablesalescounterapp.ui.main;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 
@@ -31,6 +32,8 @@ public interface MainActivityView extends MvpView {
     void onTransactionSuccess(Transaction transact);
 
     void onSelfSuccess();
+
+    void onScanTransact(PreTransaction transact);
 
 
 

@@ -59,6 +59,7 @@ import com.portablesalescounterapp.databinding.DialogReceiptBinding;
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
@@ -127,7 +128,7 @@ public class MainActivity
     DialogCartBinding dialogBinding;
     private ProgressDialog progressDialog;
     private Products currProduct;
-    private Transaction transQr;
+    private PreTransaction transQr;
     String cashCode="Cash",discountId="",discountName="",discountValue="0",discountCode="",oldTotal="";
     String vtsPrice="",vtsDiscount="";
     public double newPrice;
@@ -138,6 +139,8 @@ public class MainActivity
     boolean changeChecker =false;
     public int skuLimiter=0;
     public boolean scanChecker=false;
+    double transactChange=0.0,transactCash=0.0;
+    private String onScantransactid = "0";
      DialogReceiptBinding dialogBindingSuccess;
 
     @SuppressWarnings("ConstantConditions")
@@ -274,7 +277,7 @@ public class MainActivity
                                        int position, long id) {
 
                 filterCategory = ""+(categoryIdList.get(position));
-                Log.d("TAG>>>",filterCategory);
+
                 prepareList();
             }
 
@@ -316,6 +319,8 @@ public class MainActivity
             nav_Menu.findItem(R.id.nav_receipts).setVisible(false);
             nav_Menu.findItem(R.id.nav_sales).setVisible(false);
             nav_Menu.findItem(R.id.nav_businessprofile).setVisible(false);
+
+
 
 
         }
@@ -381,18 +386,21 @@ public class MainActivity
                     String contents = in.getStringExtra("SCAN_RESULT");
 
                     if (qrSwitcher) {
+
                         currProduct = presenter.getProductQr(contents);
                         if (currProduct.isLoaded() && currProduct.isValid()) {
-                            OnButtonAddtoCart();
                             scanChecker=true;
+                            OnButtonAddtoCart();
+
                         }
 
                     } else {
                         transQr = presenter.getTransactionQr(Integer.parseInt(contents));
-                        if (transQr.getUserId() == 0) {
+                        if (transQr.getPreuserId() == 0) {
                             if (transQr.isLoaded() && transQr.isValid())
 
-                                onTransactionSuccess(transQr);
+                               // onTransactionSuccess(transQr);
+                                onScanTransact(transQr);
                         } else {
                             showAlert("Transaction Order is Already Paid!");
                         }
@@ -705,14 +713,24 @@ public class MainActivity
 
             case R.id.item_trscan:
 
-                qrSwitcher=false;
-                startScan();
+                if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
+                {
+                    showError("Permission to Process Transaction Denied");
+                }else {
+                    qrSwitcher = false;
+                    startScan();
+                }
             return  true;
 
             case R.id.item_qrscan:
 
-                qrSwitcher=true;
-                startScan();
+                if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
+                {
+                    showError("Permission to Process Transaction Denied");
+                }else {
+                    qrSwitcher = true;
+                    startScan();
+                }
                 return  true;
 
 
@@ -814,6 +832,8 @@ public class MainActivity
     @Override
     public void onTransactionSuccess(final Transaction transaction) {
 
+
+        qrSwitcher = true;
         if(qrSwitcher)
         showError("Payment Successful!");
 
@@ -846,6 +866,10 @@ public class MainActivity
         dialogBindingSuccess.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
         dialogBindingSuccess.orPrice.setText("Php: "+transaction.getTransactionPrice());
         dialogBindingSuccess.orCashierName.setText("Cashier Name: "+transaction.getUserName());
+        dialogBindingSuccess.orChange.setText("Php: "+String.valueOf(DateTimeUtils.parseDoubleTL(transactChange)));
+        dialogBindingSuccess.orCash.setText("Php: "+String.valueOf(DateTimeUtils.parseDoubleTL(transactCash)));
+
+
 
 
         if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
@@ -875,7 +899,7 @@ public class MainActivity
 
         dialogBindingSuccess.etReceiptEmail.setVisibility(View.VISIBLE);
         dialogBindingSuccess.send.setVisibility(View.VISIBLE);
-        Log.d(">>>>","1>"+qrSwitcher);
+
         if(!qrSwitcher) {
             dialogBindingSuccess.send.setText("Confirm Checkout");
         }
@@ -889,11 +913,11 @@ public class MainActivity
 //                    showError("No Valid Email Address");
 //                }else {
 
-                    Log.d(">>>>",""+qrSwitcher);
+
                     if(!qrSwitcher)
                     {
 
-                        presenter.updateTransaction(user.getBusiness_id(),String.valueOf(transaction.getTransactionId()),String.valueOf(user.getUserId()),user.getFullName(), String.valueOf(DateTimeUtils.getCurrentTimeStamp()),transaction.getTransactionIdList(),transaction.getTransactionNameList(),transaction.getTransactionQuantityList(),transaction.getTransactionPriceList());
+                      //  presenter.updateTransaction(user.getBusiness_id(),String.valueOf(transaction.getTransactionId()),String.valueOf(user.getUserId()),user.getFullName(), String.valueOf(DateTimeUtils.getCurrentTimeStamp()),transaction.getTransactionIdList(),transaction.getTransactionNameList(),transaction.getTransactionQuantityList(),transaction.getTransactionPriceList());
                         qrSwitcher=true;
 
                     }
@@ -941,8 +965,13 @@ public class MainActivity
             vtsPrice = String.valueOf(oldTotal);
             dialogBinding.cartItemPrice.setText(oldTotal);
             dialogBinding.viewDiscount.setVisibility(View.GONE);
-
+        }else if(!(discountId.equalsIgnoreCase("")))
+        {
+            vtsPrice = String.valueOf(oldTotal);
+            dialogBinding.cartItemPrice.setText(oldTotal);
+            dialogBinding.viewDiscount.setVisibility(View.GONE);
         }
+
 
             discountId = String.valueOf(discount.getDiscountId());
             discountCode = discount.getDiscountCode();
@@ -954,7 +983,7 @@ public class MainActivity
             dialogBinding.viewDiscount.setVisibility(View.VISIBLE);
             dialogBinding.cartDiscountList.setText(discountName);
             double discounted = 0;
-            Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
+
             if(discountCode.equalsIgnoreCase("P"))
             {
               discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
@@ -1001,6 +1030,88 @@ public class MainActivity
             MainActivity.this.invalidateOptionsMenu();
 
         }
+    }
+
+
+    @Override
+    public void onScanTransact(PreTransaction transact) {
+
+
+
+        onScantransactid = String.valueOf(transact.getPretransactionId());
+
+        productList.clear();
+        prodIdcart.clear();
+        prodNamecart.clear();
+        prodQuantitycart.clear();
+        prodPricecart.clear();
+
+        List<Products> productsList2 = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("productStatus","D").findAll());
+
+
+        ArrayList<String> prodIdcart2 = presenter.StringtoList(transact.getPretransactionIdList());
+         ArrayList<String> prodNamecart2 = presenter.StringtoList(transact.getPretransactionNameList());
+         ArrayList<String> prodQuantitycart2 = presenter.StringtoList(transact.getPretransactionQuantityList());
+         ArrayList<String> prodPricecart2 =presenter.StringtoList(transact.getPretransactionPriceList());
+
+         int skuLimiter2 = 0;
+         Products currProduct2 = null;
+
+        for(int a =0; a<prodIdcart2.size();a++)
+        {
+
+            for(int b=0;b<productsList2.size();b++)
+            {
+                if((String.valueOf(productsList2.get(b).getProductId())).equalsIgnoreCase(prodIdcart2.get(a)))
+                  currProduct2 = productsList2.get(b);
+            }
+
+
+              if(currProduct2 != null) {
+                Log.d(">>>>>",currProduct2.getProductId()+"  >>>>"+currProduct2.getProductName()+" >>>"+currProduct2.getProductSKU());
+                  Log.d(">>>>>",prodIdcart2.get(a)+"  >>>>"+prodNamecart2.get(a)+" >>>"+prodQuantitycart2.get(a));
+
+                  if (currProduct2.getProductSKU().equalsIgnoreCase("0") || currProduct2.getProductSKU().equalsIgnoreCase("")) {
+
+
+                      showError("Out of Stock! for Product "+ currProduct2.getProductName());
+                  } else if (((Integer.parseInt(currProduct2.getProductSKU())) - (Integer.parseInt(prodQuantitycart2.get(a)))) < 0 ) {
+
+
+                      showError("Not Enough Stock! for Product: "+ currProduct2.getProductName());
+                      Double newPrice2 = (Double.parseDouble(currProduct2.getProductPrice()) * Integer.parseInt(currProduct2.getProductSKU()));
+
+
+                      productList.add(currProduct2);
+                      prodIdcart.add(currProduct2.getProductId() + "");
+                      prodNamecart.add(currProduct2.getProductName());
+                      prodQuantitycart.add(currProduct2.getProductSKU());
+                      prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice2)));
+
+                      MainActivity.this.invalidateOptionsMenu();
+                  }
+                  else
+                  {
+                     Double newPrice2 = (Double.parseDouble(currProduct2.getProductPrice()) * Integer.parseInt(prodQuantitycart2.get(a)));
+
+
+                      productList.add(currProduct2);
+                      prodIdcart.add(currProduct2.getProductId() + "");
+                      prodNamecart.add(currProduct2.getProductName());
+                      prodQuantitycart.add(prodQuantitycart2.get(a));
+                      prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice2)));
+
+                      MainActivity.this.invalidateOptionsMenu();
+                  }
+
+
+
+              }
+
+        }
+
+        checkout();
+
     }
 
 
@@ -1090,11 +1201,12 @@ public class MainActivity
 
             dialogBinding.buyItemProdcode.setText(prodCode);
 
+            Log.d("HERE>>>>>",scanChecker+"");
 
             if(scanChecker)
                 dialogBinding.buy.setVisibility(View.VISIBLE);
 
-                dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+                dialogBinding.buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
@@ -1124,14 +1236,14 @@ public class MainActivity
                     prodPricecart.add(String.valueOf(DateTimeUtils.parseDoubleTL(newPrice)));
 
                     MainActivity.this.invalidateOptionsMenu();
-
+                    scanChecker=false;
                     dialog.dismiss();
                 }
             });
             dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    scanChecker=false;
                     dialog.dismiss();
 
                 }
@@ -1149,37 +1261,43 @@ public class MainActivity
     @Override
     public void onItemClick(Products product) {
 
-        currProduct = product;
 
-        binding.appBarMain.itemView.setVisibility(View.VISIBLE);
-        binding.appBarMain.remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currProduct = null;
-                binding.appBarMain.itemView.setVisibility(View.GONE);
-            }
-        });
-        String imageURL = Endpoints.URL_IMAGE + currProduct.getProductId() + "prod";
-       // String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
-        Glide.with(this)
-                .load(imageURL)
-             //   .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .centerCrop()
-                .error(R.drawable.placeholder)
-                .into(binding.appBarMain.productImage);
-        Log.d("TAG", imageURL);
 
-        binding.appBarMain.viewItemDesc.setText(currProduct.getProductDescription());
-        binding.appBarMain.viewItemPrice.setText("Php: "+ DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
-        binding.appBarMain.viewItemName.setText(currProduct.getProductName());
+        if((user.getPosition()).equalsIgnoreCase("inventory custodian"))
+        {
+            showError("Permission to Process Transaction Denied");
+        }else {
+            currProduct = product;
+            binding.appBarMain.itemView.setVisibility(View.VISIBLE);
+            binding.appBarMain.remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currProduct = null;
+                    binding.appBarMain.itemView.setVisibility(View.GONE);
+                }
+            });
+            String imageURL = Endpoints.URL_IMAGE + currProduct.getProductId() + "prod";
+            // String imageURL = Endpoints.URL_IMAGE +currProduct.getProductName();
+            Glide.with(this)
+                    .load(imageURL)
+                    //   .skipMemoryCache(true)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .centerCrop()
+                    .error(R.drawable.placeholder)
+                    .into(binding.appBarMain.productImage);
+            Log.d("TAG", imageURL);
 
-        String prodCode;
-        if(currProduct.getProductCode().equalsIgnoreCase("E"))
-            prodCode = "pcs.";
-        else
-            prodCode = "kg";
-        binding.appBarMain.viewItemQuantity.setText("Quantity: "+currProduct.getProductSKU()+prodCode);
+            binding.appBarMain.viewItemDesc.setText(currProduct.getProductDescription());
+            binding.appBarMain.viewItemPrice.setText("Php: " + DateTimeUtils.parseDoubleTL(Double.parseDouble(currProduct.getProductPrice())));
+            binding.appBarMain.viewItemName.setText(currProduct.getProductName());
+
+            String prodCode;
+            if (currProduct.getProductCode().equalsIgnoreCase("E"))
+                prodCode = "pcs.";
+            else
+                prodCode = "kg";
+            binding.appBarMain.viewItemQuantity.setText("Quantity: " + currProduct.getProductSKU() + prodCode);
+        }
 
 
     }
@@ -1201,6 +1319,7 @@ public class MainActivity
                 false);
 
 
+
         dialogBinding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dialogBinding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -1219,8 +1338,13 @@ public class MainActivity
         vtsPrice = String.valueOf(cartPrice);
         dialogBinding.cartItemPrice.setText("Php: "+DateTimeUtils.parseDoubleTL(cartPrice));
 
+        if(!onScantransactid.equalsIgnoreCase("0"))
+        dialogBinding.cartItems.setText("Items of Transaction ID: "+onScantransactid);
 
 
+        dialogBinding.calcuCash.setText("0.00");
+        dialogBinding.calcuCash.setSelectAllOnFocus(true);
+        dialogBinding.calcuCash.selectAll();
 
         dialogBinding.calcuCash.addTextChangedListener(new TextWatcher() {
 
@@ -1239,6 +1363,8 @@ public class MainActivity
                             changeChecker = true;
                             Double change = (Double.parseDouble(dialogBinding.calcuCash.getText().toString())) - (Double.parseDouble(vtsPrice));
                             dialogBinding.calcuChange.setText("Php: " + String.valueOf(DateTimeUtils.parseDoubleTL(change)));
+                                transactChange = change;
+                                transactCash = Double.parseDouble(dialogBinding.calcuCash.getText().toString());
                         }
                     }
                     catch (Exception e)
@@ -1288,8 +1414,37 @@ public class MainActivity
 
                 if(!changeChecker)
                     showError("Cash Not Enough!");
+//                else if(!onScantransactid.equalsIgnoreCase("0"))
+//                {
+//                    presenter.addPreTransaction(
+//                            vtsPrice,
+//                            cashCode, vtsDiscount,
+//                            // dialogBinding.cartDiscountPrice.getText().toString(),
+//                            presenter.listToString(prodIdcart),
+//                            presenter.listToString(prodNamecart),
+//                            presenter.listToString(prodQuantitycart),
+//                            presenter.listToString(prodPricecart),
+//                            discountId,
+//                            discountName,
+//                            String.valueOf(user.getUserId()),
+//                            user.getFullName(),
+//                            DateTimeUtils.getCurrentTimeStamp(),
+//                            user.getBusiness_id());
+//
+//
+//                    //   showError("here3");
+//
+//                    dialog.dismiss();
+//                }
                 else
                 {
+                    if(discountId.equalsIgnoreCase("A")||discountId.equalsIgnoreCase(""))
+                    {
+                        vtsDiscount="";
+                        discountId="";
+                        discountName="";
+                    }
+
                     presenter.addTransaction(
                             vtsPrice,
                             cashCode, vtsDiscount,
@@ -1322,6 +1477,26 @@ public class MainActivity
             }
         });
 
+        dialogBinding.clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                onScantransactid = "0";
+
+                productList.clear();
+                prodIdcart.clear();
+                prodNamecart.clear();
+                prodQuantitycart.clear();
+                prodPricecart.clear();
+
+                MainActivity.this.invalidateOptionsMenu();
+
+
+                dialog.dismiss();
+
+            }
+        });
+
 
         if(!discountId.equalsIgnoreCase(""))
         {
@@ -1331,7 +1506,7 @@ public class MainActivity
 
             if(discountCode.equalsIgnoreCase("P"))
             {
-                Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
+
                 discounted = Double.parseDouble(vtsPrice) * (Double.parseDouble(discountValue)/100);
             }
             else
@@ -1363,7 +1538,7 @@ public class MainActivity
                 vtsPrice = String.valueOf(oldTotal);
                 dialogBinding.cartItemPrice.setText("PHP: "+oldTotal);
                 dialogBinding.viewDiscount.setVisibility(View.GONE);
-                Log.d(">>>>",discountValue+"  >>>"+vtsPrice);
+
 
             }
         });
@@ -1432,12 +1607,10 @@ public class MainActivity
 
 
     private void takeScreenshot(View v1,String email,String bname, String cname) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +email+now + ".jpg";
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +email+DateTimeUtils.getCurrentTimeStamp()+ ".jpg";
 
             // create bitmap screen capture
             // v1 = getWindow().getDecorView();

@@ -368,8 +368,6 @@ public class MonitorListActivity
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productSKU", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("productTotal", searchText, Case.INSENSITIVE)
                             .notEqualTo("productStatus","D")
                             .findAll().sort("productName", Sort.ASCENDING));
                 }
@@ -379,8 +377,6 @@ public class MonitorListActivity
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productSKU", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("productTotal", searchText, Case.INSENSITIVE)
                             .notEqualTo("productStatus","D")
                             .findAll().sort("productId", Sort.ASCENDING));
 
@@ -390,8 +386,6 @@ public class MonitorListActivity
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productSKU", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("productTotal", searchText, Case.INSENSITIVE)
                             .notEqualTo("productStatus","D")
                             .findAll().sort("productSKU", Sort.ASCENDING));
 
@@ -401,8 +395,6 @@ public class MonitorListActivity
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productSKU", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("productTotal", searchText, Case.INSENSITIVE)
                             .notEqualTo("productStatus","D")
                             .findAll().sort("productSKU", Sort.DESCENDING));
 
@@ -412,8 +404,6 @@ public class MonitorListActivity
                             .contains("productName", searchText, Case.INSENSITIVE)
                             .or()
                             .contains("productSKU", searchText, Case.INSENSITIVE)
-                            .or()
-                            .contains("productTotal", searchText, Case.INSENSITIVE)
                             .notEqualTo("productStatus","D")
                             .findAll().sort("productName", Sort.ASCENDING));
 

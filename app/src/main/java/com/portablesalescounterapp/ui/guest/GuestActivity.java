@@ -63,12 +63,14 @@ import com.portablesalescounterapp.databinding.DialogEditProductQrBinding;
 import com.portablesalescounterapp.databinding.DialogTransactionQrBinding;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.inventory.InventoryActivity;
 import com.portablesalescounterapp.ui.item.ItemActivity;
 import com.portablesalescounterapp.ui.login.LoginActivity;
+import com.portablesalescounterapp.ui.main.MainActivity;
 import com.portablesalescounterapp.ui.manageqr.ProductQrListActivity;
 import com.portablesalescounterapp.ui.manageuser.EmployeeListActivity;
 import com.portablesalescounterapp.ui.profile.ProfileActivity;
@@ -156,7 +158,7 @@ public class GuestActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_guest_list);
 
         setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "PSC Ap" : "PSC App");
+        getSupportActionBar().setTitle(BuildConfig.DEBUG ? "Smart Sales Counter" : "Smart Sales Counter");
 
 
         presenter.onStart();
@@ -519,7 +521,18 @@ public class GuestActivity
 
 
     @Override
-    public void onTransactionSuccess(final Transaction transaction) {
+    public void onTransactionSuccess(final PreTransaction transaction) {
+
+
+
+        productList.clear();
+        prodIdcart.clear();
+        prodNamecart.clear();
+        prodQuantitycart.clear();
+        prodPricecart.clear();
+
+        GuestActivity.this.invalidateOptionsMenu();
+
 
         showError("Order Successful!");
         dialog = new Dialog(GuestActivity.this);
@@ -538,11 +551,11 @@ public class GuestActivity
 
 
 
-            Bitmap bitmap =  TextToImageEncode((transaction.getTransactionId())+"",GuestActivity.this);
+            Bitmap bitmap =  TextToImageEncode((transaction.getPretransactionId())+"",GuestActivity.this);
 
             dialogBinding.productQR.setImageBitmap(bitmap);
-            dialogBinding.productQRPrice.setText("Php: "+transaction.getTransactionPrice());
-            dialogBinding.productQRcodeView.setText(""+(transaction.getTransactionId()));
+            dialogBinding.productQRPrice.setText("Php: "+transaction.getPretransactionPrice());
+            dialogBinding.productQRcodeView.setText("Order ID: "+(transaction.getPretransactionId()));
         }
         catch (Exception e) {
             showAlert("Error Displaying Qr Code");
@@ -555,7 +568,7 @@ public class GuestActivity
             @Override
             public void onClick(View v) {
 
-                takeScreenshot(dialogBinding.qrScreenshot,transaction.getTransactionPrice());
+                takeScreenshot(dialogBinding.qrScreenshot,transaction.getPretransactionPrice());
 
             }
         });
@@ -626,6 +639,8 @@ public class GuestActivity
                 adapterCart.setProductList(productList, prodIdcart, prodNamecart, prodQuantitycart, prodPricecart);
                 adapterCart.notifyDataSetChanged();
             }
+
+            GuestActivity.this.invalidateOptionsMenu();
         }
     }
 
@@ -839,6 +854,27 @@ public class GuestActivity
                 cashCode = "Card";
                 dialogBinding.card.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.lightGray));
                 dialogBinding.cash.setBackgroundColor(ContextCompat.getColor(GuestActivity.this, R.color.colorPrimary));
+
+            }
+        });
+
+
+        dialogBinding.clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+
+                productList.clear();
+                prodIdcart.clear();
+                prodNamecart.clear();
+                prodQuantitycart.clear();
+                prodPricecart.clear();
+
+               GuestActivity.this.invalidateOptionsMenu();
+
+
+                dialog.dismiss();
 
             }
         });

@@ -136,7 +136,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTint="#777777"
-                    android:text="Decision Support System(Inventory)"
+                    android:text="Decision Support System Report"
                     android:textColor="@color/darkGray"
                     android:layout_margin="10dp"
                     android:textSize="18sp"

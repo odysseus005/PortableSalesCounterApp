@@ -90,17 +90,14 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             android:textColorHint="@android:color/darker_gray" />
 
-        <EditText
-            android:id="@+id/et_position"
+
+        <Spinner
+            android:id="@+id/sp_position"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/edittext_selector"
-            android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ "
-            android:hint="Position"
-            android:text='@{employee.position}'
-            android:inputType="textPersonName|textCapWords"
-            android:maxLength="100"
+            android:background="@drawable/bg_spinner"
+            android:fontFamily="sans-serif"
             android:padding="12dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
             android:textColorHint="@android:color/darker_gray" />

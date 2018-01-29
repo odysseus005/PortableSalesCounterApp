@@ -26,6 +26,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +52,7 @@ import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.util.BarCodeUtils;
+import com.portablesalescounterapp.util.DateTimeUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -370,12 +372,13 @@ public class ProductQrListActivity
 
 
     private void takeScreenshot(View v1,String productName) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+            String prodname = productName.replace(" ","");
+        prodname = prodname + (String.valueOf(DateTimeUtils.getCurrentTimeStamp()).replace(" ",""));
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +productName+now + ".jpg";
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +(prodname)+ ".jpg";
 
             // create bitmap screen capture
             // v1 = getWindow().getDecorView();

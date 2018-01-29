@@ -59,12 +59,12 @@ public class MonitorListPresenter extends MvpBasePresenter<MonitorListView> {
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Connect to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Connect to Server");
                         }
                     }
 
@@ -73,7 +73,7 @@ public class MonitorListPresenter extends MvpBasePresenter<MonitorListView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Error Connecting to Server");
                         }
                     }
                 });

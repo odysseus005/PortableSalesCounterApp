@@ -54,12 +54,12 @@ public class BusinessListPresenter extends MvpBasePresenter<BusinessListView> {
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Error Connecting to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Connect to Server");
                         }
                     }
 
@@ -68,7 +68,7 @@ public class BusinessListPresenter extends MvpBasePresenter<BusinessListView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect to Server");
                         }
                     }
                 });

@@ -69,9 +69,16 @@ public class Endpoints {
     public static final String TRANSACTION  = "transaction.php?";
     public static final String ADD_TRANSACTION = "addTransaction";
     public static final String ALL_TRANSACTION = "allTransaction";
-    public static final String UPDATE_TRANSACTION = "updateTransaction";
     public static final String REFUND_TRANSACTION = "refundTransaction";
-    public static final String ADD_TRANSACTION_GUEST = "addTransactionGuest";
+
+
+
+
+    //Transaction
+    public static final String PRETRANSACTION  = "pretransaction.php?";
+    public static final String PREADD_TRANSACTION = "preaddTransaction";
+    public static final String PREALL_TRANSACTION = "preallTransaction";
+
 
 
 }

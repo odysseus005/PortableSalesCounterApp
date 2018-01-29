@@ -2,6 +2,7 @@ package com.portablesalescounterapp.ui.guest;
 
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 
@@ -28,7 +29,7 @@ public interface GuestActivityView extends MvpView {
 
     void onAddDiscount(Discount discount);
 
-    void onTransactionSuccess(Transaction transaction);
+    void onTransactionSuccess(PreTransaction transaction);
 
 
 

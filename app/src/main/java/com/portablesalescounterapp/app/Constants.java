@@ -78,4 +78,18 @@ public class Constants {
     public static final String TRANSACTION_QUANTITYLIST = "transactionQuantityList";
     public static final String TRANSACTION_PRICELIST = "transactionPriceList";
 
+
+
+
+    //preTransaction
+    public static final String PRETRANSACTION_ID = "pretransaction_id";
+    public static final String PRETRANSACTION_PRICE = "pretransactionPrice";
+    public static final String PRETRANSACTION_CODE = "pretransactionCode";
+    public static final String PRETRANSACTION_DISCOUNT = "pretransactionDiscount";
+    public static final String PRETRANSACTION_IDLIST = "pretransactionIdList";
+    public static final String PRETRANSACTION_NAMELIST = "pretransactionNameList";
+    public static final String PRETRANSACTION_QUANTITYLIST = "pretransactionQuantityList";
+    public static final String PRETRANSACTION_PRICELIST = "pretransactionPriceList";
+
+
 }

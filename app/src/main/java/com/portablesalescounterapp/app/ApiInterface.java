@@ -9,11 +9,13 @@ import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
 import com.portablesalescounterapp.model.data.Employee;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Restock;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.model.response.LoginResponse;
+import com.portablesalescounterapp.model.response.PreTransactionResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
 import com.portablesalescounterapp.model.response.TransactionResponse;
 
@@ -342,6 +344,32 @@ public interface ApiInterface {
                                              @Field(Constants.FIRST_NAME) String name,
                                              @Field(Constants.DATE_TIME) String date,
                                              @Field(Constants.BUSINESS_ID) String business_id
+    );
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRETRANSACTION)
+    Call<List<PreTransaction>> pregetTransaction(@Field(Constants.TAG) String tag, @Field(Constants.BUSINESS_ID) String business_id );
+
+
+
+
+    @FormUrlEncoded
+    @POST(Endpoints.PRETRANSACTION)
+    Call<PreTransactionResponse> preaddTransaction(@Field(Constants.TAG) String tag,
+                                                   @Field(Constants.PRETRANSACTION_PRICE) String transPrice,
+                                                   @Field(Constants.PRETRANSACTION_CODE) String transCode,
+                                                   @Field(Constants.PRETRANSACTION_DISCOUNT) String transDiscount,
+                                                   @Field(Constants.PRETRANSACTION_IDLIST) String transIdList,
+                                                   @Field(Constants.PRETRANSACTION_NAMELIST) String transNameList,
+                                                   @Field(Constants.PRETRANSACTION_QUANTITYLIST) String transQuanList,
+                                                   @Field(Constants.PRETRANSACTION_PRICELIST) String transPriceList,
+                                                   @Field("pre"+Constants.DISCOUNT_ID) String disId,
+                                                   @Field("pre"+Constants.DISCOUNT__NAME) String disName,
+                                                   @Field("pre"+Constants.USER_ID) String user_id,
+                                                   @Field("pre"+Constants.FIRST_NAME) String name,
+                                                   @Field("pre"+Constants.DATE_TIME) String date,
+                                                   @Field("pre"+Constants.BUSINESS_ID) String business_id
     );
 
 

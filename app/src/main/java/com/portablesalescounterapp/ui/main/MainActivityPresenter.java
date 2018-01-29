@@ -10,6 +10,7 @@ import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Restock;
 import com.portablesalescounterapp.model.data.Transaction;
@@ -99,9 +100,9 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                 .findFirst();
     }
 
-    Transaction getTransactionQr(int id){
-        return realm.where(Transaction.class)
-                .equalTo("transactionId", id)
+    PreTransaction getTransactionQr(int id){
+        return realm.where(PreTransaction.class)
+                .equalTo("pretransactionId", id)
                 .findFirst();
     }
 
@@ -328,10 +329,10 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
     }
 
     public void loadTransaction(String bussinessId) {
-        App.getInstance().getApiInterface().getTransaction(Endpoints.ALL_TRANSACTION,bussinessId)
-                .enqueue(new Callback<List<Transaction>>() {
+        App.getInstance().getApiInterface().pregetTransaction(Endpoints.PREALL_TRANSACTION,bussinessId)
+                .enqueue(new Callback<List<PreTransaction>>() {
                     @Override
-                    public void onResponse(Call<List<Transaction>> call, final Response<List<Transaction>> response) {
+                    public void onResponse(Call<List<PreTransaction>> call, final Response<List<PreTransaction>> response) {
                         if (isViewAttached()) {
                             getView().stopRefresh();
                         }
@@ -340,7 +341,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                             realm.executeTransactionAsync(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
-                                    realm.delete(Restock.class);
+                                    realm.delete(PreTransaction.class);
                                     realm.copyToRealmOrUpdate(response.body());
                                 }
                             }, new Realm.Transaction.OnSuccess() {
@@ -364,7 +365,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                     }
 
                     @Override
-                    public void onFailure(Call<List<Transaction>> call, Throwable t) {
+                    public void onFailure(Call<List<PreTransaction>> call, Throwable t) {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
@@ -375,7 +376,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
     }
 
 
-    public void updateTransaction(String bussinessId,String productid,String userID,String name,String date,String idList,
+  /* public void updateTransaction(String bussinessId,String productid,String userID,String name,String date,String idList,
                                   String nameList,
                                   String quanList,
                                   String priceList) {
@@ -416,7 +417,7 @@ public class MainActivityPresenter extends MvpBasePresenter<MainActivityView> {
                     }
                 });
     }
-
+*/
 
 
 

@@ -54,6 +54,9 @@ public class CartreceiptActivityAdapter extends RecyclerView.Adapter<Cartreceipt
         holder.itemEmergencyBinding.cartProdName.setText(prodNamecart.get(position));
         holder.itemEmergencyBinding.cartQuantity.setText(prodQuantitycart.get(position));
 
+
+
+
     }
 
     @Override

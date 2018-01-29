@@ -100,7 +100,7 @@ public class EditBusinessPresenter extends MvpNullObjectBasePresenter<EditBusine
                                     public void onError(Throwable error) {
                                         realm.close();
                                         error.printStackTrace();
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Connect to Server");
                                     }
                                 });
                             } else {

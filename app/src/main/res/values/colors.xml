@@ -9,7 +9,7 @@
     <color name="greenSuccess">#9ccc65</color>
     <color name="greenSuccessDark">#78a741</color>
     <color name="redFailedDark">#b95d5d</color>
-    <color name="redFailed">#e57373</color>
+    <color name="redFailed">#d94242</color>
     <color name="gray">#757575</color>
     <color name="lightGray">#bdbdbd</color>
     <color name="lightestGray">#dfdfdf</color>

@@ -7,9 +7,11 @@ import com.portablesalescounterapp.app.Constants;
 import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Discount;
+import com.portablesalescounterapp.model.data.PreTransaction;
 import com.portablesalescounterapp.model.data.Products;
 import com.portablesalescounterapp.model.data.Transaction;
 import com.portablesalescounterapp.model.data.User;
+import com.portablesalescounterapp.model.response.PreTransactionResponse;
 import com.portablesalescounterapp.model.response.ResultResponse;
 import com.portablesalescounterapp.model.response.TransactionResponse;
 
@@ -61,12 +63,12 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Connect to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Connect to Server");
                         }
                     }
 
@@ -75,7 +77,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect to Server");
                         }
                     }
                 });
@@ -109,7 +111,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
         }
         else {
             getView().startLoading();
-            App.getInstance().getApiInterface().addTransaction(Endpoints.ADD_TRANSACTION_GUEST,transPrice,
+            App.getInstance().getApiInterface().preaddTransaction(Endpoints.PREADD_TRANSACTION,transPrice,
                     transCode,
                     transDiscount,
                     idList,
@@ -122,14 +124,14 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                     username,
                     date,
                     bid)
-                    .enqueue(new Callback<TransactionResponse>() {
+                    .enqueue(new Callback<PreTransactionResponse>() {
                         @Override
-                        public void onResponse(Call<TransactionResponse> call, final Response<TransactionResponse> response) {
+                        public void onResponse(Call<PreTransactionResponse> call, final Response<PreTransactionResponse> response) {
                             getView().stopLoading();
                             if (response.isSuccessful()) {
                                 switch (response.body().getResult()) {
                                     case Constants.SUCCESS:
-                                        Transaction trans = response.body().getTransaction();
+                                        PreTransaction trans = response.body().getPreTransaction();
                                         getView().onTransactionSuccess(trans);
                                         break;
 
@@ -143,7 +145,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                         }
 
                         @Override
-                        public void onFailure(Call<TransactionResponse> call, Throwable t) {
+                        public void onFailure(Call<PreTransactionResponse> call, Throwable t) {
 
                             getView().stopLoading();
                             getView().showAlert("Error Connecting to Server");
@@ -181,12 +183,12 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Connect to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Connect to Server");
                         }
                     }
 
@@ -195,7 +197,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect to Server");
                         }
                     }
                 });
@@ -230,12 +232,12 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to Connect to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Unable to Connect to Server");
                         }
                     }
 
@@ -244,7 +246,7 @@ public class GuestActivityPresenter extends MvpBasePresenter<GuestActivityView> 
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Unable to Connect to Server");
                         }
                     }
                 });

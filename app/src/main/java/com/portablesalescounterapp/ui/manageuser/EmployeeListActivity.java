@@ -271,6 +271,18 @@ public class EmployeeListActivity
             }
         });
 
+
+        String positions[] = new String[] {"Cashier","Inventory Custodian"};
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(EmployeeListActivity.this, R.layout.spinner_custom_item, positions);
+        dialogBinding.spPosition.setAdapter(arrayAdapter);
+
+        if(emergency.getPosition().equalsIgnoreCase("Cashier"))
+        dialogBinding.spPosition.setSelection(0);
+        else
+            dialogBinding.spPosition.setSelection(1);
+
+
+
         dialogBinding.layoutBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,7 +322,7 @@ public class EmployeeListActivity
                         dialogBinding.etBirthday.getText().toString(),
                         dialogBinding.etMobileNumber.getText().toString(),
                         dialogBinding.etAddress.getText().toString(),
-                        dialogBinding.etPosition.getText().toString(),
+                        dialogBinding.spPosition.getSelectedItem().toString(),
                         user.getBusiness_id());
                 //dialog.dismiss();
             }
@@ -526,14 +538,15 @@ public class EmployeeListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Employee> productsList;
             if (searchText.isEmpty()) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                productsList = realm.copyFromRealm(employeeRealmResults.where().notEqualTo("position","Owner",Case.INSENSITIVE).findAll());
             } else {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("productName", searchText, Case.INSENSITIVE)
+                        .contains("firstname", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("productDescription", searchText, Case.INSENSITIVE)
+                        .contains("lastname", searchText, Case.INSENSITIVE)
                         .or()
-                        .contains("productPrice", searchText, Case.INSENSITIVE)
+                        .contains("email", searchText, Case.INSENSITIVE)
+                        .notEqualTo("position","Owner", Case.INSENSITIVE)
                         .findAll());
             }
             adapterPromo.setEmployeeList(productsList);

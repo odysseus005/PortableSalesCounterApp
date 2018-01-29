@@ -274,6 +274,10 @@ public class ReceiptListActivity
         dialogBinding.orCashierName.setText("Cashier Name: "+transaction.getUserName());
 
 
+        dialogBinding.orCash.setVisibility(View.GONE);
+        dialogBinding.orChange.setVisibility(View.GONE);
+
+
         dialogBinding.etReceiptEmail.setVisibility(View.GONE);
 
         if(transaction.getTransactionDiscount().equalsIgnoreCase(""))

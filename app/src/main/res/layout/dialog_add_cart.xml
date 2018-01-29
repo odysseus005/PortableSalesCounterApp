@@ -195,33 +195,36 @@
                     android:layout_height="wrap_content"
                     android:minWidth="300dp"
                     android:padding="16dp"
+                    android:weightSum="1"
                     android:gravity="right"
 
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/buy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="50dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:visibility="gone"
+                       android:visibility="gone"
                         android:text="CONTINUE"
                         android:layout_marginRight="@dimen/activity_half_margin"
                         android:textAllCaps="true"
-                        android:gravity="center|right"
-                        android:paddingRight="25dp"
+                        android:gravity="center"
+                        android:paddingRight="15dp"
                         android:textColor="@color/white"
                         android:textSize="14sp"
                         android:layout_below="@+id/LinearMoTo" />
 
                     <TextView
                         android:id="@+id/send"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_width="0dp"
+                        android:layout_weight=".25"
+                        android:layout_height="50dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
@@ -230,18 +233,19 @@
                         android:text="BUY"
                         android:layout_marginRight="@dimen/activity_half_margin"
                         android:textAllCaps="true"
-                        android:gravity="center|right"
-                        android:paddingRight="25dp"
+                        android:gravity="center"
+                        android:paddingRight="15dp"
                         android:textColor="@color/white"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:layout_below="@+id/LinearMoTo" />
 
 
 
                     <TextView
                         android:id="@+id/cancel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_width="0dp"
+                        android:layout_weight=".35"
+                        android:layout_height="50dp"
                         android:background="@drawable/rounded_button_solid"
                         android:clickable="true"
                         android:padding="8dp"
@@ -249,10 +253,10 @@
                         android:paddingStart="20dp"
                         android:text="Cancel"
                         android:textAllCaps="true"
-                        android:gravity="center|right"
-                        android:paddingRight="25dp"
+                        android:gravity="center"
+                        android:paddingRight="15dp"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
