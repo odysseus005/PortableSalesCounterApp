@@ -394,6 +394,8 @@ public class ProductQrListActivity
             outputStream.flush();
             outputStream.close();
 
+
+            showToast("Product Code Save on Download Folder");
             openScreenshot(imageFile);
         } catch (Throwable e) {
             // Several error may come out with file handling or DOM

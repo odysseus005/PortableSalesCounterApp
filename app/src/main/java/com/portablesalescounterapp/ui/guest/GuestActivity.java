@@ -1034,7 +1034,7 @@ public class GuestActivity
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +productName+now + ".jpg";
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +((productName+now).replace(" ","")) + ".jpg";
 
             // create bitmap screen capture
             // v1 = getWindow().getDecorView();
@@ -1049,6 +1049,8 @@ public class GuestActivity
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
             outputStream.flush();
             outputStream.close();
+
+            showError("Transaction Code Save on Download Folder");
 
             openScreenshot(imageFile);
         } catch (Throwable e) {

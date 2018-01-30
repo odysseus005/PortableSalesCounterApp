@@ -62,12 +62,12 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Unable to load data");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Oops something went wrong");
                         }
                     }
 
@@ -76,7 +76,7 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Error Connecting to Server");
                         }
                     }
                 });

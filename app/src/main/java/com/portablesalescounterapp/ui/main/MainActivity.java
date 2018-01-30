@@ -1661,7 +1661,7 @@ public class MainActivity
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                 "Hi,\n" +
                         "\n" +
-                        "Thank you for buying goods from Business name. Your E-Receipt is attached below.\n" +
+                        "Thank you for buying goods from "+bname+". Your E-Receipt is attached below.\n" +
                         "\n" +
                         "Best Regards,\n" +
                         cname+"\n" +

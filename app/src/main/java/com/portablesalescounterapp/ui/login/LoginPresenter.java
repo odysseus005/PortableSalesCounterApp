@@ -46,6 +46,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                             realm.executeTransactionAsync(new Realm.Transaction() {
                                                 @Override
                                                 public void execute(Realm realm) {
+                                                    realm.delete(Business.class);
                                                     user = response.body().getUser();
                                                     Business business = response.body().getBusiness();
                                                     realm.copyToRealmOrUpdate(user);
@@ -86,8 +87,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                     getView().showAlert("Oops");
                                 }
                             } else {
-                                getView().showAlert(response.message() != null ? response.message()
-                                        : "Unknown Error");
+                                getView().showAlert("Error Connecting to the Server!");
                             }
                         }
 

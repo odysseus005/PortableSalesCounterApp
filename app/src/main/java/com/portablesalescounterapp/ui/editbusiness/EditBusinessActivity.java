@@ -79,7 +79,7 @@ public class EditBusinessActivity extends MvpActivity<EditBusinessView, EditBusi
         binding.setActivity(this);
         realm = Realm.getDefaultInstance();
         user = realm.where(User.class).findFirst();
-        business = realm.where(Business.class).contains();
+        business = realm.where(Business.class).findFirst();
         binding.setUser(business);
 
         presenter.onStart();
