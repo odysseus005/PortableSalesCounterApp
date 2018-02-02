@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="300dp"
+        android:padding="3dp"
+        android:id="@+id/send_layout"
+        android:background="@color/black"
+        android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical"
+            >
+
+
+
+
+
+
+
+
+
+            <TextView
+                android:id="@+id/orCashierName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:gravity="left"
+                android:text="Cashier NAme"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <include
+            layout="@layout/design_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="15dp" />
+
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:id="@+id/reg_usergroup">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_height="wrap_content"
+                        android:text="Items"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        />
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <include
+                        layout="@layout/design_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="15dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/view_discount"
+                        android:weightSum="1">
+
+
+                        <TextView
+                            android:id="@+id/orDiscountName"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="wrap_content"
+                            android:text="Discount1 "
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"
+                            android:textSize="12sp"
+                            />
+
+                        <TextView
+                            android:id="@+id/orDiscount"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:text="Php 1000,00"
+                            android:textSize="14dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            />
+
+
+                    </LinearLayout>
+
+                        <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:text="Total Price: "
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp"
+                            android:layout_below="@+id/LinearMoTo" />
+
+                        <TextView
+                            android:id="@+id/orPrice"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/black"
+                            android:text="Php 1000,00"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            />
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:text="Change: "
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            android:textColor="@color/gray"
+                            android:textSize="14sp"
+                            android:layout_below="@+id/LinearMoTo" />
+
+                        <TextView
+                            android:id="@+id/orChange"
+                            android:layout_width="0dp"
+                            android:layout_weight=".5"
+                            android:layout_marginTop="8dp"
+                            android:layout_height="40dp"
+                            android:textColor="@color/black"
+                            android:text="Php 1000,00"
+                            android:textSize="16dp"
+                            android:textStyle="bold"
+                            android:layout_marginRight="@dimen/activity_half_margin"
+                            android:textAllCaps="true"
+                            android:gravity="center"
+                            />
+
+
+
+
+
+
+
+
+
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minWidth="300dp"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+
+
+
+
+
+                    <TextView
+                        android:id="@+id/cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/rounded_button_solid"
+                        android:clickable="true"
+                        android:padding="8dp"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="CLOSe"
+                        android:textAllCaps="true"
+                        android:gravity="center|right"
+                        android:paddingRight="25dp"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+
+
+
+                </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+    </ScrollView>
+</layout>

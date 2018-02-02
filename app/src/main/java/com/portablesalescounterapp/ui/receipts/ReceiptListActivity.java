@@ -246,7 +246,7 @@ public class ReceiptListActivity
         dialog = new Dialog(this);
         dialogBinding = DataBindingUtil.inflate(
                 getLayoutInflater(),
-                R.layout.dialog_receipt,
+                R.layout.dialog_history,
                 null,
                 false);
 

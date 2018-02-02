@@ -374,7 +374,7 @@ public class ProductQrListActivity
     private void takeScreenshot(View v1,String productName) {
 
             String prodname = productName.replace(" ","");
-        prodname = prodname + (String.valueOf(DateTimeUtils.getCurrentTimeStamp()).replace(" ",""));
+        prodname = prodname + (String.valueOf(DateTimeUtils.getCurrentTimeStamp2()).replace(" ",""));
 
         try {
             // image naming and path  to include sd card  appending name you choose for file

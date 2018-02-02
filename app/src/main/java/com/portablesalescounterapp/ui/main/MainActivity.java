@@ -391,21 +391,18 @@ public class MainActivity
                         if (currProduct.isLoaded() && currProduct.isValid()) {
                             scanChecker=true;
                             OnButtonAddtoCart();
-
                         }
-
                     } else {
                         transQr = presenter.getTransactionQr(Integer.parseInt(contents));
                         if (transQr.getPreuserId() == 0) {
                             if (transQr.isLoaded() && transQr.isValid())
 
-                               // onTransactionSuccess(transQr);
                                 onScanTransact(transQr);
                         } else {
                             showAlert("Transaction Order is Already Paid!");
                         }
 
-                        //OnButtonAddtoCart();
+
                     }
                 } catch (Exception e) {
                     showError("Cannot Read Code!");
@@ -1610,7 +1607,7 @@ public class MainActivity
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +email+DateTimeUtils.getCurrentTimeStamp()+ ".jpg";
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +email+DateTimeUtils.getCurrentTimeStamp2()+ ".jpg";
 
             // create bitmap screen capture
             // v1 = getWindow().getDecorView();

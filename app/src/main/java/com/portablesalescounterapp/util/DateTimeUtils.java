@@ -58,6 +58,20 @@ public class DateTimeUtils {
     }
 
 
+    public static String getCurrentTimeStamp2(){
+        try {
+
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            return ts;
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+
     public static String getTimeOnly(String dateString) {
         return convertDateToString("hh:mm a", convertTransactionStringDate(dateString, FULL_23_HR_DATE));
     }

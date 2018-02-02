@@ -50,13 +50,11 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
 
 
-
         if(employeeList.get(position).getProductStatus().equalsIgnoreCase("D")) {
             holder.itemEmergencyBinding.setView(null);
         }
         else
         {
-
 
             holder.itemEmergencyBinding.setProduct(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
