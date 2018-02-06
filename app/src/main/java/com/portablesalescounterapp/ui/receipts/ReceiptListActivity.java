@@ -23,6 +23,7 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.databinding.ActivityReceiptListBinding;
 import com.portablesalescounterapp.databinding.DialogCartBinding;
+import com.portablesalescounterapp.databinding.DialogHistoryBinding;
 import com.portablesalescounterapp.databinding.DialogReceiptBinding;
 import com.portablesalescounterapp.model.data.Business;
 import com.portablesalescounterapp.model.data.Products;
@@ -56,7 +57,7 @@ public class ReceiptListActivity
     private ArrayList<Integer> categoryIdList;
     private Dialog dialog;
     private CartreceiptActivityAdapter adapterCart;
-    DialogReceiptBinding dialogBinding;
+    DialogHistoryBinding dialogBinding;
     private ProgressDialog progressDialog;
     private String searchText;
     private String sorter="Date Descending";
@@ -76,7 +77,7 @@ public class ReceiptListActivity
         binding = DataBindingUtil.setContentView(this, R.layout.activity_receipt_list);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Product");
+        getSupportActionBar().setTitle("History of Sales");
 
         presenter.onStart();
         // binding.swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_refresh_layout_color_scheme));
@@ -264,21 +265,21 @@ public class ReceiptListActivity
         adapterCart.notifyDataSetChanged();
 
 
-        dialogBinding.orbName.setText(business.getBusinessName());
-        dialogBinding.orbAddress.setText(business.getBusinessAddress());
-        dialogBinding.orbContact.setText(business.getBusinessContact());
-        dialogBinding.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
-        dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
-        dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
+       // dialogBinding.orbName.setText(business.getBusinessName());
+        //dialogBinding.orbAddress.setText(business.getBusinessAddress());
+        //dialogBinding.orbContact.setText(business.getBusinessContact());
+        //dialogBinding.orDate.setText(DateTimeUtils.toReadable(transaction.getDate()));
+        //dialogBinding.orTime.setText(DateTimeUtils.getTimeOnly(transaction.getDate()));
+        //dialogBinding.orPayment.setText("Payment Method: "+transaction.getTransactionCode());
         dialogBinding.orPrice.setText("Php: "+transaction.getTransactionPrice());
         dialogBinding.orCashierName.setText("Cashier Name: "+transaction.getUserName());
 
 
-        dialogBinding.orCash.setVisibility(View.GONE);
-        dialogBinding.orChange.setVisibility(View.GONE);
+       // dialogBinding.orCash.setVisibility(View.GONE);
+       // dialogBinding.orChange.setVisibility(View.GONE);
 
 
-        dialogBinding.etReceiptEmail.setVisibility(View.GONE);
+       // dialogBinding.etReceiptEmail.setVisibility(View.GONE);
 
         if(transaction.getTransactionDiscount().equalsIgnoreCase(""))
             dialogBinding.viewDiscount.setVisibility(View.GONE);
