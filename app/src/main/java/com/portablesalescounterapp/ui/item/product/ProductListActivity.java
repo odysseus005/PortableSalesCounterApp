@@ -837,7 +837,7 @@ public class ProductListActivity
         //  integrator.setBeepEnabled(false);
         integrator.setPrompt("Scan Product Bar Code/Qr Code");
         integrator.setCameraId(0);  // Use a specific camera of the device
-        integrator.setBeepEnabled(false);
+        integrator.setBeepEnabled(true);
         integrator.setBarcodeImageEnabled(true);
         integrator.initiateScan();
 

@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_above="@+id/textUsername"
             android:layout_centerHorizontal="true"
-            android:background="@mipmap/ic_launcher"
+            android:background="@drawable/scc_logo"
             />
 
         <!-- Login progress -->

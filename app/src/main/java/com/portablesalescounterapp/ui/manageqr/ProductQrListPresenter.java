@@ -59,12 +59,12 @@ public class ProductQrListPresenter extends MvpBasePresenter<ProductQrListView> 
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Error Connecting to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -73,7 +73,7 @@ public class ProductQrListPresenter extends MvpBasePresenter<ProductQrListView> 
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Error Connecting to Server");
                         }
                     }
                 });

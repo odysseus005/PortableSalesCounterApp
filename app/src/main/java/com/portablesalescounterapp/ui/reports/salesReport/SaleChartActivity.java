@@ -27,6 +27,7 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.portablesalescounterapp.R;
 import com.portablesalescounterapp.app.Constants;
+import com.portablesalescounterapp.app.Endpoints;
 import com.portablesalescounterapp.databinding.ActivitySalechartBinding;
 import com.portablesalescounterapp.model.data.User;
 import com.portablesalescounterapp.ui.login.LoginActivity;
@@ -76,23 +77,24 @@ public class SaleChartActivity extends MvpActivity<SaleChartView, SaleChartPrese
         }
         if(id==1)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php?business_id="+user.getBusiness_id();
+            url= Endpoints.API_URL+"reports/pages/index.php?business_id="+user.getBusiness_id();
             //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/index.php";
             title="";
         }else if(id==2)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php?business_id="+user.getBusiness_id();
+            url=Endpoints.API_URL+"reports/pages/top-products.php?business_id="+user.getBusiness_id();
             //url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/top-products.php";
             title="";
         }
         else if(id==3)
         {
-            url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php?business_id="+user.getBusiness_id();
+            url=Endpoints.API_URL+"reports/pages/monthly-predictions.php?business_id="+user.getBusiness_id();
            // url="https://findingodysseus.000webhostapp.com/portablesalescounter/reports/pages/monthly-predictions.php";
             title="";
         }
 
 
+        Log.d("URL>",url);
 
         binding.webview.clearCache(true);
         binding.webview.clearHistory();
