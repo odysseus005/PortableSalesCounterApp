@@ -542,8 +542,10 @@ public class EmployeeListActivity
             } else {
                 productsList = realm.copyFromRealm(employeeRealmResults.where()
                         .contains("firstname", searchText, Case.INSENSITIVE)
+                        .notEqualTo("position","Owner", Case.INSENSITIVE)
                         .or()
                         .contains("lastname", searchText, Case.INSENSITIVE)
+                        .notEqualTo("position","Owner", Case.INSENSITIVE)
                         .or()
                         .contains("email", searchText, Case.INSENSITIVE)
                         .notEqualTo("position","Owner", Case.INSENSITIVE)

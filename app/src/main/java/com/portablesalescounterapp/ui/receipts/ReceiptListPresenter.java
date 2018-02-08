@@ -46,7 +46,7 @@ public class ReceiptListPresenter extends MvpBasePresenter<ReceiptListView> {
                             realm.executeTransactionAsync(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
-                                    realm.delete(Restock.class);
+                                    realm.delete(Transaction.class);
                                     realm.copyToRealmOrUpdate(response.body());
                                 }
                             }, new Realm.Transaction.OnSuccess() {

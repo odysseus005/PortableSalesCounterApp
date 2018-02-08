@@ -1030,12 +1030,13 @@ public class GuestActivity
     }
 
     private void takeScreenshot(View v1,String productName) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        String prodname = productName.replace(" ","");
+        prodname = prodname + (String.valueOf(DateTimeUtils.getCurrentTimeStamp2()).replace(" ",""));
 
         try {
             // image naming and path  to include sd card  appending name you choose for file
-            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +((productName+now).replace(" ","")) + ".jpg";
+            String mPath = Environment.getExternalStorageDirectory().toString() + "/Download/" +(prodname)+ ".jpg";
 
             // create bitmap screen capture
             // v1 = getWindow().getDecorView();
@@ -1073,6 +1074,7 @@ public class GuestActivity
                         Log.i("ExternalStorage", "-> uri=" + uri);
                     }
                 });
+
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);

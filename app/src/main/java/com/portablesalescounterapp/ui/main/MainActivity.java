@@ -604,26 +604,34 @@ public class MainActivity
 
         }else {*/
             if (id == R.id.nav_sales) {
+
                 startActivity(new Intent(this, MainActivity.class));
 
             } else if (id == R.id.nav_manageusers) {
+                clearCart();
                 startActivity(new Intent(this, EmployeeListActivity.class));
 
             } else if (id == R.id.nav_receipts) {
+                clearCart();
                 startActivity(new Intent(this, ReceiptListActivity.class));
             } else if (id == R.id.nav_items) {
+                clearCart();
                 startActivity(new Intent(this, ItemActivity.class));
             } else if (id == R.id.nav_inventory) {
+                clearCart();
                 startActivity(new Intent(this, InventoryActivity.class));
             } else if (id == R.id.nav_report) {
-
+                clearCart();
                 startActivity(new Intent(this, ReportsActivity.class));
             } else if (id == R.id.nav_qrcode) {
+                clearCart();
                 startActivity(new Intent(this, ProductQrListActivity.class));
             } else if (id == R.id.nav_profile) {
+                clearCart();
                 startActivity(new Intent(this, ProfileActivity.class));
             }
              else if (id == R.id.nav_businessprofile) {
+                clearCart();
                   startActivity(new Intent(this, EditBusinessActivity.class));
             }
             else if (id == R.id.nav_logout) {
@@ -1670,7 +1678,20 @@ public class MainActivity
     }
 
 
+     public void clearCart() {
 
+        onScantransactid = "0";
+
+        productList.clear();
+        prodIdcart.clear();
+        prodNamecart.clear();
+        prodQuantitycart.clear();
+        prodPricecart.clear();
+
+        MainActivity.this.invalidateOptionsMenu();
+
+
+    }
 
 
 }
