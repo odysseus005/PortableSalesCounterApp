@@ -12,6 +12,8 @@ public interface MonitorListView extends MvpView {
 
     void OnRestockEdit(Products employee);
 
+    void OnRemoveEdit(Products employee);
+
     void startLoading();
 
     void stopLoading();

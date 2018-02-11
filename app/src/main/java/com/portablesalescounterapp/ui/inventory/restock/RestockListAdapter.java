@@ -3,6 +3,7 @@ package com.portablesalescounterapp.ui.inventory.restock;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -48,7 +49,21 @@ public class RestockListAdapter extends RecyclerView.Adapter<RestockListAdapter.
             holder.itemEmergencyBinding.setRestock(employeeList.get(position));
             holder.itemEmergencyBinding.setView(view);
 
-            holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");
+
+        Log.d("TAG>>>>>",employeeList.get(position).getProductRestock());
+            if((employeeList.get(position).getProductRestock()).contains("-")) {
+                Log.d("TAG>>>>>",1+"");
+                holder.itemEmergencyBinding.stockList.setText("Remove Stock :");
+                holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) + Integer.parseInt((employeeList.get(position).getProductRestock().replace("-",""))))+"");
+                holder.itemEmergencyBinding.stockValue.setText(employeeList.get(position).getProductRestock().replace("-",""));
+            }else
+            {
+                Log.d("TAG>>>>>",2+"");
+                holder.itemEmergencyBinding.stockList.setText("Added Stock :");
+                holder.itemEmergencyBinding.restockRemaining.setText((Integer.parseInt(employeeList.get(position).getProductTotal()) - Integer.parseInt(employeeList.get(position).getProductRestock()))+"");
+                holder.itemEmergencyBinding.stockValue.setText(employeeList.get(position).getProductRestock());
+            }
+
 
     }
 

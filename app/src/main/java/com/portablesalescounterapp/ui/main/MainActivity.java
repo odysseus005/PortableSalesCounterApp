@@ -1032,9 +1032,20 @@ public class MainActivity
                 adapterCart.notifyDataSetChanged();
             }
 
-            MainActivity.this.invalidateOptionsMenu();
 
         }
+
+        MainActivity.this.invalidateOptionsMenu();
+        double cartPrice = 0;
+
+        for(int a=0;a<prodPricecart.size();a++)
+        {
+            cartPrice += Double.parseDouble(prodPricecart.get(a).replace(",",""));
+        }
+        // Log.d("TAG",">>>"+DateTimeUtils.parseDoubleTL(cartPrice));
+        vtsPrice = String.valueOf(cartPrice);
+        dialogBinding.cartItemPrice.setText("Php: "+DateTimeUtils.parseDoubleTL(cartPrice));
+
     }
 
 

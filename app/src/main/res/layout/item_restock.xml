@@ -103,6 +103,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/stockList"
                         android:layout_width="0dp"
                         android:layout_weight=".30"
                         android:layout_height="wrap_content"
@@ -114,11 +115,11 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/stockValue"
                         android:layout_width="0dp"
                         android:layout_weight=".20"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text='@{restock.productRestock}'
                         android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:textColor="@color/darkGray"

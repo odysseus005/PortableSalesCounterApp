@@ -114,6 +114,23 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/remove"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:background="@drawable/rounded_button_solid"
+                        android:clickable="true"
+                        android:layout_margin="10dp"
+                        android:padding="8dp"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:onClick="@{()->view.OnRemoveEdit(product)}"
+                        android:text="REMOVE"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
                     <TextView
                         android:id="@+id/cancel"
                         android:layout_width="wrap_content"

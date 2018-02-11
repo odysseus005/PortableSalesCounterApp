@@ -37,6 +37,7 @@ import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
 import com.portablesalescounterapp.R;
 
 import com.portablesalescounterapp.databinding.ActivityMonitorListBinding;
+import com.portablesalescounterapp.databinding.DialogEditMonitor2Binding;
 import com.portablesalescounterapp.databinding.DialogEditMonitorBinding;
 import com.portablesalescounterapp.model.data.Category;
 import com.portablesalescounterapp.model.data.Products;
@@ -309,6 +310,64 @@ public class MonitorListActivity
                         products.getProductName(),
                         (Integer.parseInt(dialogBinding.etValue.getText().toString())+Integer.parseInt(products.getProductSKU()))+"",
                         dialogBinding.etValue.getText().toString(),
+                        DateTimeUtils.getCurrentTimeStamp(),
+                        user.getUserId()+"",
+                        user.getFullName(),
+                        user.getBusiness_id());
+                //dialog.dismiss();
+            }
+        });
+
+        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setCancelable(false);
+        dialog.show();
+
+    }
+
+
+
+    @Override
+    public void OnRemoveEdit(final Products products) {
+
+
+
+        dialog = new Dialog(MonitorListActivity.this);
+        final DialogEditMonitor2Binding dialogBinding = DataBindingUtil.inflate(
+                getLayoutInflater(),
+                R.layout.dialog_edit_monitor2,
+                null,
+                false);
+
+
+        if(products.getProductCode().equalsIgnoreCase("E"))
+        {    dialogBinding.prodCode.setText(" pcs.");
+            dialogBinding.prodCode2.setText(" pcs.");
+        }
+        else
+        {
+            dialogBinding.prodCode.setText(" kg");
+            dialogBinding.prodCode2.setText(" kg");
+        }
+
+
+        dialogBinding.setProduct(products);
+
+        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+            }
+        });
+        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                presenter.restockContact(Integer.toString(products.getProductId()),
+                        products.getProductName(),
+                        (Integer.parseInt(products.getProductSKU())-Integer.parseInt(dialogBinding.etValue.getText().toString()))+"",
+                        "-"+(dialogBinding.etValue.getText().toString()),
                         DateTimeUtils.getCurrentTimeStamp(),
                         user.getUserId()+"",
                         user.getFullName(),
