@@ -87,7 +87,7 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView> {
                                     getView().showAlert("Oops");
                                 }
                             } else {
-                                getView().showAlert("Error Connecting to the Server!");
+                                getView().showAlert("Wrong Password or Email!");
                             }
                         }
 

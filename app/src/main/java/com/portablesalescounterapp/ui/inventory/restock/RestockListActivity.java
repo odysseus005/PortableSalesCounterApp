@@ -31,6 +31,7 @@ import io.realm.Case;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import pl.aprilapps.easyphotopicker.EasyImage;
 
 
@@ -238,7 +239,7 @@ public class RestockListActivity
                         .contains("productRestock", searchText, Case.INSENSITIVE)
                         .or()
                         .contains("productTotal", searchText, Case.INSENSITIVE)
-                        .findAll());
+                        .findAll().sort("productId", Sort.DESCENDING));
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();
