@@ -296,7 +296,7 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                                 getView().showAlert(response.body().getResult());
                             }
                         } else {
-                            getView().showAlert("Error Server Connection");
+                            getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -304,7 +304,7 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                     public void onFailure(Call<ResultResponse> call, Throwable t) {
                         getView().stopLoading();
                         t.printStackTrace();
-                        getView().showAlert(t.getLocalizedMessage());
+                        getView().showAlert("Error Connecting to Server");
                     }
                 });
     }
@@ -337,12 +337,12 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                                     realm.close();
                                     error.printStackTrace();
                                     if (isViewAttached())
-                                        getView().showAlert(error.getLocalizedMessage());
+                                        getView().showAlert("Error Connecting to Server");
                                 }
                             });
                         } else {
                             if (isViewAttached())
-                                getView().showAlert(response.errorBody().toString());
+                                getView().showAlert("Error Connecting to Server");
                         }
                     }
 
@@ -351,7 +351,7 @@ public class ProductListPresenter extends MvpBasePresenter<ProductListView> {
                         t.printStackTrace();
                         if (isViewAttached()) {
                             getView().stopRefresh();
-                            getView().showAlert(t.getLocalizedMessage());
+                            getView().showAlert("Error Connecting to Server");
                         }
                     }
                 });

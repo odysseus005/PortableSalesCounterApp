@@ -326,6 +326,12 @@ public class ProductListActivity
         });
 
 
+        if(!products.getProductQr().isEmpty())
+        {
+            dialogBinding.etBarcode.setVisibility(View.GONE);
+            dialogBinding.startScan.setVisibility(View.GONE);
+        }
+
 
         if(products.getProductCode().equalsIgnoreCase("W"))
         {
@@ -352,6 +358,13 @@ public class ProductListActivity
                 dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
                 dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
+            }
+        });
+
+        dialogBinding.startScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startScan();
             }
         });
 

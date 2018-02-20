@@ -126,6 +126,7 @@
                         android:layout_margin="10dp"
                         android:padding="8dp"
                         android:paddingEnd="20dp"
+                        android:visibility="gone"
                         android:paddingStart="20dp"
                         android:onClick="@{()->view.OnRemoveEdit(product)}"
                         android:text="REMOVE"

@@ -14,6 +14,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import com.hannesdorfmann.mosby.mvp.viewstate.MvpViewStateActivity;
 import com.hannesdorfmann.mosby.mvp.viewstate.ViewState;
@@ -55,6 +57,7 @@ public class RestockListActivity
     private int emerID=0;
     private  String productCode = "E", categoryId;
     private String searchText;
+    private String sorter="Descending Order";
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -104,6 +107,38 @@ public class RestockListActivity
                 onRefresh();
             }
         });
+
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Descending Order");
+        categories.add("Ascending Order");
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spCategory.setAdapter(dataAdapter);
+
+
+        binding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                // Showing selected spinner item
+
+                // Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                sorter= item;
+                prepareList();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+
+            }
+        });
+
     }
 
 
@@ -231,15 +266,40 @@ public class RestockListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Restock> productsList;
             if (searchText.isEmpty()) {
-                productsList = realm.copyFromRealm(employeeRealmResults);
+                if(sorter.equalsIgnoreCase("Ascending Order"))
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("restockId", Sort.DESCENDING));
+                }else
+                {
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("restockId", Sort.DESCENDING));
+                }
+
             } else {
-                productsList = realm.copyFromRealm(employeeRealmResults.where()
-                        .contains("productName", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productRestock", searchText, Case.INSENSITIVE)
-                        .or()
-                        .contains("productTotal", searchText, Case.INSENSITIVE)
-                        .findAll().sort("productId", Sort.DESCENDING));
+                if(sorter.equalsIgnoreCase("Ascending Order")) {
+                    productsList = realm.copyFromRealm(employeeRealmResults.where()
+                            .contains("productName", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productRestock", searchText, Case.INSENSITIVE)
+                            .or()
+                            .contains("productTotal", searchText, Case.INSENSITIVE)
+                            .findAll().sort("restockId", Sort.ASCENDING));
+                }
+                else
+                    {
+                        productsList = realm.copyFromRealm(employeeRealmResults.where()
+                                .contains("productName", searchText, Case.INSENSITIVE)
+                                .or()
+                                .contains("productRestock", searchText, Case.INSENSITIVE)
+                                .or()
+                                .contains("productTotal", searchText, Case.INSENSITIVE)
+                                .findAll().sort("restockId", Sort.DESCENDING));
+                    }
+            }
+            for(int a=0;a<productsList.size();a++)
+            {
+                if((productsList.get(a).getProductRestock()).contains("-"))
+                    productsList.remove(a);
+
             }
             adapterPromo.setProductList(productsList);
             adapterPromo.notifyDataSetChanged();

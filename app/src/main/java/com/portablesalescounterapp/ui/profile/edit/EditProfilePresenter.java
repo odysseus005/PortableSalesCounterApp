@@ -113,7 +113,7 @@ public class EditProfilePresenter extends MvpNullObjectBasePresenter<EditProfile
                     public void onFailure(Call<ResultResponse> call, Throwable t) {
                         getView().stopLoading();
                         t.printStackTrace();
-                        getView().showAlert(t.getLocalizedMessage());
+                        getView().showAlert("Error Server Connection");
                     }
                 });
     }
