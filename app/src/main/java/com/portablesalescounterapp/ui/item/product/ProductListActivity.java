@@ -90,6 +90,7 @@ public class ProductListActivity
     private final int PERMISSION_CODE = 9235;
     private String sorter="Name";
      DialogAddProductBinding dialogBinding;
+     DialogEditProductBinding dialogBinding2;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -297,15 +298,15 @@ public class ProductListActivity
         emerID = products.getProductId();
 
         dialog = new Dialog(ProductListActivity.this);
-        final DialogEditProductBinding dialogBinding = DataBindingUtil.inflate(
+         dialogBinding2 = DataBindingUtil.inflate(
                 getLayoutInflater(),
                 R.layout.dialog_edit_product,
                 null,
                 false);
-        dialogBinding.btnChangeImage.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.btnChangeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(ProductListActivity.this, dialogBinding.btnChangeImage);
+                PopupMenu popupMenu = new PopupMenu(ProductListActivity.this, dialogBinding2.btnChangeImage);
                 popupMenu.inflate(R.menu.edit_product_image);
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -328,40 +329,40 @@ public class ProductListActivity
 
         if(!products.getProductQr().isEmpty())
         {
-            dialogBinding.etBarcode.setVisibility(View.GONE);
-            dialogBinding.startScan.setVisibility(View.GONE);
+            dialogBinding2.etBarcode.setVisibility(View.GONE);
+            dialogBinding2.startScan.setVisibility(View.GONE);
         }
 
 
         if(products.getProductCode().equalsIgnoreCase("W"))
         {
-            dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
-            dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+            dialogBinding2.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+            dialogBinding2.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
         }
 
 
-        dialogBinding.each.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.each.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 productCode = "E";
-                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
-                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+                dialogBinding2.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding2.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
             }
         });
 
-        dialogBinding.weight.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.weight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 productCode = "W";
-                dialogBinding.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
-                dialogBinding.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
+                dialogBinding2.weight.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.lightGray));
+                dialogBinding2.each.setBackgroundColor(ContextCompat.getColor(ProductListActivity.this, R.color.colorPrimary));
 
             }
         });
 
-        dialogBinding.startScan.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.startScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startScan();
@@ -395,8 +396,8 @@ public class ProductListActivity
 
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(ProductListActivity.this, R.layout.spinner_custom_item, promoList);
-                dialogBinding.spCategory.setAdapter(arrayAdapter);
-                dialogBinding.spCategory.setSelection(currCateg);
+                dialogBinding2.spCategory.setAdapter(arrayAdapter);
+                dialogBinding2.spCategory.setSelection(currCateg);
             }
         });
 
@@ -404,7 +405,7 @@ public class ProductListActivity
         /**
          * Triggers on click of the spinner
          */
-        dialogBinding.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        dialogBinding2.spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 categoryId = ""+(categoryIdList.get(position));
@@ -419,33 +420,33 @@ public class ProductListActivity
 
 
 
-        dialogBinding.setProduct(products);
+        dialogBinding2.setProduct(products);
 
-        dialogBinding.cancel.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 emerID=0;
                 dialog.dismiss();
             }
         });
-        dialogBinding.send.setOnClickListener(new View.OnClickListener() {
+        dialogBinding2.send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
                 presenter.updateContact(Integer.toString(products.getProductId()),
-                        dialogBinding.etName.getText().toString(),
-                        dialogBinding.etDescription.getText().toString(),
-                        dialogBinding.etPrice.getText().toString(),
+                        dialogBinding2.etName.getText().toString(),
+                        dialogBinding2.etDescription.getText().toString(),
+                        dialogBinding2.etPrice.getText().toString(),
                         productCode,
-                        dialogBinding.etBarcode.getText().toString(),
+                        dialogBinding2.etBarcode.getText().toString(),
                         categoryId,
                         user.getBusiness_id());
                 //dialog.dismiss();
             }
         });
 
-        dialog.setContentView(dialogBinding.getRoot());
+        dialog.setContentView(dialogBinding2.getRoot());
         dialog.setCancelable(false);
         dialog.show();
 
@@ -611,9 +612,20 @@ public class ProductListActivity
             if (resultCode == RESULT_OK) {
                 String contents = data.getStringExtra("SCAN_RESULT");
 
-                dialogBinding.etBarcode.setText(contents);
+                try {
+                    dialogBinding2.etBarcode.setText(contents);
 
 
+                } catch (Exception e) {
+
+                }
+
+                try {
+                    dialogBinding.etBarcode.setText(contents);
+
+                } catch (Exception e) {
+
+                }
             }
         }
 

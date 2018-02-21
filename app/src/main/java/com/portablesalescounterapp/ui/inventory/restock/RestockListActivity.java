@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -266,9 +267,10 @@ public class RestockListActivity
         if (employeeRealmResults.isLoaded() && employeeRealmResults.isValid()) {
             List<Restock> productsList;
             if (searchText.isEmpty()) {
+                Log.d(">>>",sorter);
                 if(sorter.equalsIgnoreCase("Ascending Order"))
                 {
-                    productsList = realm.copyFromRealm(employeeRealmResults.sort("restockId", Sort.DESCENDING));
+                    productsList = realm.copyFromRealm(employeeRealmResults.sort("restockId", Sort.ASCENDING));
                 }else
                 {
                     productsList = realm.copyFromRealm(employeeRealmResults.sort("restockId", Sort.DESCENDING));
